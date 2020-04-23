@@ -1,44 +1,63 @@
-[![Build Status](https://travis-ci.org/clearidea/neuron.svg?branch=master)](https://travis-ci.org/clearidea/neuron)
-
 # About Neuron PHP
 
-Neuron is a PHP utility library. Although, it contains a basic
-application class for CLI and Web, the goal of this project is in
-no way to become a framework.
-
-## Data
-
-### Filtering
-
-### Validation
- 
 ## Logging
 
-A fairly full featured logging mechanism that supports many formats
-and destinations.
+Log to a multitude of unique destinations and formats simultaneously.
 
-## Settings
+### Destinations
 
-## Parsers
+* Echo
+* Email
+* File
+* Null
+* Slack
+* Socket
+* StErr
+* StdOut
+* Webhook
 
-## Patterns
+### Formats
 
-### Criteria
-Implementation of the Criteria pattern including And, Or and Not.
+* CSV
+* HTML
+* HTMLEmail
+* JSon
+* PlainText
 
-### Observer
+## Examples
 
-### Registry
+The default log is the Echoer is plain text.
 
-### Singleton
+The quickest way to get started is using the singleton
+facade:
 
-## Applications
+    // Optionally set the runlevel..
+    Log::setRunLevel( ILogger::DEBUG );
 
-### Generic Application
+    Log::debug( "Log message." );
+    
 
-### Commandline Application
+To configure slack:
 
-## Versioning
+    $Log = Log::getInstance();
 
-The Version data object is design to couple with the [Bump](https://github.com/ljonesfl/bump)
-utility to reference version information.
+    $Slack = new Slack(
+        new PlainText( true )
+    );
+
+    $Slack->open(
+        [
+            'endpoint' => env( 'LOG_SLACK_WEBHOOK_URL' ),
+            'params' => [
+                'channel'  => env( 'LOG_SLACK_CHANNEL' ),
+                'username' => 'Log'
+            ]
+        ]
+    );
+
+    $SlackLogger = new Logger( $Slack );
+    $SlackLogger->setRunLevel( ILogger::ERROR );
+    $Log->Logger->addLog( $SlackLogger );
+
+In this example, any log with a level of ERROR or
+higher will be written to the slack channel.
