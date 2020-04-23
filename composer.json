@@ -1,0 +1,24 @@
+{
+    "name": "neuron-php/log",
+    "description": "Logging.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lee Jones",
+            "email": "lee@dragonflyrg.com"
+        }
+    ],
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Neuron\\": "src/"
+        }
+    }
+}
