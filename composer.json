@@ -1,5 +1,5 @@
 {
-    "name": "neuron-php/log",
+    "name": "neuron-php/logging",
     "description": "Logging.",
     "type": "library",
     "license": "MIT",
