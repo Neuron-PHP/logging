@@ -38,7 +38,7 @@ abstract class DestinationBase
 	 * @return string
 	 */
 
-	public function getLevelText( $Level ) : string
+	public function getLevelText( int $Level ) : string
 	{
 		switch( $Level )
 		{

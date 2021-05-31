@@ -8,8 +8,8 @@ use Neuron\Util\WebHook;
 
 class Slack extends DestinationBase
 {
-	private $_Webhook;
-	private $_Params;
+	private string $_Webhook;
+	private array $_Params;
 
 	/**
 	 * 'channel'     => $channel,
@@ -53,9 +53,10 @@ class Slack extends DestinationBase
 	public function write( string $Text, Log\Data $Data )
 	{
 		$this->_Params[ 'text' ] = $Text;
+
 		$DataString = json_encode( $this->_Params );
 
-		$WebHook = (new WebHook() )
+		$WebHook = (new WebHook())
 			->postJson( $this->_Webhook, $DataString );
 	}
 }

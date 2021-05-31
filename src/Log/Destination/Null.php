@@ -25,7 +25,6 @@ class Null
 
 	public function close()
 	{
-
 	}
 
 	/**

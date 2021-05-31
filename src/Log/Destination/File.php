@@ -11,8 +11,8 @@ use Neuron\Log;
 
 class File extends DestinationBase
 {
-	private $_sName;
-	private $_hFile;
+	private $_Name;
+	private $_File;
 
 	/**
 	 * @param array $Params
@@ -21,11 +21,11 @@ class File extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
-		$this->_sName = $Params[ 'file_name' ];
+		$this->_Name = $Params[ 'file_name' ];
 
-		$this->_hFile = @fopen( $this->_sName, 'a' );
+		$this->_File = @fopen( $this->_Name, 'a' );
 
-		if( !$this->_hFile )
+		if( !$this->_File )
 		{
 			return false;
 		}
@@ -35,9 +35,9 @@ class File extends DestinationBase
 
 	public function close()
 	{
-		if( $this->_hFile )
+		if( $this->_File )
 		{
-			fclose( $this->_hFile );
+			fclose( $this->_File );
 		}
 	}
 
@@ -51,7 +51,7 @@ class File extends DestinationBase
 
 	public function write( string $text, Log\Data $Data )
 	{
-		fwrite(	$this->_hFile,
+		fwrite(	$this->_File,
 					"$text\r\n" );
 	}
 }

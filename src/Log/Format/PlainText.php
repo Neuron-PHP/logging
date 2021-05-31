@@ -10,18 +10,26 @@ use \Neuron\Log;
 
 class PlainText implements IFormat
 {
-	private $_bShowDate;
+	private $_ShowDate;
 
-	public function __construct( $bShowDate = true )
+	/**
+	 * PlainText constructor.
+	 * @param bool $ShowDate
+	 */
+	public function __construct( $ShowDate = true )
 	{
-		$this->_bShowDate = $bShowDate;
+		$this->_ShowDate = $ShowDate;
 	}
 
+	/**
+	 * @param Log\Data $Data
+	 * @return string
+	 */
 	public function format( Log\Data $Data ) : string
 	{
 		$output = '';
 
-		if( $this->_bShowDate )
+		if( $this->_ShowDate )
 		{
 			$output .= date( "[Y-m-d G:i:s]", $Data->TimeStamp );
 		}

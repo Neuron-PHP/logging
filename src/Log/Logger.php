@@ -2,19 +2,20 @@
 
 namespace Neuron\Log;
 
+use Neuron\Log\Destination\DestinationBase;
+
 /**
  * Class for writing formatted output to specific destinations.
  */
 
 class Logger implements ILogger
 {
-	private $_iRunLevel = ILogger::ERROR;
-	private $_Destination;
+	private int $_RunLevel = ILogger::ERROR;
+	private DestinationBase $_Destination;
 
 	/**
 	 * @param Destination\DestinationBase $Dest
 	 */
-
 	public function setDestination( Destination\DestinationBase $Dest )
 	{
 		$this->_Destination = $Dest;
@@ -23,28 +24,25 @@ class Logger implements ILogger
 	/**
 	 * @return mixed
 	 */
-
 	public function getDestination()
 	{
 		return $this->_Destination;
 	}
 
 	/**
-	 * @param $iLevel
+	 * @param $Level
 	 */
-
-	public function setRunLevel( int $iLevel )
+	public function setRunLevel( int $Level )
 	{
-		$this->_iRunLevel = $iLevel;
+		$this->_RunLevel = $Level;
 	}
 
 	/**
 	 * @return int
 	 */
-
 	public function getRunLevel() : int
 	{
-		return $this->_iRunLevel;
+		return $this->_RunLevel;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -52,7 +50,6 @@ class Logger implements ILogger
 	/**
 	 * @param Destination\DestinationBase $Dest
 	 */
-
 	public function __construct( Destination\DestinationBase $Dest )
 	{
 		$this->setDestination( $Dest );
@@ -61,7 +58,6 @@ class Logger implements ILogger
 	/**
 	 * @return mixed
 	 */
-
 	public function open()
 	{
 		return $this->getDestination()->open();
@@ -70,68 +66,61 @@ class Logger implements ILogger
 	/**
 	 *
 	 */
-
 	public function close()
 	{
 		$this->getDestination()->close();
 	}
 
 	/**
-	 * @param $text
-	 * @param $iLevel
+	 * @param string $Text
+	 * @param int $Level
 	 */
-
-	public function log( string $text, int $iLevel )
+	public function log( string $Text, int $Level )
 	{
-		if( $iLevel >= $this->getRunLevel() )
+		if( $Level >= $this->getRunLevel() )
 		{
-			$this->getDestination()->log( $text, $iLevel );
+			$this->getDestination()->log( $Text, $Level );
 		}
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-
-	public function debug( string $text )
+	public function debug( string $Text )
 	{
-		$this->log( $text, self::DEBUG );
+		$this->log( $Text, self::DEBUG );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
-
-	public function info( string $text )
+	public function info( string $Text )
 	{
-		$this->log( $text, self::INFO );
+		$this->log( $Text, self::INFO );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-
-	public function warning( string $text )
+	public function warning( string $Text )
 	{
-		$this->log( $text, self::WARNING );
+		$this->log( $Text, self::WARNING );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-
-	public function error( string $text )
+	public function error( string $Text )
 	{
-		$this->log( $text, self::ERROR );
+		$this->log( $Text, self::ERROR );
 	}
 
 	/**
-	 * @param $text
+	 * @param string  $Text
 	 */
-
-	public function fatal( string $text )
+	public function fatal( string $Text )
 	{
-		$this->log( $text, self::FATAL );
+		$this->log( $Text, self::FATAL );
 	}
 }
 

@@ -8,7 +8,7 @@ use Neuron\Patterns\Singleton\Memory;
 
 class Log extends Memory
 {
-	public $Logger;
+	public ?ILogger $Logger = null;
 
 	/**
 	 * Creates and initializes the core logger if needed.
@@ -32,64 +32,64 @@ class Log extends Memory
 	}
 
 	/**
-	 * @param $text
-	 * @param $iLevel
+	 * @param string $Text
+	 * @param int $Level
 	 */
-	public static function _log( string $text, int $iLevel )
+	public static function _log( string $Text, int $Level )
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
-		$Log->Logger->log( $text, $iLevel );
+		$Log->Logger->log( $Text, $Level );
 	}
 
 	/**
-	 * @param $iLevel
+	 * @param int $Level
 	 */
-	public static function setRunLevel( int $iLevel )
+	public static function setRunLevel( int $Level )
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
-		$Log->Logger->setRunLevel( $iLevel );
+		$Log->Logger->setRunLevel( $Level );
 		$Log->serialize();
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-	public static function debug( string $text )
+	public static function debug( string $Text )
 	{
-		self::_log( $text, ILogger::DEBUG );
+		self::_log( $Text, ILogger::DEBUG );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-	public static function info( string $text )
+	public static function info( string $Text )
 	{
-		self::_log( $text, ILogger::INFO );
+		self::_log( $Text, ILogger::INFO );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-	public static function warning( string $text )
+	public static function warning( string $Text )
 	{
-		self::_log( $text, ILogger::WARNING );
+		self::_log( $Text, ILogger::WARNING );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-	public static function error( string $text )
+	public static function error( string $Text )
 	{
-		self::_log( $text, ILogger::ERROR );
+		self::_log( $Text, ILogger::ERROR );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 */
-	public static function fatal( string $text )
+	public static function fatal( string $Text )
 	{
-		self::_log( $text, ILogger::FATAL );
+		self::_log( $Text, ILogger::FATAL );
 	}
 }
