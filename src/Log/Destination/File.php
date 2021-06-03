@@ -11,8 +11,31 @@ use Neuron\Log;
 
 class File extends DestinationBase
 {
-	private $_Name;
+	private string $_Name;
 	private $_File;
+
+	/**
+	 * @return string
+	 */
+
+	public function getName() : string
+	{
+		return $this->_Name;
+	}
+
+	/**
+	 * Returns either the normal file name or, replaced %DATE% with the current date
+	 * for example:
+	 * 2021-06-03.log
+	 *
+	 * @param string $Mask
+	 * @return string
+	 */
+
+	public function getFileName( string $Mask ) : string
+	{
+		return str_replace( "%DATE%", date( "Y-m-d" ).".log", $Mask );
+	}
 
 	/**
 	 * @param array $Params
@@ -21,7 +44,7 @@ class File extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
-		$this->_Name = $Params[ 'file_name' ];
+		$this->_Name = $this->getFileName( $Params[ 'file_name' ] );
 
 		$this->_File = @fopen( $this->_Name, 'a' );
 
