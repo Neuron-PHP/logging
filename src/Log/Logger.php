@@ -5,9 +5,9 @@ namespace Neuron\Log;
 use Neuron\Log\Destination\DestinationBase;
 
 /**
- * Class for writing formatted output to specific destinations.
+ * Class Logger
+ * @package Neuron\Log
  */
-
 class Logger implements ILogger
 {
 	private int $_RunLevel = ILogger::ERROR;

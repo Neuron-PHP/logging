@@ -5,7 +5,8 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Outputs to stderr
+ * Class StdErr
+ * @package Neuron\Log\Destination
  */
 
 class StdErr extends DestinationBase
@@ -33,8 +34,8 @@ class StdErr extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
-		fwrite( STDERR, $text."\r\n" );
+		fwrite( STDERR, $Text."\r\n" );
 	}
 }

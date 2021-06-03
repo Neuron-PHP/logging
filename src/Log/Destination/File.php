@@ -9,10 +9,37 @@ use Neuron\Log;
  * Use the 'file_name' parameter in the open param array.
  */
 
+/**
+ * Class File
+ * @package Neuron\Log\Destination
+ */
 class File extends DestinationBase
 {
-	private $_Name;
+	private string $_Name;
 	private $_File;
+
+	/**
+	 * @return string
+	 */
+
+	public function getFileName() : string
+	{
+		return $this->_Name;
+	}
+
+	/**
+	 * Returns either the normal file name or, replaced %DATE% with the current date
+	 * for example:
+	 * 2021-06-03.log
+	 *
+	 * @param string $Mask
+	 * @return string
+	 */
+
+	public function buildFileName( string $Mask ) : string
+	{
+		return str_replace( "%DATE%", date( "Y-m-d" ).".log", $Mask );
+	}
 
 	/**
 	 * @param array $Params
@@ -21,7 +48,7 @@ class File extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
-		$this->_Name = $Params[ 'file_name' ];
+		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );
 
 		$this->_File = @fopen( $this->_Name, 'a' );
 
@@ -33,6 +60,10 @@ class File extends DestinationBase
 		return true;
 	}
 
+	/**
+	 * Closes the open file handle associated with the log file.
+	 */
+
 	public function close()
 	{
 		if( $this->_File )
@@ -42,16 +73,16 @@ class File extends DestinationBase
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
 		fwrite(	$this->_File,
-					"$text\r\n" );
+					"$Text\r\n" );
 	}
 }

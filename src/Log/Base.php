@@ -2,6 +2,10 @@
 
 namespace Neuron\Log;
 
+/**
+ * Class Base
+ * @package Neuron\Log
+ */
 class Base implements ILogger
 {
 	private ILogger $_Logger;
