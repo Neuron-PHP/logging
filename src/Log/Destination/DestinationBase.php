@@ -1,14 +1,8 @@
 <?php
 
-/*
- *
- */
-
-//////////////////////////////////////////////////////////////////////////////
-//
-// Abstract base class for the device level output destinations.
-//
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * Abstract base class for the device level output destinations.
+*/
 
 namespace Neuron\Log\Destination;
 
@@ -22,7 +16,7 @@ use \Neuron\Log\Format;
 
 abstract class DestinationBase
 {
-	private $_Format;
+	private Format\IFormat $_Format;
 
 	/**
 	 * @param Format\IFormat $Format

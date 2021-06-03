@@ -2,6 +2,10 @@
 
 namespace Neuron\Log;
 
+/**
+ * Class LogMux
+ * @package Neuron\Log
+ */
 class LogMux implements ILogger
 {
 	private $_Logs = [];

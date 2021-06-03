@@ -6,6 +6,10 @@ use Neuron\Log\Destination\Echoer;
 use Neuron\Log\Format\PlainText;
 use Neuron\Patterns\Singleton\Memory;
 
+/**
+ * Class Log
+ * @package Neuron\Log
+ */
 class Log extends Memory
 {
 	public ?ILogger $Logger = null;

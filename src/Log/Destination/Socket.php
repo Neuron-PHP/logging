@@ -4,9 +4,13 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 
+/**
+ * Class Socket
+ * @package Neuron\Log\Destination
+ */
 class Socket extends DestinationBase
 {
-	private $_sAddress;
+	private string $_Address;
 
 	/**
 	 * @param array $Params
@@ -15,7 +19,7 @@ class Socket extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
-		$this->_sAddress = $Params[ 'ip_address' ];
+		$this->_Address = $Params[ 'ip_address' ];
 
 		return true;
 	}
@@ -52,7 +56,7 @@ class Socket extends DestinationBase
 			$this->error( 'Could not create socket' );
 		}
 
-		if( !socket_connect($sock , $this->_sAddress , 80))
+		if( !socket_connect($sock , $this->_Address , 80))
 		{
 			$this->error( 'Could not connect' );
 		}

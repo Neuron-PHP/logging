@@ -6,6 +6,10 @@ use Neuron\Data\Validation\Url;
 use Neuron\Log;
 use Neuron\Util\WebHook;
 
+/**
+ * Class Slack
+ * @package Neuron\Log\Destination
+ */
 class Slack extends DestinationBase
 {
 	private string $_Webhook;
@@ -21,7 +25,7 @@ class Slack extends DestinationBase
 	 * @param array $Params
 	 * @return bool
 	 *
-	 * @throws
+	 * @throws \Exception
 	 */
 	public function open( array $Params ) : bool
 	{

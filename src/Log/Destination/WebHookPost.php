@@ -5,6 +5,10 @@ namespace Neuron\Log\Destination;
 use Neuron\Data\Validation\Url;
 use Neuron\Log;
 
+/**
+ * Class WebHookPost
+ * @package Neuron\Log\Destination
+ */
 class WebHookPost extends DestinationBase
 {
 	private $_EndPoint;

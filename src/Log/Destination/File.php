@@ -9,6 +9,10 @@ use Neuron\Log;
  * Use the 'file_name' parameter in the open param array.
  */
 
+/**
+ * Class File
+ * @package Neuron\Log\Destination
+ */
 class File extends DestinationBase
 {
 	private string $_Name;
