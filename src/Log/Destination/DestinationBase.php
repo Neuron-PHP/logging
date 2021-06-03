@@ -72,12 +72,12 @@ abstract class DestinationBase
 	}
 
 	/**
-	 * @param $text - Text m
+	 * @param $Text - Text m
 	 * @param Log\Data $Data
 	 * @return mixed
 	 */
 
-	protected abstract function write( string $text, Log\Data $Data );
+	protected abstract function write( string $Text, Log\Data $Data );
 
 	/**
 	 * @param array $Params

@@ -26,20 +26,20 @@ class StdOut extends DestinationBase
 	{}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
 		if( !defined( 'STDOUT') )
 		{
 			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
 		}
 
-		fwrite( STDOUT, $text."\r\n" );
+		fwrite( STDOUT, $Text."\r\n" );
 	}
 }

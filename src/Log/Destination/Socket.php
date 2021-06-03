@@ -38,14 +38,14 @@ class Socket extends DestinationBase
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
 		if( !($sock = socket_create(AF_INET, SOCK_STREAM, 0)))
 		{
@@ -57,7 +57,7 @@ class Socket extends DestinationBase
 			$this->error( 'Could not connect' );
 		}
 
-		if( !socket_send ( $sock , $text, strlen( $text ) , 0))
+		if( !socket_send ( $sock , $Text, strlen( $Text ) , 0))
 		{
 			$this->error( 'Write failed' );
 		}

@@ -18,7 +18,7 @@ class File extends DestinationBase
 	 * @return string
 	 */
 
-	public function getName() : string
+	public function getFileName() : string
 	{
 		return $this->_Name;
 	}
@@ -32,7 +32,7 @@ class File extends DestinationBase
 	 * @return string
 	 */
 
-	public function getFileName( string $Mask ) : string
+	public function buildFileName( string $Mask ) : string
 	{
 		return str_replace( "%DATE%", date( "Y-m-d" ).".log", $Mask );
 	}
@@ -44,7 +44,7 @@ class File extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
-		$this->_Name = $this->getFileName( $Params[ 'file_name' ] );
+		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );
 
 		$this->_File = @fopen( $this->_Name, 'a' );
 
@@ -56,6 +56,10 @@ class File extends DestinationBase
 		return true;
 	}
 
+	/**
+	 * Closes the open file handle associated with the log file.
+	 */
+
 	public function close()
 	{
 		if( $this->_File )
@@ -65,16 +69,16 @@ class File extends DestinationBase
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
 		fwrite(	$this->_File,
-					"$text\r\n" );
+					"$Text\r\n" );
 	}
 }
