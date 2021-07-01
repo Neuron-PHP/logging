@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lee
- * Date: 9/5/15
- * Time: 1:14 PM
- */
-
 
 class LoggerTest extends PHPUnit\Framework\TestCase
 {
@@ -20,9 +13,35 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 		);
 	}
 
+	public function testSetRunLevelPass()
+	{
+		$this->_Logger->setRunLevelByText( 'info' );
+
+		$this->assertEquals(
+			$this->_Logger->getRunLevel(),
+			Neuron\Log\ILogger::INFO
+		);
+	}
+
+	public function testSetRunLevelFail()
+	{
+		$Failed = false;
+
+		try
+		{
+			$this->_Logger->setRunLevelByText( 'fail' );
+		}
+		catch( Exception $Exception )
+		{
+			$Failed = true;
+		}
+
+		$this->assertTrue( $Failed );
+	}
+
 	public function testPass()
 	{
-		$this->_Logger ->setRunLevel( Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( Neuron\Log\ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
