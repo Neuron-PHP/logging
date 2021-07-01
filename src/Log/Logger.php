@@ -30,6 +30,43 @@ class Logger implements ILogger
 	}
 
 	/**
+	 * @param string $Text
+	 * @throws \Exception
+	 */
+	public function setRunLevelByText( string $Text )
+	{
+		$Level = self::DEBUG;
+
+		switch( strtolower( $Text ) )
+		{
+			case 'debug':
+				$Level = self::DEBUG;
+				break;
+
+			case 'info':
+				$Level = self::INFO;
+				break;
+
+			case 'warning':
+				$Level = self::WARNING;
+				break;
+
+			case 'error':
+				$Level = self::ERROR;
+				break;
+
+			case 'fatal':
+				$Level = self::FATAL;
+				break;
+
+			default:
+				throw new \Exception( "Unrecognized run level '$Text'" );
+		}
+
+		$this->setRunLevel( $Level );
+	}
+
+	/**
 	 * @param $Level
 	 */
 	public function setRunLevel( int $Level )
@@ -44,8 +81,6 @@ class Logger implements ILogger
 	{
 		return $this->_RunLevel;
 	}
-
-	//////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * @param Destination\DestinationBase $Dest

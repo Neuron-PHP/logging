@@ -1,6 +1,8 @@
 ## 0.6.0
 
 * Converting to PHP8
+* Added util package requirement.
+* Added Log::setRunLevelByText
 
 ## 0.5.3
 
