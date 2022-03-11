@@ -1,7 +1,7 @@
 language: php
 dist: focal
 php:
-  - '8.1.1'
+  - '8.1'
 
 before_script: composer install
 
