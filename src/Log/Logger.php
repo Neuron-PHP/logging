@@ -69,9 +69,15 @@ class Logger implements ILogger
 	/**
 	 * @param $Level
 	 */
-	public function setRunLevel( int $Level )
+	public function setRunLevel( mixed $Level )
 	{
-		$this->_RunLevel = $Level;
+		if( is_string( $Level ) )
+		{
+			$this->setRunLevelByText( $Level );
+			return;
+		}
+
+		$this->_RunLevel = (int)$Level;
 	}
 
 	/**

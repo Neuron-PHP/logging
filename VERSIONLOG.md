@@ -3,6 +3,7 @@
 * Converting to PHP8
 * Added util package requirement.
 * Added Log::setRunLevelByText
+* Log::setRunLevel now works with int and string.
 
 ## 0.5.3
 

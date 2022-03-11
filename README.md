@@ -32,7 +32,7 @@ The quickest way to get started is using the singleton
 facade:
 
     // Optionally set the runlevel..
-    Log::setRunLevel( ILogger::DEBUG );
+    Log::setRunLevel( 'debug' );
 
     Log::debug( "Log message." );
     
@@ -56,7 +56,7 @@ To configure slack:
     );
 
     $SlackLogger = new Logger( $Slack );
-    $SlackLogger->setRunLevel( ILogger::ERROR );
+    $SlackLogger->setRunLevel( 'error' );
     $Log->Logger->addLog( $SlackLogger );
 
 In this example, any log with a level of ERROR or

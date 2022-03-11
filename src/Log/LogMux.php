@@ -43,7 +43,7 @@ class LogMux implements ILogger
 	 * Sync run levels for all loggers.
 	 */
 
-	public function setRunLevel( int $Level )
+	public function setRunLevel( mixed $Level )
 	{
 		foreach( $this->getLogs() as $Log )
 		{

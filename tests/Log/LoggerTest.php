@@ -4,7 +4,7 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 {
 	public $_Logger;
 
-	public function setUp()
+	public function setUp() : void
 	{
 		$this->_Logger = new Neuron\Log\Logger(
 			new Neuron\Log\Destination\Echoer(
@@ -13,9 +13,9 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 		);
 	}
 
-	public function testSetRunLevelPass()
+	public function testSetRunLevelTextPass()
 	{
-		$this->_Logger->setRunLevelByText( 'info' );
+		$this->_Logger->setRunLevel( 'info' );
 
 		$this->assertEquals(
 			$this->_Logger->getRunLevel(),
@@ -29,7 +29,7 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 
 		try
 		{
-			$this->_Logger->setRunLevelByText( 'fail' );
+			$this->_Logger->setRunLevel( 'fail' );
 		}
 		catch( Exception $Exception )
 		{

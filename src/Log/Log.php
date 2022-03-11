@@ -49,11 +49,19 @@ class Log extends Memory
 	/**
 	 * @param int $Level
 	 */
-	public static function setRunLevel( int $Level )
+	public static function setRunLevel( mixed $Level )
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
-		$Log->Logger->setRunLevel( $Level );
+
+		if( is_int( $Level ) )
+		{
+			$Log->Logger->setRunLevel( $Level );
+		}
+		else
+		{
+			$Log->Logger->setRunLevelText( $Level );
+		}
 		$Log->serialize();
 	}
 

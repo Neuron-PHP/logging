@@ -25,7 +25,7 @@ interface ILogger
 	 * @param int $Level
 	 * @return mixed
 	 */
-	public function setRunLevel( int $Level );
+	public function setRunLevel( mixed $Level );
 
 	/**
 	 * @param string $Text
