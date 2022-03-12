@@ -1,4 +1,4 @@
-## 0.6.0
+## 0.6.0 202-03-12
 
 * Converting to PHP8
 * Added util package requirement.
