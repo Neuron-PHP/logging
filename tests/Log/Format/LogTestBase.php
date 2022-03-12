@@ -11,7 +11,7 @@ class LogTestBase extends PHPUnit\Framework\TestCase
 	const INPUT = 'Test log.';
 	public $Data;
 
-	public function setup()
+	public function setUp() : void
 	{
 		$this->Data = new \Neuron\Log\Data( time(), self::INPUT, \Neuron\Log\ILogger::DEBUG, 'DEBUG' );
 	}

@@ -10,6 +10,10 @@ use \Neuron\Log;
 
 class JSON implements IFormat
 {
+	/**
+	 * @param Log\Data $Data
+	 * @return string
+	 */
 	public function format( Log\Data $Data ) : string
 	{
 		$aData = [

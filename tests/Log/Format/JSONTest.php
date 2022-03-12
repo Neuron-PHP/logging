@@ -1,7 +1,7 @@
 <?php
 require_once 'tests/Log/Format/LogTestBase.php';
 
-class JsonTest extends \LogTestBase
+class JSONTest extends \LogTestBase
 {
 	public function testFormat()
 	{

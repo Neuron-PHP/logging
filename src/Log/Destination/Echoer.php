@@ -26,15 +26,15 @@ class Echoer extends DestinationBase
 	{}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data )
 	{
-		echo $text."\r\n";
+		echo $Text."\r\n";
 	}
 }

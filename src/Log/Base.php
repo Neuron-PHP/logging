@@ -2,9 +2,13 @@
 
 namespace Neuron\Log;
 
+/**
+ * Class Base
+ * @package Neuron\Log
+ */
 class Base implements ILogger
 {
-	private $_Logger;
+	private ILogger $_Logger;
 
 	/**
 	 * @param ILogger $Logger
@@ -25,69 +29,69 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $text
-	 * @param $iLevel
+	 * @param $ext
+	 * @param $Level
 	 *
 	 * Writes to the logger. Defaults to debug level.
 	 * Data is only written to the log based on the loggers run-level.
 	 */
 
-	public function log( string $text, int $iLevel = self::DEBUG )
+	public function log( string $Text, int $Level = self::DEBUG )
 	{
-		$this->_Logger->log( get_class( $this ).': '.$text, $iLevel );
+		$this->_Logger->log( get_class( $this ).': '.$Text, $Level );
 	}
 
 	/**
-	 * @param $iLevel
+	 * @param $Level
 	 */
 
-	public function setRunLevel( int $iLevel )
+	public function setRunLevel( int $Level )
 	{
-		$this->_Logger->setRunLevel( $iLevel );
+		$this->_Logger->setRunLevel( $Level );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function debug( string $text )
+	public function debug( string $Text )
 	{
-		$this->_Logger->debug( $text );
+		$this->_Logger->debug( $Text );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function info( string $text )
+	public function info( string $Text )
 	{
-		$this->_Logger->info( $text );
+		$this->_Logger->info( $Text );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function warning( string $text )
+	public function warning( string $Text )
 	{
-		$this->_Logger->warning( $text );
+		$this->_Logger->warning( $Text );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function error( string $text )
+	public function error( string $Text )
 	{
-		$this->_Logger->error( $text );
+		$this->_Logger->error( $Text );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function fatal( string $text )
+	public function fatal( string $Text )
 	{
-		$this->_Logger->fatal( $text );
+		$this->_Logger->fatal( $Text );
 	}
 }

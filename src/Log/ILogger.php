@@ -1,9 +1,5 @@
 <?php
 
-/*
- *
- */
-
 namespace Neuron\Log;
 
 /**
@@ -20,44 +16,44 @@ interface ILogger
 	const FATAL   = 40;		// Log fatal
 
 	/**
-	 * @param $text
-	 * @param $iLevel
+	 * @param string $Text
+	 * @param int $Level
 	 */
-	public function log( string $text, int $iLevel );
+	public function log( string $Text, int $Level );
 
 	/**
-	 * @param $iLevel
+	 * @param int $Level
 	 * @return mixed
 	 */
-	public function setRunLevel( int $iLevel );
+	public function setRunLevel( mixed $Level );
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 * @return mixed
 	 */
-	public function debug( string $text );
+	public function debug( string $Text );
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 * @return mixed
 	 */
-	public function info( string $text );
+	public function info( string $Text );
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 * @return mixed
 	 */
-	public function warning( string $text );
+	public function warning( string $Text );
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 * @return mixed
 	 */
-	public function error( string $text );
+	public function error( string $Text );
 
 	/**
-	 * @param $text
+	 * @param string $Text
 	 * @return mixed
 	 */
-	public function fatal( string $text );
+	public function fatal( string $Text );
 }

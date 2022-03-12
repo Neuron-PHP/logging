@@ -2,9 +2,13 @@
 
 namespace Neuron\Log;
 
+/**
+ * Class LogMux
+ * @package Neuron\Log
+ */
 class LogMux implements ILogger
 {
-	private $_aLogs = [];
+	private $_Logs = [];
 
 	/**
 	 * @param ILogger $Log
@@ -12,7 +16,7 @@ class LogMux implements ILogger
 
 	public function addLog( ILogger $Log )
 	{
-		$this->_aLogs[] = $Log;
+		$this->_Logs[] = $Log;
 	}
 
 	/**
@@ -21,7 +25,7 @@ class LogMux implements ILogger
 
 	public function reset()
 	{
-		$this->_aLogs = [];
+		$this->_Logs = [];
 	}
 
 	/**
@@ -30,81 +34,80 @@ class LogMux implements ILogger
 
 	public function getLogs()
 	{
-		return $this->_aLogs;
+		return $this->_Logs;
 	}
 
 	/**
-	 * @param $iLevel
+	 * @param $Level
 	 *
 	 * Sync run levels for all loggers.
 	 */
 
-	public function setRunLevel( int $iLevel )
+	public function setRunLevel( mixed $Level )
 	{
 		foreach( $this->getLogs() as $Log )
 		{
-			$Log->setRunLevel( $iLevel );
+			$Log->setRunLevel( $Level );
 		}
 	}
 
 	//region ILogger
 	/**
-	 * @param $text
-	 * @param $iLevel
+	 * @param $Text
+	 * @param $Level
 	 */
 
-	public function log( string $text, int $iLevel )
+	public function log( string $Text, int $Level )
 	{
 		foreach( $this->getLogs() as $Log )
 		{
-			$Log->log( $text, $iLevel );
+			$Log->log( $Text, $Level );
 		}
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function debug( string $text )
+	public function debug( string $Text )
 	{
-		$this->log( $text, self::DEBUG );
+		$this->log( $Text, self::DEBUG );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function info( string $text )
+	public function info( string $Text )
 	{
-		$this->log( $text, self::INFO );
+		$this->log( $Text, self::INFO );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function warning( string $text )
+	public function warning( string $Text )
 	{
-		$this->log( $text, self::WARNING );
+		$this->log( $Text, self::WARNING );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function error( string $text )
+	public function error( string $Text )
 	{
-		$this->log( $text, self::ERROR );
+		$this->log( $Text, self::ERROR );
 	}
 
 	/**
-	 * @param $text
+	 * @param $Text
 	 */
 
-	public function fatal( string $text )
+	public function fatal( string $Text )
 	{
-		$this->log( $text, self::FATAL );
+		$this->log( $Text, self::FATAL );
 	}
 	//endregion
-
 }

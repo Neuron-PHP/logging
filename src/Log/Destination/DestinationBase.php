@@ -1,14 +1,8 @@
 <?php
 
-/*
- *
- */
-
-//////////////////////////////////////////////////////////////////////////////
-//
-// Abstract base class for the device level output destinations.
-//
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * Abstract base class for the device level output destinations.
+*/
 
 namespace Neuron\Log\Destination;
 
@@ -22,7 +16,7 @@ use \Neuron\Log\Format;
 
 abstract class DestinationBase
 {
-	private $_Format;
+	private Format\IFormat $_Format;
 
 	/**
 	 * @param Format\IFormat $Format
@@ -38,7 +32,7 @@ abstract class DestinationBase
 	 * @return string
 	 */
 
-	public function getLevelText( $Level ) : string
+	public function getLevelText( int $Level ) : string
 	{
 		switch( $Level )
 		{
@@ -72,12 +66,12 @@ abstract class DestinationBase
 	}
 
 	/**
-	 * @param $text - Text m
+	 * @param $Text - Text m
 	 * @param Log\Data $Data
 	 * @return mixed
 	 */
 
-	protected abstract function write( string $text, Log\Data $Data );
+	protected abstract function write( string $Text, Log\Data $Data );
 
 	/**
 	 * @param array $Params

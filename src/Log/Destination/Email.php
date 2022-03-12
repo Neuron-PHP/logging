@@ -4,11 +4,15 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 
+/**
+ * Class Email
+ * @package Neuron\Log\Destination
+ */
 class Email
 {
-	private $_To;
-	private $_From;
-	private $_Subject;
+	private string $_To;
+	private string $_From;
+	private string $_Subject;
 
 	/**
 	 * @param array $Params
@@ -25,7 +29,7 @@ class Email
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 * @param Log\Data $Data
 	 * @return void
 	 *
@@ -37,7 +41,8 @@ class Email
 		mail(
 			$this->_To,
 			$this->_Subject,
-			$Text
+			$Text,
+			"From: ".$this->_From
 		);
 	}
 }

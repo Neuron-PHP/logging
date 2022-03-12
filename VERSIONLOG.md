@@ -1,3 +1,13 @@
+## 0.6.0 202-03-12
+
+* Converting to PHP8
+* Added util package requirement.
+* Added Log::setRunLevelByText
+* Log::setRunLevel now works with int and string.
+* Updated travis to php 8.1
+
+## 0.5.3
+
 ## 0.5.2
 
 ## 0.5.1

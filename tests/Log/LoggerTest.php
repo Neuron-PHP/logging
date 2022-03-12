@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lee
- * Date: 9/5/15
- * Time: 1:14 PM
- */
-
 
 class LoggerTest extends PHPUnit\Framework\TestCase
 {
 	public $_Logger;
 
-	public function setUp()
+	public function setUp() : void
 	{
 		$this->_Logger = new Neuron\Log\Logger(
 			new Neuron\Log\Destination\Echoer(
@@ -20,9 +13,35 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 		);
 	}
 
+	public function testSetRunLevelTextPass()
+	{
+		$this->_Logger->setRunLevel( 'info' );
+
+		$this->assertEquals(
+			$this->_Logger->getRunLevel(),
+			Neuron\Log\ILogger::INFO
+		);
+	}
+
+	public function testSetRunLevelFail()
+	{
+		$Failed = false;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'fail' );
+		}
+		catch( Exception $Exception )
+		{
+			$Failed = true;
+		}
+
+		$this->assertTrue( $Failed );
+	}
+
 	public function testPass()
 	{
-		$this->_Logger ->setRunLevel( Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( Neuron\Log\ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();

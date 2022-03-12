@@ -4,7 +4,7 @@ class LogMuxTest extends PHPUnit\Framework\TestCase
 {
 	public $_Mux;
 
-	public function setUp()
+	public function setUp() : void
 	{
 		$this->_Mux = new Neuron\Log\LogMux();
 
