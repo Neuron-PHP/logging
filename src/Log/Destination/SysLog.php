@@ -2,6 +2,8 @@
 
 namespace Neuron\Log\Destination;
 
+use Neuron\Log;
+
 class SysLog extends DestinationBase
 {
 	/**
