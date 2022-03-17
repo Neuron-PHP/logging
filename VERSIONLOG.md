@@ -1,6 +1,8 @@
-## 0.6.1
+## 0.6.1 2022-03-17
 
-## 0.6.0 202-03-12
+* Added syslog destination.
+
+## 0.6.0 2022-03-12
 
 * Converting to PHP8
 * Added util package requirement.
