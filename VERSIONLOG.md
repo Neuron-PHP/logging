@@ -1,3 +1,5 @@
+## 0.6.2
+
 ## 0.6.1 2022-03-17
 
 * Added syslog destination.
