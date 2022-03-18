@@ -1,4 +1,4 @@
-## 0.6.2
+## 0.6.2 2022-03-18
 * Updated SysLog to use openlog/closelog.
 
 ## 0.6.1 2022-03-17
