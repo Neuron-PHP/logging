@@ -15,11 +15,15 @@ class SysLog extends DestinationBase
 
 	public function open( array $Params ) : bool
 	{
+		openlog('neuron', LOG_PID, LOG_USER );
+
 		return true;
 	}
 
 	public function close()
-	{}
+	{
+		closelog();
+	}
 
 	/**
 	 * @param $Text
@@ -31,6 +35,31 @@ class SysLog extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data )
 	{
-		syslog(LOG_INFO, $Text );
+		$Level = 0;
+
+		switch( $Data->Level )
+		{
+			case Log\ILogger::DEBUG:
+				$Level = LOG_DEBUG;
+				break;
+
+			case Log\ILogger::INFO:
+				$Level = LOG_INFO;
+				break;
+
+			case Log\ILogger::WARNING:
+				$Level = LOG_WARNING;
+				break;
+
+			case Log\ILogger::ERROR:
+				$Level = LOG_ERR;
+				break;
+
+			case Log\ILogger::FATAL:
+				$Level = LOG_CRIT;
+				break;
+		}
+
+		syslog( $Level, $Text );
 	}
 }
