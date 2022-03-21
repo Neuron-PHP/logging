@@ -11,6 +11,7 @@ use Neuron\Log;
 
 class StdErr extends DestinationBase
 {
+	private $_StdErr;
 	/**
 	 * @param array $Params
 	 * @return bool
@@ -24,7 +25,8 @@ class StdErr extends DestinationBase
 	}
 
 	public function close()
-	{}
+	{
+	}
 
 	/**
 	 * @param $s
@@ -36,6 +38,11 @@ class StdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data )
 	{
-		fwrite( \STDERR, $Text."\r\n" );
+		if( !defined( 'STDOUT') )
+		{
+			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
+		}
+
+		fwrite( STDOUT, $Text."\r\n" );
 	}
 }
