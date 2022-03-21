@@ -1,3 +1,5 @@
+## 0.6.5
+
 ## 0.6.4 2022-03-21
 * Added code to handle missing STDERR on non cli applications.
 * 
