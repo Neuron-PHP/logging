@@ -1,5 +1,6 @@
-## 0.6.3
+## 0.6.3 2022-03-21
 * Added port setting to Destination/Socket.
+* Added an update to strerr logging for heroku.
 
 ## 0.6.2 2022-03-18
 * Updated SysLog to use openlog/closelog.
