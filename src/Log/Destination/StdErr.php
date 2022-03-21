@@ -36,6 +36,6 @@ class StdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data )
 	{
-		fwrite( STDERR, $Text."\r\n" );
+		fwrite( \STDERR, $Text."\r\n" );
 	}
 }
