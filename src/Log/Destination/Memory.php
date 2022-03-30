@@ -1,0 +1,46 @@
+<?php
+
+namespace Neuron\Log\Destination;
+
+use Neuron\Log;
+
+class Memory extends DestinationBase
+{
+	private string $_Data = '';
+
+	/**
+	 * @return string
+	 */
+	public function getData(): string
+	{
+		return $this->_Data;
+	}
+
+	/**
+	 * @param string $Data
+	 * @return Memory
+	 */
+	public function setData( string $Data ): Memory
+	{
+		$this->_Data = $Data;
+		return $this;
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function write( string $Text, Log\Data $Data )
+	{
+		$this->setData(
+			$this->getData().$Text."\n"
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function open( array $Params ): bool
+	{
+	}
+}
