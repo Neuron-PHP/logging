@@ -8,7 +8,8 @@ namespace Neuron\Log;
  */
 class LogMux implements ILogger
 {
-	private $_Logs = [];
+	private $_Logs     = [];
+	private $_RunLevel = 0;
 
 	/**
 	 * @param ILogger $Log
@@ -48,7 +49,17 @@ class LogMux implements ILogger
 		foreach( $this->getLogs() as $Log )
 		{
 			$Log->setRunLevel( $Level );
+
+			$this->_RunLevel = $Log->getRunLevel();
 		}
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRunLevel(): int
+	{
+		return $this->_RunLevel;
 	}
 
 	//region ILogger

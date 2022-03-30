@@ -2,11 +2,11 @@
 
 namespace Log\Format;
 
-class Raw extends \LogTestBase
+class RawTest extends \LogTestBase
 {
 	public function testFormat()
 	{
-		$Raw = new \Neuron\Log\Format\RawTest();
+		$Raw = new \Neuron\Log\Format\Raw();
 
 		$Out = $Raw->format( $this->Data );
 
