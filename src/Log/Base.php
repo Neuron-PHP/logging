@@ -45,9 +45,17 @@ class Base implements ILogger
 	 * @param $Level
 	 */
 
-	public function setRunLevel( int $Level )
+	public function setRunLevel( mixed $Level )
 	{
 		$this->_Logger->setRunLevel( $Level );
+	}
+
+	/**
+	 *
+	 */
+	public function getRunLevel() : int
+	{
+		return $this->_Logger->getRunLevel();
 	}
 
 	/**

@@ -1,3 +1,6 @@
+## 0.6.6
+* Fixed an issue with Log\Base.
+
 ## 0.6.5 2022-03-30
 * Added Memory log destination.
 * Added Raw log format.

@@ -4,7 +4,7 @@ namespace Neuron\Log\Format;
 
 use Neuron\Log;
 
-class RawTest implements IFormat
+class Raw implements IFormat
 {
 
 	/**

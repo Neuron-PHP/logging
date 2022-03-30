@@ -9,7 +9,7 @@ class MemoryTest extends TestCase
 {
 	public function testLog()
 	{
-		$Mem = new Memory( new \Neuron\Log\Format\RawTest() );
+		$Mem = new Memory( new \Neuron\Log\Format\Raw() );
 
 		$Text = "Test";
 
