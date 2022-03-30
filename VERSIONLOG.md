@@ -1,3 +1,5 @@
+## 0.6.7
+
 ## 0.6.6
 * Fixed an issue with Log\Base.
 
