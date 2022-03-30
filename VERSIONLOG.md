@@ -1,3 +1,5 @@
+## 0.6.6
+
 ## 0.6.5 2022-03-30
 * Added Memory log destination.
 * Added Raw log format.
