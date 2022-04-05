@@ -5,7 +5,7 @@ namespace Neuron\Log\Format;
 use Neuron\Log;
 
 /**
- * Interface IFormat
+ * Formatter interface.
  */
 
 interface IFormat

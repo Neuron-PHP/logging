@@ -5,8 +5,7 @@ namespace Neuron\Log;
 use Neuron\Log\Destination\DestinationBase;
 
 /**
- * Class Logger
- * @package Neuron\Log
+ * Logger implementation.
  */
 class Logger implements ILogger
 {

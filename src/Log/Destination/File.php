@@ -5,14 +5,10 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Writes log data to a file.
+ * Outputs log data to a file.
  * Use the 'file_name' parameter in the open param array.
  */
 
-/**
- * Class File
- * @package Neuron\Log\Destination
- */
 class File extends DestinationBase
 {
 	private string $_Name;

@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Interface ILogger
- * @package Neuron\Log
+ * Logger interface.
  */
 
 interface ILogger

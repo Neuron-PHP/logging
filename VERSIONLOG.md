@@ -1,4 +1,5 @@
-## 0.6.7
+## 0.6.7 2022-04-04
+* Scheduled release
 
 ## 0.6.6
 * Fixed an issue with Log\Base.

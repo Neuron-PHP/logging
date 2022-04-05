@@ -4,6 +4,9 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 
+/**
+ * Outputs log information to syslog.
+ */
 class SysLog extends DestinationBase
 {
 	/**

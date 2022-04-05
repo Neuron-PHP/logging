@@ -4,6 +4,9 @@ namespace Neuron\Log\Format;
 
 use Neuron\Log;
 
+/**
+ * Raw log format. Only includes the text. No date/time or level.
+ */
 class Raw implements IFormat
 {
 

@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Class Data
- * @package Neuron\Log
+ * DTO to pass log information internally.
  */
 
 class Data

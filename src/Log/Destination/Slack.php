@@ -7,8 +7,7 @@ use Neuron\Log;
 use Neuron\Util\WebHook;
 
 /**
- * Class Slack
- * @package Neuron\Log\Destination
+ * Outputs log information to a slack channel.
  */
 class Slack extends DestinationBase
 {

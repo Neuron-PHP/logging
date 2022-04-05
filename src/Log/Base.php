@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Class Base
- * @package Neuron\Log
+ * Base log class.
  */
 class Base implements ILogger
 {

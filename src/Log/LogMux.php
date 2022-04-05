@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Class LogMux
- * @package Neuron\Log
+ * Log multiplexer. Allows writing to multiple log destinations simultaneously.
  */
 class LogMux implements ILogger
 {

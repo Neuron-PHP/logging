@@ -1,17 +1,12 @@
 <?php
 
-/**
- * Abstract base class for the device level output destinations.
-*/
-
 namespace Neuron\Log\Destination;
 
 use \Neuron\Log;
 use \Neuron\Log\Format;
 
 /**
- * Class DestinationBase
- * @package Neuron\Log\Destination
+ * Abstract base class for log destinations.
  */
 
 abstract class DestinationBase
