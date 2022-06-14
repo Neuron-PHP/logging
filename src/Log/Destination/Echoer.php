@@ -5,7 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Outputs information using the php echo command. (non stdout)
+ * Outputs log information using the php echo command. (non stdout)
  */
 
 class Echoer extends DestinationBase

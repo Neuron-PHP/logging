@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Interface ILogger
- * @package Neuron\Log
+ * Logger interface.
  */
 
 interface ILogger
@@ -58,4 +57,11 @@ interface ILogger
 	 * @return mixed
 	 */
 	public function fatal( string $Text );
+
+	/**
+	 * @param string $Name
+	 * @param string $Value
+	 * @return mixed
+	 */
+	public function setContext( string $Name, string $Value ) : void;
 }

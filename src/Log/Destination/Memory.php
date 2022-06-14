@@ -4,6 +4,10 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 
+/**
+ * Stores log in formation as a string.
+ * Access via the getData() method.
+ */
 class Memory extends DestinationBase
 {
 	private string $_Data = '';

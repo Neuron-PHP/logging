@@ -5,8 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Class Socket
- * @package Neuron\Log\Destination
+ * Outputs log information to a socket.
  */
 class Socket extends DestinationBase
 {

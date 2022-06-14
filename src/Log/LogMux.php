@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Class LogMux
- * @package Neuron\Log
+ * Log multiplexer. Allows writing to multiple log destinations simultaneously.
  */
 class LogMux implements ILogger
 {
@@ -36,6 +35,16 @@ class LogMux implements ILogger
 	public function getLogs()
 	{
 		return $this->_Logs;
+	}
+
+	public function setContext( string $Name, string $Value ): void
+	{
+		foreach( $this->getLogs() as $Log )
+		{
+			$Log->setContext( $Name, $Value );
+
+			$this->_RunLevel = $Log->getRunLevel();
+		}
 	}
 
 	/**

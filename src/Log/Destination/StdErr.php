@@ -5,13 +5,11 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Class StdErr
- * @package Neuron\Log\Destination
+ * Outputs log information to STDERR.
  */
 
 class StdErr extends DestinationBase
 {
-	private $_StdErr;
 	/**
 	 * @param array $Params
 	 * @return bool
@@ -38,11 +36,11 @@ class StdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data )
 	{
-		if( !defined( 'STDOUT') )
+		if( !defined( 'STDERR') )
 		{
-			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
+			define( 'STDERR', fopen( 'php://stderr', 'w' ) );
 		}
 
-		fwrite( STDOUT, $Text."\r\n" );
+		fwrite( STDERR, $Text."\r\n" );
 	}
 }

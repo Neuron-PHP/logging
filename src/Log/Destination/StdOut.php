@@ -5,8 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Class StdOut
- * @package Neuron\Log\Destination
+ * Outputs log information to STDOUT.
  */
 
 class StdOut extends DestinationBase

@@ -4,6 +4,9 @@ namespace Neuron\Log\Format;
 
 use Neuron\Log;
 
+/**
+ * Formats log data as an html email.
+ */
 class HTMLEmail implements IFormat
 {
 	public function format( Log\Data $Data ): string

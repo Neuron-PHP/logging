@@ -5,7 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Performs to output. Use as dev/null.
+ * Generates no output. Use as dev/null.
  */
 
 class Null

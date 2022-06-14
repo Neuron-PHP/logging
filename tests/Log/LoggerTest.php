@@ -8,7 +8,7 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 	{
 		$this->_Logger = new Neuron\Log\Logger(
 			new Neuron\Log\Destination\Echoer(
-				new Neuron\Log\Format\PlainText()
+				new Neuron\Log\Format\Raw()
 			)
 		);
 	}
@@ -71,4 +71,60 @@ class LoggerTest extends PHPUnit\Framework\TestCase
 		$this->assertTrue( $s == '' );
 
 	}
+
+	public function testSingleContext()
+	{
+		$this->_Logger->setRunLevel( Neuron\Log\ILogger::DEBUG );
+		$test = 'this is a test';
+
+		$this->_Logger->setContext( 'UserId', 1 );
+		ob_start();
+
+		$this->_Logger->log( $test, Neuron\Log\ILogger::INFO );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertEquals( "[UserId=1] ".$test."\r\n", $s );
+
+	}
+
+	public function testMultipleContext()
+	{
+		$this->_Logger->setRunLevel( Neuron\Log\ILogger::DEBUG );
+		$test = 'this is a test';
+
+		$this->_Logger->setContext( 'UserId', 1 );
+		$this->_Logger->setContext( 'SessionId', 2 );
+		ob_start();
+
+		$this->_Logger->log( $test, Neuron\Log\ILogger::INFO );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertEquals( "[UserId=1, SessionId=2] ".$test."\r\n", $s );
+	}
+
+	public function testRemoveContext()
+	{
+		$this->_Logger->setRunLevel( Neuron\Log\ILogger::DEBUG );
+		$test = 'this is a test';
+
+		$this->_Logger->setContext( 'UserId', 1 );
+		$this->_Logger->setContext( 'SessionId', 2 );
+		$this->_Logger->setContext( "UserId", '' );
+		ob_start();
+
+		$this->_Logger->log( $test, Neuron\Log\ILogger::INFO );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertEquals( "[SessionId=2] ".$test."\r\n", $s );
+	}
+
 }

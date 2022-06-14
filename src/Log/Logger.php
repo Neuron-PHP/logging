@@ -5,13 +5,50 @@ namespace Neuron\Log;
 use Neuron\Log\Destination\DestinationBase;
 
 /**
- * Class Logger
- * @package Neuron\Log
+ * Logger implementation.
  */
 class Logger implements ILogger
 {
-	private int $_RunLevel = ILogger::ERROR;
+	private int             $_RunLevel = ILogger::ERROR;
 	private DestinationBase $_Destination;
+	private array           $_Context  = [];
+
+	public function setContext( string $Name, string $Value ) : void
+	{
+		if( !$Value )
+		{
+			unset( $this->_Context[ $Name ] );
+		}
+		else
+		{
+			$this->_Context[ $Name ] = $Value;
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getContextString() : string
+	{
+		$Context = '';
+
+		foreach( $this->_Context as $Name => $Value )
+		{
+			if( strlen( $Context ) )
+			{
+				$Context .= ', ';
+			}
+
+			$Context .= "$Name=$Value";
+		}
+
+		if( $Context )
+		{
+			return "[$Context] ";
+		}
+
+		return "";
+	}
 
 	/**
 	 * @param Destination\DestinationBase $Dest
@@ -120,7 +157,7 @@ class Logger implements ILogger
 	{
 		if( $Level >= $this->getRunLevel() )
 		{
-			$this->getDestination()->log( $Text, $Level );
+			$this->getDestination()->log( $this->getContextString().$Text, $Level );
 		}
 	}
 

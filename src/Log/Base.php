@@ -3,8 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Class Base
- * @package Neuron\Log
+ * Base log class.
  */
 class Base implements ILogger
 {
@@ -17,6 +16,11 @@ class Base implements ILogger
 	public function __construct( ILogger $Logger )
 	{
 		$this->_Logger = $Logger;
+	}
+
+	public function setContext( string $Name, string $Value ): void
+	{
+		$this->_Logger->setContext( $Name, $Value );
 	}
 
 	/**

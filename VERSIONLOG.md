@@ -1,3 +1,6 @@
+## 0.6.7 2022-06-14
+* Added contexts to logging.
+
 ## 0.6.6
 * Fixed an issue with Log\Base.
 
