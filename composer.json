@@ -12,9 +12,9 @@
     "require": {
         "ext-curl": "*",
         "ext-json": "*",
+        "ext-sockets": "*",
         "neuron-php/patterns": "0.5.*",
         "neuron-php/validation": "0.5.*",
-        "ext-sockets": "*",
         "neuron-php/util": "0.5.*"
     },
     "require-dev": {

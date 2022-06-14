@@ -61,3 +61,14 @@ To configure slack:
 
 In this example, any log with a level of ERROR or
 higher will be written to the slack channel.
+
+### Contexts
+
+    Log::setContext( 'UserId', $UserId );
+    Log::setContext( 'SessionId', $SessionId );
+
+    Log::info( "New login." );
+
+Outputs:
+
+[2022-06-03 12:00:00][Info] [UserId=15, SessionId=1234] New Login

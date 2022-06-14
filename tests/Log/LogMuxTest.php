@@ -41,7 +41,7 @@ class LogMuxTest extends PHPUnit\Framework\TestCase
 
 		ob_end_clean();
 
-		$this->assertTrue( strstr( $s, $test ) ? true : false );
+		$this->assertStringContainsString( $test, $s );
 
 		ob_start();
 
@@ -51,7 +51,7 @@ class LogMuxTest extends PHPUnit\Framework\TestCase
 
 		ob_end_clean();
 
-		$this->assertTrue( strstr( $s, "\"text\":\"$test\"" ) ? true : false );
+		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
 	}
 
 	public function testFail()

@@ -18,6 +18,11 @@ class Base implements ILogger
 		$this->_Logger = $Logger;
 	}
 
+	public function setContext( string $Name, string $Value ): void
+	{
+		$this->_Logger->setContext( $Name, $Value );
+	}
+
 	/**
 	 * @return ILogger
 	 */
