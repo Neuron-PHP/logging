@@ -2,7 +2,7 @@
 
 ## Logging
 
-Log to a multitude of unique destinations and formats simultaneously.
+Log to a multitude of unique destinations and formats simultaneously
 
 ### Destinations
 
@@ -24,9 +24,18 @@ Log to a multitude of unique destinations and formats simultaneously.
 * JSon
 * PlainText
 
+## Installation
+
+Install php composer from https://getcomposer.org/
+
+Install the neuron logging component:
+
+    composer require neuron-php/logging
+
 ## Examples
 
-The default log is the Echoer is plain text.
+### Singleton Logger
+The default log is the Echoer using plain text format.
 
 The quickest way to get started is using the singleton
 facade:
@@ -36,7 +45,7 @@ facade:
 
     Log::debug( "Log message." );
     
-
+### Slack
 To configure slack:
 
     $Log = Log::getInstance();
