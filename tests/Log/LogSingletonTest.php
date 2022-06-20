@@ -145,6 +145,5 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 		ob_end_clean();
 
 		$this->assertStringContainsString( $test, $str );
-
 	}
 }
