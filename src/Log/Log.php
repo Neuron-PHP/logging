@@ -12,6 +12,7 @@ use Neuron\Patterns\Singleton\Memory;
 class Log extends Memory
 {
 	public ?ILogger $Logger = null;
+	public array $Mux = [];
 
 	/**
 	 * Creates and initializes the core logger if needed.
@@ -102,5 +103,33 @@ class Log extends Memory
 	public static function fatal( string $Text )
 	{
 		self::_log( $Text, ILogger::FATAL );
+	}
+
+	public static function addToMux( string $Name, ILogger $Logger ) : void
+	{
+		$Log = self::getInstance();
+		$Log->initIfNeeded();
+
+		if( !array_key_exists( $Name, $Log->Mux ) )
+		{
+			$Log->Mux[ $Name ] = new LogMux();
+		}
+
+		$Log->Mux[ $Name ]->addLog( $Logger );
+
+		$Log->serialize();
+	}
+
+	public static function mux( string $Name ) : LogMux
+	{
+		$Log = self::getInstance();
+		$Log->initIfNeeded();
+
+		if( !array_key_exists( $Name, $Log->Mux ) )
+		{
+			$Log->Mux[ $Name ] = new LogMux();
+		}
+
+		return $Log->Mux[ $Name ];
 	}
 }

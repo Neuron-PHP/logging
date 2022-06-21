@@ -1,8 +1,16 @@
 # About Neuron PHP
 
+## Installation
+
+Install php composer from https://getcomposer.org/
+
+Install the neuron logging component:
+
+    composer require neuron-php/logging
+
 ## Logging
 
-Log to a multitude of unique destinations and formats simultaneously.
+A logger writes log entries to a destination using a specific format.
 
 ### Destinations
 
@@ -23,11 +31,25 @@ Log to a multitude of unique destinations and formats simultaneously.
 * HTMLEmail
 * JSon
 * PlainText
+* Raw
+
+## Multiplexer
+
+A LogMux implements the ILogger interface but contains and writes to multiple logs
+simultaneously. Each logger can have a separate run level so only certain logs may
+be written to depending on the log level.
+
+
+## Logger Singleton
+
+The logger singleton is a LogMux wrapper that exists as a singleton/cross cutting concern
+so it can be accessed anywhere in the code base.
+
+The default log is the Echoer using plain text format.
 
 ## Examples
 
-The default log is the Echoer is plain text.
-
+### Logger Singleton
 The quickest way to get started is using the singleton
 facade:
 
@@ -36,7 +58,7 @@ facade:
 
     Log::debug( "Log message." );
     
-
+### Slack
 To configure slack:
 
     $Log = Log::getInstance();
@@ -72,3 +94,28 @@ higher will be written to the slack channel.
 Outputs:
 
 [2022-06-03 12:00:00][Info] [UserId=15, SessionId=1234] New Login
+
+### 
+
+    $Log = Log::getInstance();
+
+    $Slack = new Slack(
+        new PlainText( true )
+    );
+
+    $Slack->open(
+        [
+            'endpoint' => env( 'LOG_SLACK_WEBHOOK_URL' ),
+            'params' => [
+                'channel'  => env( 'LOG_SLACK_CHANNEL' ),
+                'username' => 'Log'
+            ]
+        ]
+    );
+
+    $SlackLogger = new Logger( $Slack );
+    $SlackLogger->setRunLevel( 'info' );
+
+    Log::addToMux( 'RealTime', $SlackLogger );
+
+    Log::mux( 'RealTime' )->info( "Slack notification." );

@@ -1,3 +1,6 @@
+## 0.6.8
+* Added named multiplexors to the singleton logger.
+
 ## 0.6.7 2022-06-14
 * Added contexts to logging.
 
