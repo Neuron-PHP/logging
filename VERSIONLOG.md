@@ -1,3 +1,5 @@
+## 0.6.9
+
 ## 0.6.8
 * Added named multiplexors to the singleton logger.
 
