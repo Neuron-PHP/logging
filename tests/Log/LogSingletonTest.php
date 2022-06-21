@@ -146,4 +146,11 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 		$this->assertStringContainsString( $test, $str );
 	}
+
+	public function testMissingMux()
+	{
+		$this->assertNotNull(
+			Log::mux( 'Missing' )
+		);
+	}
 }

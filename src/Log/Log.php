@@ -110,7 +110,6 @@ class Log extends Memory
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
 
-
 		if( !array_key_exists( $Name, $Log->Mux ) )
 		{
 			$Log->Mux[ $Name ] = new LogMux();
@@ -125,6 +124,11 @@ class Log extends Memory
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
+
+		if( !array_key_exists( $Name, $Log->Mux ) )
+		{
+			$Log->Mux[ $Name ] = new LogMux();
+		}
 
 		return $Log->Mux[ $Name ];
 	}
