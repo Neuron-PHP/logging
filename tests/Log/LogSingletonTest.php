@@ -120,4 +120,37 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 		$this->assertTrue( strstr( $str, $test ) ? true : false );
 	}
+
+	public function testAddMux()
+	{
+		$Log = Log::getInstance();
+		Log::setRunLevel( Neuron\Log\ILogger::INFO );
+
+		$test = 'this is a test';
+
+		$Plain = new \Neuron\Log\Destination\Echoer(
+			new \Neuron\Log\Format\Raw()
+		);
+
+		$PlainLog = new \Neuron\Log\Logger( $Plain );
+		$PlainLog->setRunLevel( \Neuron\Log\ILogger::INFO );
+		Log::addToMux( 'RealTime', $PlainLog );
+
+		ob_start();
+
+		Log::mux( 'RealTime' )->info( $test );
+
+		$str = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $str );
+	}
+
+	public function testMissingMux()
+	{
+		$this->assertNotNull(
+			Log::mux( 'Missing' )
+		);
+	}
 }
