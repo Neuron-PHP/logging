@@ -1,3 +1,6 @@
+## 0.6.9
+* Updated dependencies.
+
 ## 0.6.8
 * Added named multiplexors to the singleton logger.
 
