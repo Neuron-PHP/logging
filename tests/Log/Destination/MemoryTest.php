@@ -1,6 +1,6 @@
 <?php
 
-namespace Log\Destination;
+namespace Tests\Log\Destination;
 use PHPUnit\Framework\TestCase;
 
 use Neuron\Log\Destination\Memory;

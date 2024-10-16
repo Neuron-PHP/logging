@@ -23,7 +23,7 @@ class SysLog extends DestinationBase
 		return true;
 	}
 
-	public function close()
+	public function close(): void
 	{
 		closelog();
 	}
@@ -36,7 +36,7 @@ class SysLog extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		$Level = 0;
 

@@ -3,6 +3,7 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
  * Generates no output. Use as dev/null.
@@ -18,18 +19,9 @@ class Null
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function open( array $Params ) : bool
-	{
-		return true;
-	}
-
-	public function close()
-	{
-	}
-
 	/**
-	 * @param $s
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */

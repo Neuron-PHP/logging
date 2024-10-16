@@ -2,6 +2,7 @@
 
 namespace Neuron\Log;
 
+use Neuron\Log\Filter;
 use Neuron\Log\Destination\DestinationBase;
 
 /**
@@ -9,9 +10,29 @@ use Neuron\Log\Destination\DestinationBase;
  */
 class Logger implements ILogger
 {
-	private int             $_RunLevel = ILogger::ERROR;
-	private DestinationBase $_Destination;
-	private array           $_Context  = [];
+	private int             				$_RunLevel = ILogger::ERROR;
+	private Destination\DestinationBase $_Destination;
+	private array           				$_Context = [];
+
+	/**
+	 * @param Destination\DestinationBase $Dest
+	 */
+	public function __construct( Destination\DestinationBase $Dest )
+	{
+		$this->setDestination( $Dest );
+
+		$this->addFilter( new Filter\RunLevel() );
+	}
+
+	public function addFilter( Filter\IFilter $Filter ): bool
+	{
+		return $this->_Destination->addFilter( $Filter );
+	}
+
+	public function removeFilter( Filter\IFilter $Filter ): bool
+	{
+		return $this->_Destination->removeFilter( $Filter );
+	}
 
 	public function setContext( string $Name, string $Value ) : void
 	{
@@ -53,7 +74,7 @@ class Logger implements ILogger
 	/**
 	 * @param Destination\DestinationBase $Dest
 	 */
-	public function setDestination( Destination\DestinationBase $Dest )
+	public function setDestination( Destination\DestinationBase $Dest ): void
 	{
 		$this->_Destination = $Dest;
 	}
@@ -61,7 +82,7 @@ class Logger implements ILogger
 	/**
 	 * @return mixed
 	 */
-	public function getDestination()
+	public function getDestination(): Destination\DestinationBase
 	{
 		return $this->_Destination;
 	}
@@ -70,7 +91,7 @@ class Logger implements ILogger
 	 * @param string $Text
 	 * @throws \Exception
 	 */
-	public function setRunLevelByText( string $Text )
+	public function setRunLevelByText( string $Text ): void
 	{
 		$Level = self::DEBUG;
 
@@ -105,8 +126,9 @@ class Logger implements ILogger
 
 	/**
 	 * @param $Level
+	 * @throws \Exception
 	 */
-	public function setRunLevel( mixed $Level )
+	public function setRunLevel( mixed $Level ): void
 	{
 		if( is_string( $Level ) )
 		{
@@ -115,6 +137,7 @@ class Logger implements ILogger
 		}
 
 		$this->_RunLevel = (int)$Level;
+		$this->getDestination()->setRunLevel( $Level );
 	}
 
 	/**
@@ -126,17 +149,9 @@ class Logger implements ILogger
 	}
 
 	/**
-	 * @param Destination\DestinationBase $Dest
-	 */
-	public function __construct( Destination\DestinationBase $Dest )
-	{
-		$this->setDestination( $Dest );
-	}
-
-	/**
 	 * @return mixed
 	 */
-	public function open()
+	public function open(): mixed
 	{
 		return $this->getDestination()->open();
 	}
@@ -144,7 +159,7 @@ class Logger implements ILogger
 	/**
 	 *
 	 */
-	public function close()
+	public function close(): void
 	{
 		$this->getDestination()->close();
 	}
@@ -153,18 +168,15 @@ class Logger implements ILogger
 	 * @param string $Text
 	 * @param int $Level
 	 */
-	public function log( string $Text, int $Level )
+	public function log( string $Text, int $Level ): void
 	{
-		if( $Level >= $this->getRunLevel() )
-		{
-			$this->getDestination()->log( $this->getContextString().$Text, $Level );
-		}
+		$this->getDestination()->log( $this->getContextString().$Text, $Level );
 	}
 
 	/**
 	 * @param string $Text
 	 */
-	public function debug( string $Text )
+	public function debug( string $Text ): void
 	{
 		$this->log( $Text, self::DEBUG );
 	}
@@ -172,7 +184,7 @@ class Logger implements ILogger
 	/**
 	 * @param $Text
 	 */
-	public function info( string $Text )
+	public function info( string $Text ): void
 	{
 		$this->log( $Text, self::INFO );
 	}
@@ -180,7 +192,7 @@ class Logger implements ILogger
 	/**
 	 * @param string $Text
 	 */
-	public function warning( string $Text )
+	public function warning( string $Text ): void
 	{
 		$this->log( $Text, self::WARNING );
 	}
@@ -188,7 +200,7 @@ class Logger implements ILogger
 	/**
 	 * @param string $Text
 	 */
-	public function error( string $Text )
+	public function error( string $Text ): void
 	{
 		$this->log( $Text, self::ERROR );
 	}
@@ -196,7 +208,7 @@ class Logger implements ILogger
 	/**
 	 * @param string  $Text
 	 */
-	public function fatal( string $Text )
+	public function fatal( string $Text ): void
 	{
 		$this->log( $Text, self::FATAL );
 	}

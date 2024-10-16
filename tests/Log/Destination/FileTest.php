@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Log\Destination;
+
 use Neuron\Log\Destination\File;
 use PHPUnit\Framework\TestCase;
 

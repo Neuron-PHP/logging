@@ -40,7 +40,7 @@ class Base implements ILogger
 	 * Data is only written to the log based on the loggers run-level.
 	 */
 
-	public function log( string $Text, int $Level = self::DEBUG )
+	public function log( string $Text, int $Level = self::DEBUG ): void
 	{
 		$this->_Logger->log( get_class( $this ).': '.$Text, $Level );
 	}
@@ -49,7 +49,7 @@ class Base implements ILogger
 	 * @param $Level
 	 */
 
-	public function setRunLevel( mixed $Level )
+	public function setRunLevel( mixed $Level ): void
 	{
 		$this->_Logger->setRunLevel( $Level );
 	}
@@ -66,7 +66,7 @@ class Base implements ILogger
 	 * @param $Text
 	 */
 
-	public function debug( string $Text )
+	public function debug( string $Text ): void
 	{
 		$this->_Logger->debug( $Text );
 	}
@@ -75,7 +75,7 @@ class Base implements ILogger
 	 * @param $Text
 	 */
 
-	public function info( string $Text )
+	public function info( string $Text ): void
 	{
 		$this->_Logger->info( $Text );
 	}
@@ -84,7 +84,7 @@ class Base implements ILogger
 	 * @param $Text
 	 */
 
-	public function warning( string $Text )
+	public function warning( string $Text ): void
 	{
 		$this->_Logger->warning( $Text );
 	}
@@ -93,7 +93,7 @@ class Base implements ILogger
 	 * @param $Text
 	 */
 
-	public function error( string $Text )
+	public function error( string $Text ): void
 	{
 		$this->_Logger->error( $Text );
 	}
@@ -102,7 +102,7 @@ class Base implements ILogger
 	 * @param $Text
 	 */
 
-	public function fatal( string $Text )
+	public function fatal( string $Text ): void
 	{
 		$this->_Logger->fatal( $Text );
 	}

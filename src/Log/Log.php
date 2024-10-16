@@ -12,12 +12,12 @@ use Neuron\Patterns\Singleton\Memory;
 class Log extends Memory
 {
 	public ?ILogger $Logger = null;
-	public array $Mux = [];
+	public array $Channels = [];
 
 	/**
 	 * Creates and initializes the core logger if needed.
 	 */
-	public function initIfNeeded()
+	public function initIfNeeded(): void
 	{
 		if( !$this->Logger )
 		{
@@ -39,7 +39,7 @@ class Log extends Memory
 	 * @param string $Text
 	 * @param int $Level
 	 */
-	public static function _log( string $Text, int $Level )
+	public static function _log( string $Text, int $Level ): void
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
@@ -49,7 +49,7 @@ class Log extends Memory
 	/**
 	 * @param int $Level
 	 */
-	public static function setRunLevel( mixed $Level )
+	public static function setRunLevel( mixed $Level ): void
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
@@ -68,7 +68,7 @@ class Log extends Memory
 	/**
 	 * @param string $Text
 	 */
-	public static function debug( string $Text )
+	public static function debug( string $Text ): void
 	{
 		self::_log( $Text, ILogger::DEBUG );
 	}
@@ -76,7 +76,7 @@ class Log extends Memory
 	/**
 	 * @param string $Text
 	 */
-	public static function info( string $Text )
+	public static function info( string $Text ): void
 	{
 		self::_log( $Text, ILogger::INFO );
 	}
@@ -84,7 +84,7 @@ class Log extends Memory
 	/**
 	 * @param string $Text
 	 */
-	public static function warning( string $Text )
+	public static function warning( string $Text ): void
 	{
 		self::_log( $Text, ILogger::WARNING );
 	}
@@ -92,7 +92,7 @@ class Log extends Memory
 	/**
 	 * @param string $Text
 	 */
-	public static function error( string $Text )
+	public static function error( string $Text ): void
 	{
 		self::_log( $Text, ILogger::ERROR );
 	}
@@ -100,36 +100,43 @@ class Log extends Memory
 	/**
 	 * @param string $Text
 	 */
-	public static function fatal( string $Text )
+	public static function fatal( string $Text ): void
 	{
 		self::_log( $Text, ILogger::FATAL );
 	}
 
-	public static function addToMux( string $Name, ILogger $Logger ) : void
+	public static function addChannel( string $Name, ILogger $Logger ) : void
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
 
-		if( !array_key_exists( $Name, $Log->Mux ) )
+		if( !array_key_exists( $Name, $Log->Channels ) )
 		{
-			$Log->Mux[ $Name ] = new LogMux();
+			$Log->Channels[ $Name ] = new LogMux();
 		}
 
-		$Log->Mux[ $Name ]->addLog( $Logger );
+		$Log->Channels[ $Name ]->addLog( $Logger );
 
 		$Log->serialize();
 	}
 
-	public static function mux( string $Name ) : LogMux
+	public static function getChannel( string $Name ) : LogMux
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
 
-		if( !array_key_exists( $Name, $Log->Mux ) )
+		if( !array_key_exists( $Name, $Log->Channels ) )
 		{
-			$Log->Mux[ $Name ] = new LogMux();
+			$Log->Channels[ $Name ] = new LogMux();
 		}
 
-		return $Log->Mux[ $Name ];
+		return $Log->Channels[ $Name ];
+	}
+
+	public static function addFilter( Filter\IFilter $Filter ) : void
+	{
+		$Log = self::getInstance();
+		$Log->initIfNeeded();
+		$Log->Logger->addFilter( $Filter );
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+namespace Tests\Log\Destination;
 
 use Neuron\Log\Destination\WebHookPost;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +19,7 @@ class WebHookPostTest extends TestCase
 				]
 			);
 		}
-		catch( Exception $Exception )
+		catch( \Exception $Exception )
 		{
 			$Fail = true;
 		}

@@ -18,50 +18,53 @@ interface ILogger
 	 * @param string $Text
 	 * @param int $Level
 	 */
-	public function log( string $Text, int $Level );
+	public function log( string $Text, int $Level ): void;
 
 	/**
 	 * @param int $Level
-	 * @return mixed
+	 * @return void
 	 */
-	public function setRunLevel( mixed $Level );
+	public function setRunLevel( mixed $Level ): void;
 
+	/**
+	 * @return int
+	 */
 	public function getRunLevel() : int;
 
 	/**
 	 * @param string $Text
-	 * @return mixed
+	 * @return void
 	 */
-	public function debug( string $Text );
+	public function debug( string $Text ): void;
 
 	/**
 	 * @param string $Text
-	 * @return mixed
+	 * @return void
 	 */
-	public function info( string $Text );
+	public function info( string $Text ): void;
 
 	/**
 	 * @param string $Text
-	 * @return mixed
+	 * @return void
 	 */
-	public function warning( string $Text );
+	public function warning( string $Text ): void;
 
 	/**
 	 * @param string $Text
-	 * @return mixed
+	 * @return void
 	 */
-	public function error( string $Text );
+	public function error( string $Text ): void;
 
 	/**
 	 * @param string $Text
-	 * @return mixed
+	 * @return void
 	 */
-	public function fatal( string $Text );
+	public function fatal( string $Text ): void;
 
 	/**
 	 * @param string $Name
 	 * @param string $Value
-	 * @return mixed
+	 * @return void
 	 */
 	public function setContext( string $Name, string $Value ) : void;
 }

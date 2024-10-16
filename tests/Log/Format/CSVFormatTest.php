@@ -1,7 +1,9 @@
 <?php
-require_once 'tests/Log/Format/LogTestBase.php';
+namespace Tests\Log\Format;
 
-class CSVFormatTest extends \LogTestBase
+use Tests\Log\Format\LogTestBase;
+
+class CSVFormatTest extends LogTestBase
 {
 	public function testFormat()
 	{

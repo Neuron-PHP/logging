@@ -1,8 +1,7 @@
 <?php
+namespace Tests\Log\Format;
 
-namespace Log\Format;
-
-class RawTest extends \LogTestBase
+class RawTest extends LogTestBase
 {
 	public function testFormat()
 	{
