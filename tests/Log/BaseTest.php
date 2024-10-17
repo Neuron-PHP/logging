@@ -5,7 +5,6 @@ namespace Tests\Log;
 use Neuron\Log\Destination\Echoer;
 use Neuron\Log\Format\Raw;
 use Neuron\Log\Base;
-use Neuron\Log\Destination\Memory;
 use Neuron\Log\Logger;
 use PHPUnit\Framework\TestCase;
 

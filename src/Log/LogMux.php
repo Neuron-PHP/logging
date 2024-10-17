@@ -14,11 +14,23 @@ class LogMux implements ILogger
 	 * @param ILogger $Log
 	 */
 
+	/**
+	 * @param ILogger $Log
+	 * @return void
+	 *
+	 * Adds a logger.
+	 */
 	public function addLog( ILogger $Log ): void
 	{
 		$this->_Logs[] = $Log;
 	}
 
+	/**
+	 * @param Filter\IFilter $Filter
+	 * @return bool
+	 *
+	 * Add a filter to all attached loggers destinations.
+	 */
 	public function addFilter( Filter\IFilter $Filter ): bool
 	{
 		$Added  = false;
@@ -31,6 +43,12 @@ class LogMux implements ILogger
 		return $Added;
 	}
 
+	/**
+	 * @param Filter\IFilter $Filter
+	 * @return bool
+	 *
+	 * Removes a filter from all attached loggers destinations.
+	 */
 	public function removeFilter( Filter\IFilter $Filter ): bool
 	{
 		$Removed = false;
@@ -45,7 +63,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * Clears all attached logs.
+	 * Clears all attached logers.
 	 */
 
 	public function reset(): void
@@ -54,7 +72,9 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
+	 *
+	 * Returns an array of all attached loggers.
 	 */
 
 	public function getLogs(): array
@@ -62,6 +82,13 @@ class LogMux implements ILogger
 		return $this->_Logs;
 	}
 
+	/**
+	 * @param string $Name
+	 * @param string $Value
+	 * @return void
+	 *
+	 * Adds context for all loggers.
+	 */
 	public function setContext( string $Name, string $Value ): void
 	{
 		foreach( $this->getLogs() as $Log )

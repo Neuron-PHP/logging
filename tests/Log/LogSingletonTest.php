@@ -124,7 +124,6 @@ class LogSingletonTest extends TestCase
 
 	public function testAddMux()
 	{
-		$Log = Log::getInstance();
 		Log::setRunLevel( \Neuron\Log\ILogger::INFO );
 
 		$test = 'this is a test';
