@@ -1,8 +1,9 @@
 <?php
-
+namespace Tests\Log;
 use Neuron\Log\Log;
+use PHPUnit\Framework\TestCase;
 
-class LogSingletonTest extends PHPUnit\Framework\TestCase
+class LogSingletonTest extends TestCase
 {
 	public function setUp() : void
 	{
@@ -11,12 +12,12 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testPass()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::DEBUG );
+		Log::setRunLevel( \Neuron\Log\ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
 
-		Log::_log( $test, Neuron\Log\ILogger::INFO );
+		Log::_log( $test, \Neuron\Log\ILogger::INFO );
 
 		$str = ob_get_contents();
 
@@ -27,12 +28,12 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testFail()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::INFO );
+		Log::setRunLevel( \Neuron\Log\ILogger::INFO );
 		$test = 'this is a test';
 
 		ob_start();
 
-		Log::_log( $test, Neuron\Log\ILogger::DEBUG );
+		Log::_log( $test, \Neuron\Log\ILogger::DEBUG );
 
 		$str = ob_get_contents();
 
@@ -43,7 +44,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testDebug()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::DEBUG );
+		Log::setRunLevel( \Neuron\Log\ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -59,7 +60,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testInfo()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::INFO );
+		Log::setRunLevel( \Neuron\Log\ILogger::INFO );
 		$test = 'this is a test';
 
 		ob_start();
@@ -75,7 +76,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testWarning()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::WARNING );
+		Log::setRunLevel( \Neuron\Log\ILogger::WARNING );
 		$test = 'this is a test';
 
 		ob_start();
@@ -91,7 +92,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testError()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::ERROR );
+		Log::setRunLevel( \Neuron\Log\ILogger::ERROR );
 		$test = 'this is a test';
 
 		ob_start();
@@ -107,7 +108,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testFatal()
 	{
-		Log::setRunLevel( Neuron\Log\ILogger::FATAL );
+		Log::setRunLevel( \Neuron\Log\ILogger::FATAL );
 		$test = 'this is a test';
 
 		ob_start();
@@ -123,8 +124,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 	public function testAddMux()
 	{
-		$Log = Log::getInstance();
-		Log::setRunLevel( Neuron\Log\ILogger::INFO );
+		Log::setRunLevel( \Neuron\Log\ILogger::INFO );
 
 		$test = 'this is a test';
 
@@ -134,11 +134,11 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 
 		$PlainLog = new \Neuron\Log\Logger( $Plain );
 		$PlainLog->setRunLevel( \Neuron\Log\ILogger::INFO );
-		Log::addToMux( 'RealTime', $PlainLog );
+		Log::addChannel( 'RealTime', $PlainLog );
 
 		ob_start();
 
-		Log::mux( 'RealTime' )->info( $test );
+		Log::getChannel( 'RealTime' )->info( $test );
 
 		$str = ob_get_contents();
 
@@ -150,7 +150,7 @@ class LogSingletonTest extends PHPUnit\Framework\TestCase
 	public function testMissingMux()
 	{
 		$this->assertNotNull(
-			Log::mux( 'Missing' )
+			Log::getChannel( 'Missing' )
 		);
 	}
 }

@@ -25,10 +25,6 @@ class Socket extends DestinationBase
 		return true;
 	}
 
-	public function close()
-	{
-	}
-
 	/**
 	 * @param $sMsg
 	 * @throws \Exception

@@ -2,15 +2,16 @@
 
 namespace Neuron\Log\Destination;
 
-use Neuron\Data\Validation\Url;
 use Neuron\Log;
+use Neuron\Log\Data;
+use Neuron\Validation\Url;
 
 /**
  * Sends log information to a webhook.
  */
 class WebHookPost extends DestinationBase
 {
-	private $_EndPoint;
+	private string $_EndPoint;
 
 	public function open( array $Params ) : bool
 	{
@@ -26,18 +27,14 @@ class WebHookPost extends DestinationBase
 		return true;
 	}
 
-	public function close()
-	{
-	}
-
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		$Hook = new \Neuron\Util\WebHook();
 

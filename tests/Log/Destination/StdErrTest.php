@@ -1,4 +1,5 @@
 <?php
+namespace Tests\Log\Destination;
 
 use Neuron\Log\Destination\StdErr;
 use PHPUnit\Framework\TestCase;

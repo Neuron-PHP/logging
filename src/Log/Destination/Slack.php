@@ -2,9 +2,9 @@
 
 namespace Neuron\Log\Destination;
 
-use Neuron\Data\Validation\Url;
 use Neuron\Log;
 use Neuron\Util\WebHook;
+use Neuron\Validation\Url;
 
 /**
  * Outputs log information to a slack channel.
@@ -39,10 +39,6 @@ class Slack extends DestinationBase
 		$this->_Params  = $Params[ 'params' ];
 
 		return true;
-	}
-
-	public function close()
-	{
 	}
 
 	/**

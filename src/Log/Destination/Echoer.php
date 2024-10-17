@@ -11,21 +11,6 @@ use Neuron\Log;
 class Echoer extends DestinationBase
 {
 	/**
-	 * @param array $Params
-	 * @return bool
-	 *
-	 * @SuppressWarnings(PHPMD)
-	 */
-
-	public function open( array $Params ) : bool
-	{
-		return true;
-	}
-
-	public function close()
-	{}
-
-	/**
 	 * @param $Text
 	 * @param Log\Data $Data
 	 * @return void
@@ -33,7 +18,7 @@ class Echoer extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		echo $Text."\r\n";
 	}

@@ -60,7 +60,7 @@ class File extends DestinationBase
 	 * Closes the open file handle associated with the log file.
 	 */
 
-	public function close()
+	public function close(): void
 	{
 		if( $this->_File )
 		{
@@ -76,7 +76,7 @@ class File extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		fwrite(	$this->_File,
 					"$Text\r\n" );

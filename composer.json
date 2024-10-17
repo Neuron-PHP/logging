@@ -22,7 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Neuron\\": "src/"
+            "Neuron\\": "src/",
+            "Tests\\": "tests/"
         }
     }
 }

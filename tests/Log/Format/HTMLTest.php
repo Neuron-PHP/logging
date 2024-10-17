@@ -1,7 +1,8 @@
 <?php
-require_once 'tests/Log/Format/LogTestBase.php';
 
-class HTMLTest extends \LogTestBase
+namespace Tests\Log\Format;
+
+class HTMLTest extends LogTestBase
 {
 	public function testFormat()
 	{

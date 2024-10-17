@@ -21,6 +21,7 @@ class JSON implements IFormat
 			'level'	=> $Data->LevelText,
 			'text'	=> $Data->Text
 		];
+
 		return json_encode( $aData );
 	}
 }

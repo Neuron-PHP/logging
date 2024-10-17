@@ -1,10 +1,15 @@
+## 0.7.0 2024-10-16
+* Test refactoring.
+* Added logging filters.
+* Renamed mux to channels in log singleton.
+
 ## 0.6.10
 
 ## 0.6.9
 * Updated dependencies.
 
 ## 0.6.8
-* Added named multiplexors to the singleton logger.
+* Added named multiplexers to the singleton logger.
 
 ## 0.6.7 2022-06-14
 * Added contexts to logging.

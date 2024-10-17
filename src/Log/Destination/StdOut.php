@@ -3,6 +3,7 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
  * Outputs log information to STDOUT.
@@ -11,29 +12,14 @@ use Neuron\Log;
 class StdOut extends DestinationBase
 {
 	/**
-	 * @param array $Params
-	 * @return bool
-	 *
-	 * @SuppressWarnings(PHPMD)
-	 */
-
-	public function open( array $Params ) : bool
-	{
-		return true;
-	}
-
-	public function close()
-	{}
-
-	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		if( !defined( 'STDOUT') )
 		{

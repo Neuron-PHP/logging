@@ -1,12 +1,9 @@
 <?php
+namespace Tests\Log\Format;
 
-/**
- * Created by PhpStorm.
- * User: lee
- * Date: 8/13/16
- * Time: 5:48 PM
- */
-class LogTestBase extends PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class LogTestBase extends TestCase
 {
 	const INPUT = 'Test log.';
 	public $Data;

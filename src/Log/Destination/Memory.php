@@ -34,17 +34,10 @@ class Memory extends DestinationBase
 	/**
 	 * @inheritDoc
 	 */
-	protected function write( string $Text, Log\Data $Data )
+	protected function write( string $Text, Log\Data $Data ): void
 	{
 		$this->setData(
 			$this->getData().$Text."\n"
 		);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function open( array $Params ): bool
-	{
 	}
 }
