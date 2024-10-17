@@ -1,3 +1,5 @@
+## 0.7.1
+
 ## 0.7.0 2024-10-16
 * Test refactoring.
 * Added logging filters.
