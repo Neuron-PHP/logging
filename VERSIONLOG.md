@@ -1,4 +1,4 @@
-## 0.7.0
+## 0.7.0 2024-10-16
 * Test refactoring.
 * Added logging filters.
 * Renamed mux to channels in log singleton.
