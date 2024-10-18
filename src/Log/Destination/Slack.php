@@ -49,7 +49,7 @@ class Slack extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		$this->_Params[ 'text' ] = $Text;
 

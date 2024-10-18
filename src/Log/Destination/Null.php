@@ -26,7 +26,7 @@ class Null
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ) : void
 	{
 		// asm nop;
 	}

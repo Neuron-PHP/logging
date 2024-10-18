@@ -46,7 +46,7 @@ class Socket extends DestinationBase
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data )
+	public function write( string $Text, Log\Data $Data ): void
 	{
 		if( !( $sock = socket_create(AF_INET, SOCK_STREAM, 0 ) ) )
 		{
