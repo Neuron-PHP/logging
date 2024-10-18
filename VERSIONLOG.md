@@ -1,3 +1,6 @@
+## 0.7.1 2024-10-18
+* Fix for destination write signatures.
+
 ## 0.7.0 2024-10-16
 * Test refactoring.
 * Added logging filters.
