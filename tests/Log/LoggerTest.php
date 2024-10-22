@@ -153,7 +153,6 @@ class LoggerTest extends TestCase
 		ob_end_clean();
 
 		$this->assertEquals( "[UserId=1] ".$test."\r\n", $s );
-
 	}
 
 	public function testMultipleContext()

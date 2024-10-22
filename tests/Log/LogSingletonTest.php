@@ -10,6 +10,22 @@ class LogSingletonTest extends TestCase
 		parent::setUp();
 	}
 
+	public function testContext()
+	{
+		$test = 'this is a test';
+
+		Log::setContext( 'UserId', 1 );
+		ob_start();
+
+		Log::error( $test );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertStringContainsString( "[UserId=1] ".$test."\r\n", $s );
+	}
+
 	public function testPass()
 	{
 		Log::setRunLevel( \Neuron\Log\ILogger::DEBUG );

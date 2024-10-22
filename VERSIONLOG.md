@@ -1,4 +1,5 @@
-## 0.7.2
+## 0.7.2 2024-10-22
+* Added setContext to the logging singleton.
 
 ## 0.7.1 2024-10-18
 * Fix for destination write signatures.
