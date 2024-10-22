@@ -65,6 +65,14 @@ class Log extends Memory
 		$Log->serialize();
 	}
 
+	public static function setContext( string $Name, string $Value ) : void
+	{
+		$Log = self::getInstance();
+		$Log->initIfNeeded();
+		$Log->Logger->setContext( $Name, $Value );
+		$Log->serialize();
+	}
+
 	/**
 	 * @param string $Text
 	 */
