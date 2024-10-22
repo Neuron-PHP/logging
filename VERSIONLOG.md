@@ -1,3 +1,5 @@
+## 0.7.3
+
 ## 0.7.2 2024-10-22
 * Added setContext to the logging singleton.
 
