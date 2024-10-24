@@ -1,4 +1,5 @@
-## 0.7.3
+## 0.7.3 2024-10-23
+* Refactored destinations and filters to allow access to the parent logger.
 
 ## 0.7.2 2024-10-22
 * Added setContext to the logging singleton.
