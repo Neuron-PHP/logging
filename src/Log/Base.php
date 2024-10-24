@@ -23,6 +23,11 @@ class Base implements ILogger
 		$this->_Logger->setContext( $Name, $Value );
 	}
 
+	public function getContext(): array
+	{
+		return $this->_Logger->getContext();
+	}
+
 	/**
 	 * @return ILogger
 	 */
@@ -40,9 +45,9 @@ class Base implements ILogger
 	 * Data is only written to the log based on the loggers run-level.
 	 */
 
-	public function log( string $Text, int $Level = self::DEBUG ): void
+	public function log( string $Text, int $Level = self::DEBUG, array $Context = [] ): void
 	{
-		$this->_Logger->log( get_class( $this ).': '.$Text, $Level );
+		$this->_Logger->log( get_class( $this ).': '.$Text, $Level, $Context );
 	}
 
 	/**

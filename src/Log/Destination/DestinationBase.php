@@ -14,8 +14,8 @@ use Neuron\Log\ILogger;
 abstract class DestinationBase
 {
 	private Format\IFormat $_Format;
-	private array          $_Filters = [];
-	private int            $_RunLevel = ILogger::ERROR;
+	private array    $_Filters = [];
+	private ?ILogger $_Parent  = null;
 
 
 	/**
@@ -27,9 +27,14 @@ abstract class DestinationBase
 		$this->setFormat( $Format );
 	}
 
-	public function setRunLevel( int $RunLevel ) : void
+	public function setParent( ILogger $Logger ) : void
 	{
-		$this->_RunLevel = $RunLevel;
+		$this->_Parent = $Logger;
+	}
+
+	public function getParent() : ?ILogger
+	{
+		return $this->_Parent;
 	}
 
 	/**
@@ -121,12 +126,13 @@ abstract class DestinationBase
 			time(),
 			$Text,
 			$Level,
-			$this->getLevelText( $Level )
+			$this->getLevelText( $Level ),
+			$this->getParent() ? $this->getParent()->getContext() : []
 		);
 
 		foreach( $this->_Filters as $Filter )
 		{
-			$Log = $Filter->filter( $this->_RunLevel, $Log );
+			$Log = $Filter->filter( $Log );
 			if( !$Log )
 				return;
 		}

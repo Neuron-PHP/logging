@@ -65,11 +65,20 @@ class Log extends Memory
 		$Log->serialize();
 	}
 
+	/**
+	 * @param string $Name
+	 * @param string $Value
+	 * @return void
+	 */
 	public static function setContext( string $Name, string $Value ) : void
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
 		$Log->Logger->setContext( $Name, $Value );
+
+		foreach( $Log->Channels as $Channel )
+			$Channel->setContext( $Name, $Value );
+
 		$Log->serialize();
 	}
 

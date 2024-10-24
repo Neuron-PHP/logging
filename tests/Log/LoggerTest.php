@@ -10,7 +10,7 @@ class LoggerTest extends TestCase
 	{
 		$this->_Logger = new \Neuron\Log\Logger(
 			new \Neuron\Log\Destination\Echoer(
-				new \Neuron\Log\Format\Raw()
+				new \Neuron\Log\Format\PlainText()
 			)
 		);
 	}
@@ -48,7 +48,7 @@ class LoggerTest extends TestCase
 
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO );
+		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO,);
 
 		$s = ob_get_contents();
 
@@ -152,7 +152,7 @@ class LoggerTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertEquals( "[UserId=1] ".$test."\r\n", $s );
+		$this->assertStringContainsString( "(UserId=1) ".$test."\r\n", $s );
 	}
 
 	public function testMultipleContext()
@@ -170,7 +170,7 @@ class LoggerTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertEquals( "[UserId=1, SessionId=2] ".$test."\r\n", $s );
+		$this->assertStringContainsString( "(UserId=1|SessionId=2) ".$test."\r\n", $s );
 	}
 
 	public function testRemoveContext()
@@ -189,7 +189,7 @@ class LoggerTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertEquals( "[SessionId=2] ".$test."\r\n", $s );
+		$this->assertStringContainsString( "(SessionId=2) ".$test."\r\n", $s );
 	}
 
 }

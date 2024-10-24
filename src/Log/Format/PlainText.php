@@ -21,20 +21,47 @@ class PlainText implements IFormat
 		$this->_ShowDate = $ShowDate;
 	}
 
+	protected function getContextString( array $ContextList ) : string
+	{
+		$Context = '';
+
+		foreach( $ContextList as $Name => $Value )
+		{
+			if( strlen( $Context ) )
+			{
+				$Context .= '|';
+			}
+
+			$Context .= "$Name=$Value";
+		}
+
+		if( $Context )
+		{
+			return $Context;
+		}
+
+		return "";
+	}
+
 	/**
 	 * @param Log\Data $Data
 	 * @return string
 	 */
 	public function format( Log\Data $Data ) : string
 	{
-		$output = '';
+		$Output = '';
 
 		if( $this->_ShowDate )
 		{
-			$output .= date( "[Y-m-d G:i:s]", $Data->TimeStamp );
+			$Output .= date( "[Y-m-d G:i:s]", $Data->TimeStamp );
 		}
 
-		return  $output."[$Data->LevelText] $Data->Text";
+		$Context = $this->getContextString( $Data->Context );
+		$Output .= " /$Data->LevelText/ ";
+		if( $Context )
+			$Output .= "({$this->getContextString( $Data->Context )})";
+		
+		return $Output." ".$Data->Text;
 	}
 }
 
