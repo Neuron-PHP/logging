@@ -23,9 +23,33 @@ class LogSingletonTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertStringContainsString( "[UserId=1] ".$test."\r\n", $s );
+		$this->assertStringContainsString( "(UserId=1) ".$test."\r\n", $s );
 	}
 
+	public function testChannelContext()
+	{
+		$Plain = new \Neuron\Log\Destination\Echoer(
+			new \Neuron\Log\Format\PlainText()
+		);
+
+		$PlainLog = new \Neuron\Log\Logger( $Plain );
+		$PlainLog->setRunLevel( \Neuron\Log\ILogger::INFO );
+		Log::addChannel( 'Test', $PlainLog );
+
+		$test = 'this is a test';
+
+		Log::setContext( 'UserId', 1 );
+		ob_start();
+
+		Log::getChannel( 'Test' )->error( $test );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertStringContainsString( "(UserId=1) ".$test."\r\n", $s );
+
+	}
 	public function testPass()
 	{
 		Log::setRunLevel( \Neuron\Log\ILogger::DEBUG );
@@ -39,7 +63,7 @@ class LogSingletonTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertTrue( strstr( $str, $test ) ? true : false );
+		$this->assertTrue( (bool)strstr( $str, $test ) );
 	}
 
 	public function testFail()
@@ -138,7 +162,7 @@ class LogSingletonTest extends TestCase
 		$this->assertTrue( strstr( $str, $test ) ? true : false );
 	}
 
-	public function testAddMux()
+	public function testAddChannel()
 	{
 		Log::setRunLevel( \Neuron\Log\ILogger::INFO );
 
@@ -163,7 +187,7 @@ class LogSingletonTest extends TestCase
 		$this->assertStringContainsString( $test, $str );
 	}
 
-	public function testMissingMux()
+	public function testMissingChannel()
 	{
 		$this->assertNotNull(
 			Log::getChannel( 'Missing' )

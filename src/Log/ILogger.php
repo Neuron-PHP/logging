@@ -67,4 +67,9 @@ interface ILogger
 	 * @return void
 	 */
 	public function setContext( string $Name, string $Value ) : void;
+
+	/**
+	 * @return array
+	 */
+	public function getContext() : array;
 }

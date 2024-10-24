@@ -12,6 +12,7 @@ class Data
 	public string $Text;
 	public int $Level;
 	public string $LevelText;
+	public array $Context;
 
 	/**
 	 * @param int $TimeStamp
@@ -20,11 +21,12 @@ class Data
 	 * @param string $LevelText
 	 */
 
-	public function __construct( int $TimeStamp, string $Text, int $Level, string $LevelText )
+	public function __construct( int $TimeStamp, string $Text, int $Level, string $LevelText, array $Context )
 	{
 		$this->TimeStamp = $TimeStamp;
 		$this->Text      = $Text;
 		$this->Level     = $Level;
 		$this->LevelText = $LevelText;
+		$this->Context   = $Context;
 	}
 }

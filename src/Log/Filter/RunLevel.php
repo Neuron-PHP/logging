@@ -4,19 +4,17 @@ namespace Neuron\Log\Filter;
 
 use Neuron\Log\Data;
 
-class RunLevel implements IFilter
+class RunLevel extends FilterBase
 {
-
 	/**
-	 * @param int $RunLevel
 	 * @param Data $Data
 	 * @return Data|null
 	 *
 	 * Filters on run-level.
 	 */
-	public function filter( int $RunLevel, Data $Data ): Data|null
+	public function filter( Data $Data ): Data|null
 	{
-		if( $Data->Level >= $RunLevel )
+		if( $Data->Level >= $this->getParent()->getRunLevel() )
 			return $Data;
 
 		return null;

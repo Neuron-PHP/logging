@@ -10,6 +10,6 @@ class LogTestBase extends TestCase
 
 	public function setUp() : void
 	{
-		$this->Data = new \Neuron\Log\Data( time(), self::INPUT, \Neuron\Log\ILogger::DEBUG, 'DEBUG' );
+		$this->Data = new \Neuron\Log\Data( time(), self::INPUT, \Neuron\Log\ILogger::DEBUG, 'DEBUG', [] );
 	}
 }

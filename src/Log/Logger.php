@@ -26,6 +26,7 @@ class Logger implements ILogger
 
 	public function addFilter( Filter\IFilter $Filter ): bool
 	{
+		$Filter->setParent( $this );
 		return $this->_Destination->addFilter( $Filter );
 	}
 
@@ -46,29 +47,9 @@ class Logger implements ILogger
 		}
 	}
 
-	/**
-	 * @return string
-	 */
-	protected function getContextString() : string
+	public function getContext() : array
 	{
-		$Context = '';
-
-		foreach( $this->_Context as $Name => $Value )
-		{
-			if( strlen( $Context ) )
-			{
-				$Context .= ', ';
-			}
-
-			$Context .= "$Name=$Value";
-		}
-
-		if( $Context )
-		{
-			return "[$Context] ";
-		}
-
-		return "";
+		return $this->_Context;
 	}
 
 	/**
@@ -76,6 +57,8 @@ class Logger implements ILogger
 	 */
 	public function setDestination( Destination\DestinationBase $Dest ): void
 	{
+		$Dest->setParent( $this );
+
 		$this->_Destination = $Dest;
 	}
 
@@ -137,7 +120,6 @@ class Logger implements ILogger
 		}
 
 		$this->_RunLevel = (int)$Level;
-		$this->getDestination()->setRunLevel( $Level );
 	}
 
 	/**
@@ -170,7 +152,7 @@ class Logger implements ILogger
 	 */
 	public function log( string $Text, int $Level ): void
 	{
-		$this->getDestination()->log( $this->getContextString().$Text, $Level );
+		$this->getDestination()->log( $Text, $Level );
 	}
 
 	/**

@@ -94,8 +94,14 @@ class LogMux implements ILogger
 		foreach( $this->getLogs() as $Log )
 		{
 			$Log->setContext( $Name, $Value );
+		}
+	}
 
-			$this->_RunLevel = $Log->getRunLevel();
+	public function getContext() : array
+	{
+		foreach( $this->getLogs() as $Log )
+		{
+			return $Log->getContext();
 		}
 	}
 
