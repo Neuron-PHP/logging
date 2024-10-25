@@ -135,7 +135,6 @@ class LoggerTest extends TestCase
 		ob_end_clean();
 
 		$this->assertTrue( $s == '' );
-
 	}
 
 	public function testSingleContext()
@@ -173,6 +172,9 @@ class LoggerTest extends TestCase
 		$this->assertStringContainsString( "(UserId=1|SessionId=2) ".$test."\r\n", $s );
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	public function testRemoveContext()
 	{
 		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
@@ -191,5 +193,4 @@ class LoggerTest extends TestCase
 
 		$this->assertStringContainsString( "(SessionId=2) ".$test."\r\n", $s );
 	}
-
 }

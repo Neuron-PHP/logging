@@ -1,3 +1,6 @@
+## 0.7.4 2024-10-25
+* Added slack formatter.
+
 ## 0.7.3 2024-10-23
 * Refactored destinations and filters to allow access to the parent logger.
 
