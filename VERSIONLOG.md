@@ -1,3 +1,5 @@
+## 0.7.5
+
 ## 0.7.4 2024-10-25
 * Added slack formatter.
 
