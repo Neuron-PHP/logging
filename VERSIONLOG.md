@@ -1,3 +1,6 @@
+## 0.7.5 2024-12-13
+* Internal refactoring.
+
 ## 0.7.4 2024-10-25
 * Added slack formatter.
 

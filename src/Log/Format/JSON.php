@@ -5,7 +5,7 @@ namespace Neuron\Log\Format;
 use \Neuron\Log;
 
 /**
- * Formats data as JSON.
+ * Formats log data as JSON.
  */
 
 class JSON implements IFormat

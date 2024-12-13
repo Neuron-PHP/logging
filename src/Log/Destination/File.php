@@ -3,9 +3,10 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
- * Outputs log data to a file.
+ * Appends log data to a file.
  * Use the 'file_name' parameter in the open param array.
  */
 
@@ -24,7 +25,7 @@ class File extends DestinationBase
 	}
 
 	/**
-	 * Returns either the normal file name or, replaced %DATE% with the current date
+	 * Returns either the normal file name or replaces %DATE% with the current date
 	 * for example:
 	 * 2021-06-03.log
 	 *
@@ -46,7 +47,7 @@ class File extends DestinationBase
 	{
 		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );
 
-		$this->_File = @fopen( $this->_Name, 'a' );
+		$this->_File = fopen( $this->_Name, 'a' );
 
 		if( !$this->_File )
 		{
@@ -69,8 +70,8 @@ class File extends DestinationBase
 	}
 
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)

@@ -26,6 +26,11 @@ class Null
 	 * @SuppressWarnings(PHPMD)
 	 */
 
+	/**
+	 * @param string $Text
+	 * @param Data $Data
+	 * @return void
+	 */
 	public function write( string $Text, Log\Data $Data ) : void
 	{
 		// asm nop;

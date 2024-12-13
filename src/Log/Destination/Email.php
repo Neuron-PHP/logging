@@ -5,7 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Sends log information via email.
+ * Sends individual log data via email.
  */
 class Email
 {

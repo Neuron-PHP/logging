@@ -121,6 +121,16 @@ class LogMux implements ILogger
 		}
 	}
 
+	public function setRunLevelText( string $Level )
+	{
+		foreach( $this->getLogs() as $Log )
+		{
+			$Log->setRunLevelText( $Level );
+
+			$this->_RunLevel = $Log->getRunLevel();
+		}
+	}
+
 	/**
 	 * @return int
 	 */

@@ -7,7 +7,7 @@ use Neuron\Log\Data;
 use Neuron\Validation\Url;
 
 /**
- * Sends log information to a webhook.
+ * Sends individual log data to a webhook.
  */
 class WebHookPost extends DestinationBase
 {

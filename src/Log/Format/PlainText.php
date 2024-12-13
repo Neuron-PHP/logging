@@ -5,18 +5,19 @@ namespace Neuron\Log\Format;
 use \Neuron\Log;
 
 /**
- * Formats data as plain text.
+ * Formats log data as plain text.
  */
 
 class PlainText implements IFormat
 {
-	private $_ShowDate;
+	private bool $_ShowDate;
 
 	/**
+	 * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
 	 * PlainText constructor.
 	 * @param bool $ShowDate
 	 */
-	public function __construct( $ShowDate = true )
+	public function __construct( bool $ShowDate = true )
 	{
 		$this->_ShowDate = $ShowDate;
 	}

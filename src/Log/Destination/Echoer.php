@@ -3,16 +3,17 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
- * Outputs log information using the php echo command. (non stdout)
+ * Outputs log data using the php echo command. (non stdout)
  */
 
 class Echoer extends DestinationBase
 {
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)

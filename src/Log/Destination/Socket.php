@@ -3,9 +3,10 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
- * Outputs log information to a socket.
+ * Outputs log data to a socket.
  */
 class Socket extends DestinationBase
 {
@@ -26,7 +27,7 @@ class Socket extends DestinationBase
 	}
 
 	/**
-	 * @param $sMsg
+	 * @param string $sMsg
 	 * @throws \Exception
 	 */
 
@@ -39,10 +40,11 @@ class Socket extends DestinationBase
 	}
 
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
+	 * @throws \Exception
 	 * @SuppressWarnings(PHPMD)
 	 */
 

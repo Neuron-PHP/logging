@@ -3,11 +3,12 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 use Neuron\Util\WebHook;
 use Neuron\Validation\Url;
 
 /**
- * Outputs log information to a slack channel.
+ * Outputs log data to a Slack channel.
  */
 class Slack extends DestinationBase
 {
@@ -42,8 +43,8 @@ class Slack extends DestinationBase
 	}
 
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)

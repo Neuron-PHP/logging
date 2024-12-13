@@ -4,6 +4,9 @@ namespace Neuron\Log\Filter;
 
 use Neuron\Log\Data;
 
+/**
+ * Standard filter that excludes log data based on the data level vs run level.
+ */
 class RunLevel extends FilterBase
 {
 	/**

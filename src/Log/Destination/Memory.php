@@ -5,7 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 
 /**
- * Stores log in formation as a string.
+ * Appends log data to a string.
  * Access via the getData() method.
  */
 class Memory extends DestinationBase
@@ -32,7 +32,9 @@ class Memory extends DestinationBase
 
 
 	/**
-	 * @inheritDoc
+	 * @param string $Text
+	 * @param Log\Data $Data
+	 * @return void
 	 */
 	protected function write( string $Text, Log\Data $Data ): void
 	{

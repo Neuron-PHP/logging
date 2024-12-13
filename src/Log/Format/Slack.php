@@ -5,6 +5,9 @@ namespace Neuron\Log\Format;
 use Neuron\Log;
 use Neuron\Log\Format\IFormat;
 
+/**
+ * Formats log data for Slack.
+ */
 class Slack implements IFormat
 {
 	protected function getContextString( array $ContextList ) : string

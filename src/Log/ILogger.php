@@ -72,4 +72,8 @@ interface ILogger
 	 * @return array
 	 */
 	public function getContext() : array;
+
+	public function reset(): void;
+
+	public function setRunLevelText( string $Level );
 }
