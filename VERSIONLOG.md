@@ -1,3 +1,5 @@
+## 0.7.6
+
 ## 0.7.5 2024-12-13
 * Internal refactoring.
 
