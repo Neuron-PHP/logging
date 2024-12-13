@@ -57,7 +57,7 @@ class LogSingletonTest extends TestCase
 
 		ob_start();
 
-		Log::_log( $test, \Neuron\Log\ILogger::INFO );
+		Log::staticLog( $test, \Neuron\Log\ILogger::INFO );
 
 		$str = ob_get_contents();
 
@@ -73,7 +73,7 @@ class LogSingletonTest extends TestCase
 
 		ob_start();
 
-		Log::_log( $test, \Neuron\Log\ILogger::DEBUG );
+		Log::staticLog( $test, \Neuron\Log\ILogger::DEBUG );
 
 		$str = ob_get_contents();
 

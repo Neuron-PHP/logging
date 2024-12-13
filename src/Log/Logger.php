@@ -2,11 +2,13 @@
 
 namespace Neuron\Log;
 
+use Exception;
 use Neuron\Log\Filter;
 use Neuron\Log\Destination\DestinationBase;
 
 /**
  * Logger implementation.
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Logger implements ILogger
 {
@@ -24,7 +26,7 @@ class Logger implements ILogger
 		$this->addFilter( new Filter\RunLevel() );
 	}
 
-	public function addFilter( Filter\IFilter $Filter ): bool
+	public function addFilter( Filter\FilterBase $Filter ): bool
 	{
 		$Filter->setParent( $this );
 		return $this->_Destination->addFilter( $Filter );
@@ -40,11 +42,10 @@ class Logger implements ILogger
 		if( !$Value )
 		{
 			unset( $this->_Context[ $Name ] );
+			return;
 		}
-		else
-		{
-			$this->_Context[ $Name ] = $Value;
-		}
+
+		$this->_Context[ $Name ] = $Value;
 	}
 
 	public function getContext() : array
@@ -72,16 +73,15 @@ class Logger implements ILogger
 
 	/**
 	 * @param string $Text
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public function setRunLevelByText( string $Text ): void
+	public function setRunLevelText( string $Text ): void
 	{
 		$Level = self::DEBUG;
 
 		switch( strtolower( $Text ) )
 		{
 			case 'debug':
-				$Level = self::DEBUG;
 				break;
 
 			case 'info':
@@ -101,21 +101,21 @@ class Logger implements ILogger
 				break;
 
 			default:
-				throw new \Exception( "Unrecognized run level '$Text'" );
+				throw new Exception( "Unrecognized run level '$Text'" );
 		}
 
 		$this->setRunLevel( $Level );
 	}
 
 	/**
-	 * @param $Level
-	 * @throws \Exception
+	 * @param $Level string|int either the run level or a string representation of it.
+	 * @throws Exception
 	 */
 	public function setRunLevel( mixed $Level ): void
 	{
 		if( is_string( $Level ) )
 		{
-			$this->setRunLevelByText( $Level );
+			$this->setRunLevelText( $Level );
 			return;
 		}
 
@@ -133,9 +133,9 @@ class Logger implements ILogger
 	/**
 	 * @return mixed
 	 */
-	public function open(): mixed
+	public function open( array $Params ): mixed
 	{
-		return $this->getDestination()->open();
+		return $this->getDestination()->open( $Params );
 	}
 
 	/**
@@ -164,7 +164,7 @@ class Logger implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 	public function info( string $Text ): void
 	{
@@ -193,6 +193,10 @@ class Logger implements ILogger
 	public function fatal( string $Text ): void
 	{
 		$this->log( $Text, self::FATAL );
+	}
+
+	public function reset(): void
+	{
 	}
 }
 

@@ -103,6 +103,7 @@ abstract class DestinationBase
 	protected abstract function write( string $Text, Log\Data $Data ): void;
 
 	/**
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 * @param array $Params
 	 * @return mixed
 	 */

@@ -19,6 +19,7 @@ class Data
 	 * @param string $Text
 	 * @param int $Level
 	 * @param string $LevelText
+	 * @param array $Context
 	 */
 
 	public function __construct( int $TimeStamp, string $Text, int $Level, string $LevelText, array $Context )

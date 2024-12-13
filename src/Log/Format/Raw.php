@@ -13,8 +13,8 @@ class Raw implements IFormat
 	/**
 	 * @inheritDoc
 	 */
-	public function format( Log\Data $data ): string
+	public function format( Log\Data $Data ): string
 	{
-		return $data->Text;
+		return $Data->Text;
 	}
 }

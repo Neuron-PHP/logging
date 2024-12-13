@@ -6,7 +6,7 @@ use Neuron\Log;
 use Neuron\Log\Data;
 
 /**
- * Outputs log information to STDERR.
+ * Outputs log data to STDERR.
  */
 
 class StdErr extends DestinationBase

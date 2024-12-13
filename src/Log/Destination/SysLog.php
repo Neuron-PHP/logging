@@ -3,9 +3,10 @@
 namespace Neuron\Log\Destination;
 
 use Neuron\Log;
+use Neuron\Log\Data;
 
 /**
- * Outputs log information to syslog.
+ * Outputs log data to syslog.
  */
 class SysLog extends DestinationBase
 {
@@ -29,8 +30,8 @@ class SysLog extends DestinationBase
 	}
 
 	/**
-	 * @param $Text
-	 * @param Log\Data $Data
+	 * @param string $Text
+	 * @param Data $Data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)

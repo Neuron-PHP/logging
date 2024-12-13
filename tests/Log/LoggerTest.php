@@ -1,5 +1,6 @@
 <?php
 namespace Tests\Log;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase
@@ -15,6 +16,9 @@ class LoggerTest extends TestCase
 		);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSetRunLevelTextPass()
 	{
 		$this->_Logger->setRunLevel( 'info' );
@@ -33,7 +37,7 @@ class LoggerTest extends TestCase
 		{
 			$this->_Logger->setRunLevel( 'fail' );
 		}
-		catch( \Exception $Exception )
+		catch( Exception $Exception )
 		{
 			$Failed = true;
 		}
@@ -173,7 +177,7 @@ class LoggerTest extends TestCase
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function testRemoveContext()
 	{

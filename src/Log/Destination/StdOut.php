@@ -6,7 +6,7 @@ use Neuron\Log;
 use Neuron\Log\Data;
 
 /**
- * Outputs log information to STDOUT.
+ * Outputs log data to STDOUT.
  */
 
 class StdOut extends DestinationBase

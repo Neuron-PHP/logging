@@ -38,11 +38,12 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $ext
-	 * @param $Level
+	 * @param string $Text
+	 * @param int $Level
 	 *
 	 * Writes to the logger. Defaults to debug level.
 	 * Data is only written to the log based on the loggers run-level.
+	 * @param array $Context
 	 */
 
 	public function log( string $Text, int $Level = self::DEBUG, array $Context = [] ): void
@@ -51,12 +52,17 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Level
+	 * @param mixed $Level
 	 */
 
 	public function setRunLevel( mixed $Level ): void
 	{
 		$this->_Logger->setRunLevel( $Level );
+	}
+
+	public function setRunLevelText( mixed $Level ): void
+	{
+		$this->_Logger->setRunLevelText( $Level );
 	}
 
 	/**
@@ -68,7 +74,7 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function debug( string $Text ): void
@@ -77,7 +83,7 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function info( string $Text ): void
@@ -86,7 +92,7 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function warning( string $Text ): void
@@ -95,7 +101,7 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function error( string $Text ): void
@@ -104,11 +110,15 @@ class Base implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function fatal( string $Text ): void
 	{
 		$this->_Logger->fatal( $Text );
+	}
+
+	public function reset(): void
+	{
 	}
 }
