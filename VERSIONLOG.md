@@ -1,3 +1,5 @@
+## 0.7.7
+
 ## 0.7.6 2024-12-16
 * Updated core packages.
 
