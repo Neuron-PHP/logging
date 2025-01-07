@@ -1,4 +1,5 @@
 ## 0.7.8
+* Added StdOutStdError destination.
 
 ## 0.7.7
 ## 0.7.6 2024-12-16
