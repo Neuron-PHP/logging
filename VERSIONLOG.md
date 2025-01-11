@@ -1,6 +1,8 @@
 ## 0.7.8
 * Added StdOutStdError destination.
 * Updated documentation.
+* Added error handling to the socket destination.
+* Refactored formats to better handle contexts.
 
 ## 0.7.7
 ## 0.7.6 2024-12-16

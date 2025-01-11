@@ -8,7 +8,7 @@ use \Neuron\Log;
  * Formats log data as JSON.
  */
 
-class JSON implements IFormat
+class JSON extends Base
 {
 	/**
 	 * @param Log\Data $Data
@@ -17,9 +17,10 @@ class JSON implements IFormat
 	public function format( Log\Data $Data ) : string
 	{
 		$aData = [
-			'date'	=> date( "Y-m-d G:i:s", $Data->TimeStamp ),
-			'level'	=> $Data->LevelText,
-			'text'	=> $Data->Text
+			'date'	 => date( "Y-m-d G:i:s", $Data->TimeStamp ),
+			'level'	 => $Data->LevelText,
+			'context' => $this->getContextString( $Data->Context ),
+			'text'	 => $Data->Text
 		];
 
 		return json_encode( $aData );

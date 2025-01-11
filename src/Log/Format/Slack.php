@@ -8,30 +8,8 @@ use Neuron\Log\Format\IFormat;
 /**
  * Formats log data for Slack.
  */
-class Slack implements IFormat
+class Slack extends Base
 {
-	protected function getContextString( array $ContextList ) : string
-	{
-		$Context = '';
-
-		foreach( $ContextList as $Name => $Value )
-		{
-			if( strlen( $Context ) )
-			{
-				$Context .= '|';
-			}
-
-			$Context .= "$Name=$Value";
-		}
-
-		if( $Context )
-		{
-			return $Context;
-		}
-
-		return "";
-	}
-
 	/**
 	 * @inheritDoc
 	 */

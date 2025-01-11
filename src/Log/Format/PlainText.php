@@ -8,7 +8,7 @@ use \Neuron\Log;
  * Formats log data as plain text.
  */
 
-class PlainText implements IFormat
+class PlainText extends Base
 {
 	private bool $_ShowDate;
 
@@ -20,28 +20,6 @@ class PlainText implements IFormat
 	public function __construct( bool $ShowDate = true )
 	{
 		$this->_ShowDate = $ShowDate;
-	}
-
-	protected function getContextString( array $ContextList ) : string
-	{
-		$Context = '';
-
-		foreach( $ContextList as $Name => $Value )
-		{
-			if( strlen( $Context ) )
-			{
-				$Context .= '|';
-			}
-
-			$Context .= "$Name=$Value";
-		}
-
-		if( $Context )
-		{
-			return $Context;
-		}
-
-		return "";
 	}
 
 	/**
