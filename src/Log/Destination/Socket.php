@@ -54,19 +54,27 @@ class Socket extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		if( !( $sock = socket_create(AF_INET, SOCK_STREAM, 0 ) ) )
+		try
 		{
-			$this->error( 'Could not create socket' );
-		}
+			if( !( $sock = socket_create(AF_INET, SOCK_STREAM, 0 ) ) )
+			{
+				$this->error( 'Could not create socket' );
+			}
 
-		if( !socket_connect($sock , $this->_Address , $this->_Port ) )
-		{
-			$this->error( 'Could not connect' );
-		}
+			if( !socket_connect($sock , $this->_Address , $this->_Port ) )
+			{
+				$this->error( 'Could not connect' );
+			}
 
-		if( !socket_send ( $sock , $Text, strlen( $Text ) , 0))
+			if( !socket_send ( $sock , $Text, strlen( $Text ) , 0))
+			{
+				$this->error( 'Write failed' );
+			}
+		}
+		catch( \Exception $e )
 		{
-			$this->error( 'Write failed' );
+			// Ignore errors
+			return;
 		}
 	}
 }
