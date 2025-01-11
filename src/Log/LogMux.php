@@ -3,7 +3,7 @@
 namespace Neuron\Log;
 
 /**
- * Log multiplexer. Allows writing to multiple log destinations simultaneously.
+ * Log multiplexer. Allows writing to multiple logs simultaneously.
  */
 class LogMux implements ILogger
 {
@@ -26,10 +26,10 @@ class LogMux implements ILogger
 	}
 
 	/**
+	 * Add a filter to all attached loggers destinations.
+	 *
 	 * @param Filter\IFilter $Filter
 	 * @return bool
-	 *
-	 * Add a filter to all attached loggers destinations.
 	 */
 	public function addFilter( Filter\IFilter $Filter ): bool
 	{
@@ -44,10 +44,10 @@ class LogMux implements ILogger
 	}
 
 	/**
+	 * Removes a filter from all attached loggers destinations.
+	 *
 	 * @param Filter\IFilter $Filter
 	 * @return bool
-	 *
-	 * Removes a filter from all attached loggers destinations.
 	 */
 	public function removeFilter( Filter\IFilter $Filter ): bool
 	{
@@ -63,7 +63,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * Clears all attached logers.
+	 * Clears all attached loggers.
 	 */
 
 	public function reset(): void
@@ -72,9 +72,9 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @return array
-	 *
 	 * Returns an array of all attached loggers.
+	 *
+	 * @return array
 	 */
 
 	public function getLogs(): array
@@ -83,11 +83,11 @@ class LogMux implements ILogger
 	}
 
 	/**
+	 * Adds context for all loggers.
+	 *
 	 * @param string $Name
 	 * @param string $Value
 	 * @return void
-	 *
-	 * Adds context for all loggers.
 	 */
 	public function setContext( string $Name, string $Value ): void
 	{
@@ -97,6 +97,11 @@ class LogMux implements ILogger
 		}
 	}
 
+	/**
+	 * Returns an array of all contexts.
+	 *
+	 * @return array
+	 */
 	public function getContext() : array
 	{
 		foreach( $this->getLogs() as $Log )
@@ -106,9 +111,9 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @param $Level
-	 *
 	 * Sync run levels for all loggers.
+	 *
+	 * @param mixed $Level
 	 */
 
 	public function setRunLevel( mixed $Level ): void
@@ -121,7 +126,7 @@ class LogMux implements ILogger
 		}
 	}
 
-	public function setRunLevelText( string $Level )
+	public function setRunLevelText( string $Level ): void
 	{
 		foreach( $this->getLogs() as $Log )
 		{
@@ -139,10 +144,11 @@ class LogMux implements ILogger
 		return $this->_RunLevel;
 	}
 
-	//region ILogger
+	// region ILogger
+
 	/**
-	 * @param $Text
-	 * @param $Level
+	 * @param string $Text
+	 * @param int $Level
 	 */
 
 	public function log( string $Text, int $Level ): void
@@ -154,7 +160,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function debug( string $Text ): void
@@ -163,7 +169,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function info( string $Text ): void
@@ -172,7 +178,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function warning( string $Text ): void
@@ -181,7 +187,7 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @param $Text
+	 * @param string $Text
 	 */
 
 	public function error( string $Text ): void
@@ -197,5 +203,5 @@ class LogMux implements ILogger
 	{
 		$this->log( $Text, self::FATAL );
 	}
-	//endregion
+	// endregion
 }

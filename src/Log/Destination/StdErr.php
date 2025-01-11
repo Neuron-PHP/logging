@@ -21,11 +21,6 @@ class StdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		if( !defined( 'STDERR') )
-		{
-			define( 'STDERR', fopen( 'php://stderr', 'w' ) );
-		}
-
 		fwrite( STDERR, $Text."\r\n" );
 	}
 }

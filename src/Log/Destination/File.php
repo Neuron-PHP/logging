@@ -43,6 +43,10 @@ class File extends DestinationBase
 	 * @return bool
 	 */
 
+	/**
+	 * @param array $Params [ 'file_name' => string ]
+	 * @return bool
+	 */
 	public function open( array $Params ) : bool
 	{
 		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );

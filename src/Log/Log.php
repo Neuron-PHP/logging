@@ -7,7 +7,7 @@ use Neuron\Log\Format\PlainText;
 use Neuron\Patterns\Singleton\Memory;
 
 /**
- * Singleton for cross cutting log access.
+ * Singleton for cross-cutting log access.
  */
 class Log extends Memory
 {

@@ -14,10 +14,14 @@ class Socket extends DestinationBase
 	private int    $_Port;
 
 	/**
+	 * Configure the socket.
+	 * Parameters:
+	 * ip_address - IP address of the socket.
+	 * port       - Port of the socket.
+	 *
 	 * @param array $Params
 	 * @return bool
 	 */
-
 	public function open( array $Params ) : bool
 	{
 		$this->_Address = $Params[ 'ip_address' ];

@@ -21,11 +21,6 @@ class StdOut extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		if( !defined( 'STDOUT') )
-		{
-			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
-		}
-
 		fwrite( STDOUT, $Text."\r\n" );
 	}
 }

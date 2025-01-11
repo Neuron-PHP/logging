@@ -6,13 +6,15 @@ use Neuron\Log;
 use Neuron\Log\Data;
 
 /**
- * Outputs debug, info and warn to stdout.
- * Outputs error and fatal to stderr.
+ * Outputs debug, info and warn to STDOUT.
+ * Outputs error and fatal to STDERR.
  */
 
 class StdOutStdErr extends DestinationBase
 {
 	/**
+	 * Writes log data to stdout or stderr.
+	 *
 	 * @param string $Text
 	 * @param Data $Data
 	 * @return void
@@ -22,16 +24,6 @@ class StdOutStdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		if( !defined( 'STDERR') )
-		{
-			define( 'STDERR', fopen( 'php://stderr', 'w' ) );
-		}
-
-		if( !defined( 'STDOUT') )
-		{
-			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
-		}
-
 		if( $Data->Level < Log\ILogger::ERROR )
 		{
 			fwrite( STDOUT, $Text."\r\n" );

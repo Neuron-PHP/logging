@@ -3,11 +3,9 @@
 namespace Neuron\Log;
 
 use Exception;
-use Neuron\Log\Filter;
-use Neuron\Log\Destination\DestinationBase;
 
 /**
- * Logger implementation.
+ * Single Logger implementation.
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Logger implements ILogger
