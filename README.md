@@ -1,4 +1,7 @@
-# About Neuron PHP
+[![Build Status](https://app.travis-ci.com/Neuron-PHP/logging.svg?token=F8zCwpT7x7Res7J2N4vF&branch=master)](https://app.travis-ci.com/Neuron-PHP/logging)
+# Neuron-PHP Logging
+
+## Overview
 
 ## Installation
 
@@ -125,3 +128,7 @@ Channels are independent loggers that can be accessed by name.
     // Write directly to slack an any time..
 
     Log::getChannel( 'RealTime' )->info( "Slack notification." );
+
+# More Information
+
+You can read more about the Neuron components at [neuronphp.com](http://neuronphp.com)
