@@ -13,6 +13,11 @@ class WebHookPost extends DestinationBase
 {
 	private string $_EndPoint;
 
+	/**
+	 * @param array $Params [ 'endpoint' => string ]
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function open( array $Params ) : bool
 	{
 		$Validator = new Url();

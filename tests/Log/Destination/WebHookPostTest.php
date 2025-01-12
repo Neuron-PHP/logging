@@ -1,14 +1,16 @@
 <?php
 namespace Tests\Log\Destination;
 
+use Exception;
 use Neuron\Log\Destination\WebHookPost;
+use Neuron\Log\Format\CSV;
 use PHPUnit\Framework\TestCase;
 
 class WebHookPostTest extends TestCase
 {
 	public function testOpenFail()
 	{
-		$Post = new WebHookPost( new \Neuron\Log\Format\CSV() );
+		$Post = new WebHookPost( new CSV() );
 
 		$Fail = false;
 		try
@@ -29,7 +31,7 @@ class WebHookPostTest extends TestCase
 
 	public function testOpenPass()
 	{
-		$Post = new WebHookPost( new \Neuron\Log\Format\CSV() );
+		$Post = new WebHookPost( new CSV() );
 
 		$Fail = false;
 		try
@@ -40,7 +42,7 @@ class WebHookPostTest extends TestCase
 				]
 			);
 		}
-		catch( Exception $Exception )
+		catch( \Exception $Exception )
 		{
 			$Fail = true;
 		}

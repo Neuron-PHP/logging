@@ -1,11 +1,13 @@
 <?php
 namespace Tests\Log\Format;
 
+use Neuron\Log\Format\JSON;
+
 class JSONTest extends LogTestBase
 {
 	public function testFormat()
 	{
-		$Json = new \Neuron\Log\Format\JSON();
+		$Json = new JSON();
 
 		$out = $Json->format( $this->Data );
 

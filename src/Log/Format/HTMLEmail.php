@@ -7,7 +7,7 @@ use Neuron\Log;
 /**
  * Formats log data as an html email.
  */
-class HTMLEmail implements IFormat
+class HTMLEmail extends Base
 {
 	public function format( Log\Data $Data ): string
 	{
@@ -23,6 +23,7 @@ class HTMLEmail implements IFormat
 					<table>
 						<tr><td>Time</td><td>'.date( "[Y-m-d G:i:s]", $Data->TimeStamp ).'</td></tr>
 						<tr><td>Type</td><td>'.$Data->LevelText.'</td></tr>
+						<tr><td>Context</td><td>'.$this->getContextString( $Data->Context ).'</td></tr>
 						<tr><td>Text</td><td>'.$Data->Text.'</td></tr>
 					</table>
 				</body>

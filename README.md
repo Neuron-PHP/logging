@@ -1,4 +1,7 @@
-# About Neuron PHP
+[![Build Status](https://app.travis-ci.com/Neuron-PHP/logging.svg?token=F8zCwpT7x7Res7J2N4vF&branch=master)](https://app.travis-ci.com/Neuron-PHP/logging)
+# Neuron-PHP Logging
+
+## Overview
 
 ## Installation
 
@@ -17,11 +20,14 @@ A logger writes log entries to a destination using a specific format.
 * Echo
 * Email
 * File
+* Memory
 * Null
 * Slack
 * Socket
 * StErr
 * StdOut
+* StdOutStdErr
+* SysLog
 * Webhook
 
 ### Formats
@@ -29,20 +35,21 @@ A logger writes log entries to a destination using a specific format.
 * CSV
 * HTML
 * HTMLEmail
-* JSon
+* JSON
 * PlainText
 * Raw
+* Slack
 
 ## Multiplexer
 
 A LogMux implements the ILogger interface but contains and writes to multiple logs
-simultaneously. Each logger can have a separate run level so only certain logs may
-be written to depending on the log level.
+simultaneously. Each Logger can have a separate run level so only certain logs may
+be written to depending on the run level of the independent Logger.
 
 
 ## Logger Singleton
 
-The logger singleton is a LogMux wrapper that exists as a singleton/cross cutting concern
+The logger singleton is a LogMux wrapper that exists as a singleton/cross-cutting concern
 so it can be accessed anywhere in the code base.
 
 The default log is the Echoer using plain text format.
@@ -53,9 +60,7 @@ The default log is the Echoer using plain text format.
 The quickest way to get started is using the singleton
 facade:
 
-    // Optionally set the runlevel..
     Log::setRunLevel( 'debug' );
-
     Log::debug( "Log message." );
     
 ### Slack
@@ -93,9 +98,11 @@ higher will be written to the slack channel.
 
 Outputs:
 
-[2022-06-03 12:00:00][Info] [UserId=15, SessionId=1234] New Login
+[2022-06-03 12:00:00][Info] [UserId=15, SessionId=1234] New Login.
 
-### 
+### Channels
+
+Channels are independent loggers that can be accessed by name.
 
     $Log = Log::getInstance();
 
@@ -116,6 +123,12 @@ Outputs:
     $SlackLogger = new Logger( $Slack );
     $SlackLogger->setRunLevel( 'info' );
 
-    Log::addToMux( 'RealTime', $SlackLogger );
+    Log::addChannel( 'RealTime', $SlackLogger );
 
-    Log::mux( 'RealTime' )->info( "Slack notification." );
+    // Write directly to slack an any time..
+
+    Log::getChannel( 'RealTime' )->info( "Slack notification." );
+
+# More Information
+
+You can read more about the Neuron components at [neuronphp.com](http://neuronphp.com)

@@ -16,15 +16,22 @@ class Slack extends DestinationBase
 	private array $_Params;
 
 	/**
-	 * 'channel'     => $channel,
-	 * 'username'    => $bot_name,
-	 * 'text'        => $message,
-	 * 'icon_emoji'  => $icon,
-	 * 'attachments' => $attachments
+	 * Setup slack logging.
 	 *
-	 * @param array $Params
+	 * ```
+	 * [
+	 *    'endpoint' => 'Slack webhook url',
+	 *    'params' => [
+	 *        'channel' => 'Slack channel',
+	 *        'username' => 'Slack user/bot name',
+	 *        'text' => 'Slack message',
+	 *        'icon_emoji' => 'Slack emoji icon',
+	 *        'attachments' => 'Slack attachments'
+	 *    ]
+	 * ]
+	 * ```
+	 * @param array{endpoint: string, params: array{channel: string, username: string, text: string, icon_emoji?: string, attachments?: array}} $Params
 	 * @return bool
-	 *
 	 * @throws \Exception
 	 */
 	public function open( array $Params ) : bool

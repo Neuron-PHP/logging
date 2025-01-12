@@ -15,7 +15,7 @@ class CSVFormatTest extends LogTestBase
 
 		$this->assertEquals(
 			count( $aParts ),
-			3
+			4
 		);
 	}
 }

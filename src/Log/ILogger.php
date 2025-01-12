@@ -27,6 +27,13 @@ interface ILogger
 	public function setRunLevel( mixed $Level ): void;
 
 	/**
+	 * Sets the run level by text.
+	 * Valid values are: debug, info, warning, error, fatal
+	 * @param string $Level
+	 */
+	public function setRunLevelText( string $Level );
+
+	/**
 	 * @return int
 	 */
 	public function getRunLevel() : int;
@@ -62,6 +69,8 @@ interface ILogger
 	public function fatal( string $Text ): void;
 
 	/**
+	 * Add a context value to the log. Contexts are prepended to each log entry.
+	 *
 	 * @param string $Name
 	 * @param string $Value
 	 * @return void
@@ -74,6 +83,4 @@ interface ILogger
 	public function getContext() : array;
 
 	public function reset(): void;
-
-	public function setRunLevelText( string $Level );
 }

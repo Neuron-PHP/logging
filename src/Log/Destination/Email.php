@@ -18,6 +18,10 @@ class Email
 	 * @return bool
 	 */
 
+	/**
+	 * @param array $Params [ 'to' => string, 'from' => string, 'subject' => string ]
+	 * @return bool
+	 */
 	public function open( array $Params ) : bool
 	{
 		$this->_To      = $Params[ 'to' ];
