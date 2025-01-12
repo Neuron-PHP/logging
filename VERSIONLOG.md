@@ -1,3 +1,5 @@
+## 0.7.9
+
 ## 0.7.8
 * Added StdOutStdError destination.
 * Updated documentation.
