@@ -1,17 +1,20 @@
 <?php
 namespace Tests\Log;
 use Exception;
+use Neuron\Log\Destination\Echoer;
+use Neuron\Log\Format\PlainText;
+use Neuron\Log\Logger;
 use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase
 {
-	public $_Logger;
+	public Logger $_Logger;
 
 	public function setUp() : void
 	{
-		$this->_Logger = new \Neuron\Log\Logger(
-			new \Neuron\Log\Destination\Echoer(
-				new \Neuron\Log\Format\PlainText()
+		$this->_Logger = new Logger(
+			new Echoer(
+				new PlainText()
 			)
 		);
 	}
@@ -45,6 +48,74 @@ class LoggerTest extends TestCase
 		$this->assertTrue( $Failed );
 	}
 
+	public function testDebug()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'debug' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testWarning()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'warning' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testError()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'error' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testFatal()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'fatal' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
 	public function testDebugPass()
 	{
 		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
@@ -52,13 +123,13 @@ class LoggerTest extends TestCase
 
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO,);
+		$this->_Logger->debug( $test);
 
 		$s = ob_get_contents();
 
 		ob_end_clean();
 
-		$this->assertTrue( strstr( $s, $test ) ? true : false );
+		$this->assertTrue( (bool)strstr( $s, $test ) );
 	}
 
 	public function testInfoPass()
@@ -139,6 +210,27 @@ class LoggerTest extends TestCase
 		ob_end_clean();
 
 		$this->assertTrue( $s == '' );
+	}
+
+	public function testOpenPass()
+	{
+		$this->assertTrue(
+			$this->_Logger->open( [] )
+		);
+	}
+
+	public function testResetPass()
+	{
+		$this->_Logger->reset();
+
+		$this->assertTrue( true );
+	}
+
+	public function testClosePass()
+	{
+		$this->_Logger->close();
+
+		$this->assertTrue( true );
 	}
 
 	public function testSingleContext()

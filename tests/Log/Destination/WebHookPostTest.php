@@ -2,8 +2,10 @@
 namespace Tests\Log\Destination;
 
 use Exception;
+use Neuron\Log\Data;
 use Neuron\Log\Destination\WebHookPost;
 use Neuron\Log\Format\CSV;
+use Neuron\Log\ILogger;
 use PHPUnit\Framework\TestCase;
 
 class WebHookPostTest extends TestCase
@@ -50,4 +52,34 @@ class WebHookPostTest extends TestCase
 		$this->assertFalse( $Fail );
 	}
 
+	public function testWrite()
+	{
+		$Post = new WebHookPost( new CSV() );
+
+		$Fail = false;
+		try
+		{
+			$Post->open(
+				[
+					'endpoint' => 'http://www.example.org'
+				]
+			);
+		}
+		catch( \Exception $Exception )
+		{
+			$Fail = true;
+		}
+
+		$this->assertFalse( $Fail );
+
+		$Data = new Data(
+			time(),
+			'test',
+			ILogger::INFO,
+			'info',
+			[]
+		);
+
+		$Post->write( 'test', $Data );
+	}
 }

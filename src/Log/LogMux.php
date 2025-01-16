@@ -108,6 +108,8 @@ class LogMux implements ILogger
 		{
 			return $Log->getContext();
 		}
+
+		return [];
 	}
 
 	/**

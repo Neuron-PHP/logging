@@ -4,6 +4,7 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 use Neuron\Log\Data;
+use Neuron\Util\WebHook;
 use Neuron\Validation\Url;
 
 /**
@@ -41,7 +42,7 @@ class WebHookPost extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		$Hook = new \Neuron\Util\WebHook();
+		$Hook = new WebHook();
 
 		$Hook->post(
 			$this->_EndPoint,

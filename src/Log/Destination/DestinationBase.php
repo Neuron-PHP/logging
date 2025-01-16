@@ -6,6 +6,7 @@ use \Neuron\Log;
 use \Neuron\Log\Format;
 use \Neuron\Log\Filter;
 use Neuron\Log\ILogger;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Abstract base class for log destinations.
@@ -92,7 +93,7 @@ abstract class DestinationBase
 				return "Fatal";
 
 			default:
-				return "Unknown";
+				throw new Exception( "Unknown log level: $Level" );
 		}
 	}
 
