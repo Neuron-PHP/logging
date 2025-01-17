@@ -13,8 +13,12 @@ class EchoerTest extends TestCase
 	{
 		$File = new Echoer( new PlainText() );
 
+		ob_start();
 		$File->log( "Test", ILogger::ERROR );
 
-		$this->assertTrue( true );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( 'Test', $s );
 	}
 }

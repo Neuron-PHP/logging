@@ -111,7 +111,6 @@ class SysLogTest extends TestCase
 			[]
 		);
 
-
 		$File->write( "Test", $Data );
 		$this->assertTrue( true );
 	}

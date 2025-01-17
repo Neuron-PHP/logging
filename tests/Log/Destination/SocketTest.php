@@ -41,4 +41,21 @@ class SocketTest extends TestCase
 
 		$Socket->close();
 	}
+
+	public function testError()
+	{
+		$Pass = false;
+		$Socket = new Socket( new JSON() );
+
+		try
+		{
+			$Socket->error( 'Test' );
+		}
+		catch( \Exception $e )
+		{
+			$Pass = true;
+		}
+
+		$this->assertTrue( $Pass );
+	}
 }

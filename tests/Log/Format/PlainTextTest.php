@@ -1,11 +1,13 @@
 <?php
 namespace Tests\Log\Format;
 
+use Neuron\Log\Format\PlainText;
+
 class PlainTextTest extends LogTestBase
 {
 	public function testFormat()
 	{
-		$Text = new \Neuron\Log\Format\PlainText();
+		$Text = new PlainText();
 
 		$out = $Text->format( $this->Data );
 
