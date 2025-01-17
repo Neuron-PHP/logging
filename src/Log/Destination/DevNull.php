@@ -9,23 +9,8 @@ use Neuron\Log\Data;
  * Generates no output. Use as dev/null.
  */
 
-class Null
-	extends DestinationBase
+class DevNull extends DestinationBase
 {
-	/**
-	 * @param array $Params
-	 * @return bool
-	 *
-	 * @SuppressWarnings(PHPMD)
-	 */
-
-	/**
-	 * @param string $Text
-	 * @param Data $Data
-	 *
-	 * @SuppressWarnings(PHPMD)
-	 */
-
 	/**
 	 * @param string $Text
 	 * @param Data $Data

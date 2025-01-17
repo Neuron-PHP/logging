@@ -51,7 +51,7 @@ class File extends DestinationBase
 	{
 		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );
 
-		$this->_File = fopen( $this->_Name, 'a' );
+		$this->_File = @fopen( $this->_Name, 'a' );
 
 		if( !$this->_File )
 		{

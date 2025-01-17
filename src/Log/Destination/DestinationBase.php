@@ -18,7 +18,6 @@ abstract class DestinationBase
 	private array    $_Filters = [];
 	private ?ILogger $_Parent  = null;
 
-
 	/**
 	 * @param Format\IFormat $Format
 	 */
@@ -45,7 +44,6 @@ abstract class DestinationBase
 			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
 		}
 	}
-
 
 	/**
 	 * Sets the parent logger.
