@@ -21,6 +21,6 @@ class StdOut extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		fwrite( STDOUT, $Text."\r\n" );
+		fwrite( $this->getStdOut(), $Text."\r\n" );
 	}
 }

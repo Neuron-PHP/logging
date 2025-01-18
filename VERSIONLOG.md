@@ -1,5 +1,5 @@
 ## 0.7.10
-* Updated tests.
+* Updated tests to 100% coverage.
 
 ## 0.7.9
 

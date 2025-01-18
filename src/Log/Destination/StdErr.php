@@ -21,6 +21,6 @@ class StdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		fwrite( STDERR, $Text."\r\n" );
+		fwrite( $this->getStdErr(), $Text."\r\n" );
 	}
 }

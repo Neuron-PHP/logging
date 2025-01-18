@@ -21,4 +21,21 @@ class DevNullTest extends TestCase
 
 		$this->assertEquals( '', $s );
 	}
+
+	public function testLevelText()
+	{
+		$Pass = false;
+		$File = new DevNull( new PlainText() );
+
+		try
+		{
+			$File->getLevelText( -1 );
+		}
+		catch( \Exception $e )
+		{
+			$Pass = true;
+		}
+
+		$this->assertTrue( $Pass );
+	}
 }
