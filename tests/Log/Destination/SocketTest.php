@@ -2,7 +2,6 @@
 
 namespace Tests\Log\Destination;
 
-use Neuron\Log\Data;
 use Neuron\Log\Destination\Socket;
 use Neuron\Log\Format\PlainText;
 use Neuron\Log\ILogger;
