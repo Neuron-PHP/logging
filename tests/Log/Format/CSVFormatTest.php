@@ -1,13 +1,13 @@
 <?php
 namespace Tests\Log\Format;
 
-use Tests\Log\Format\LogTestBase;
+use Neuron\Log\Format\CSV;
 
 class CSVFormatTest extends LogTestBase
 {
 	public function testFormat()
 	{
-		$Csv = new \Neuron\Log\Format\CSV();
+		$Csv = new CSV();
 
 		$out = $Csv->format( $this->Data );
 

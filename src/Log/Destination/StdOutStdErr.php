@@ -26,10 +26,10 @@ class StdOutStdErr extends DestinationBase
 	{
 		if( $Data->Level < Log\ILogger::ERROR )
 		{
-			fwrite( STDOUT, $Text."\r\n" );
+			fwrite( $this->getStdOut(), $Text."\r\n" );
 			return;
 		}
 
-		fwrite( STDERR, $Text."\r\n" );
+		fwrite( $this->getStdErr(), $Text."\r\n" );
 	}
 }

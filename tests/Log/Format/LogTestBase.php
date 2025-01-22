@@ -1,15 +1,25 @@
 <?php
 namespace Tests\Log\Format;
 
+use Neuron\Log\Data;
+use Neuron\Log\ILogger;
 use PHPUnit\Framework\TestCase;
 
 class LogTestBase extends TestCase
 {
 	const INPUT = 'Test log.';
-	public $Data;
+	public Data $Data;
 
 	public function setUp() : void
 	{
-		$this->Data = new \Neuron\Log\Data( time(), self::INPUT, \Neuron\Log\ILogger::DEBUG, 'DEBUG', [ 'context' ] );
+		$this->Data = new Data(
+			time(),
+			self::INPUT,
+			ILogger::DEBUG,
+			'DEBUG',
+			[
+				'context'
+			]
+		);
 	}
 }

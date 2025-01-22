@@ -35,12 +35,12 @@ class Socket extends DestinationBase
 	 * @throws \Exception
 	 */
 
-	protected function error( string $sMsg )
+	public function error( string $sMsg )
 	{
-		$errorcode = socket_last_error();
-		$errormsg  = socket_strerror($errorcode);
+		$ErrorCode = socket_last_error();
+		$ErrorMsg  = socket_strerror($ErrorCode);
 
-		throw new \Exception( "$sMsg: [$errorcode] $errormsg\n" );
+		throw new \Exception( "$sMsg: [$ErrorCode] $ErrorMsg\n" );
 	}
 
 	/**

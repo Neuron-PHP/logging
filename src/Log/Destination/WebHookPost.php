@@ -4,7 +4,8 @@ namespace Neuron\Log\Destination;
 
 use Neuron\Log;
 use Neuron\Log\Data;
-use Neuron\Validation\Url;
+use Neuron\Util\WebHook;
+use Neuron\Validation\IsUrl;
 
 /**
  * Sends individual log data to a webhook.
@@ -20,7 +21,7 @@ class WebHookPost extends DestinationBase
 	 */
 	public function open( array $Params ) : bool
 	{
-		$Validator = new Url();
+		$Validator = new IsUrl();
 
 		if( !$Validator->isValid( $Params[ 'endpoint' ] ) )
 		{
@@ -41,7 +42,7 @@ class WebHookPost extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		$Hook = new \Neuron\Util\WebHook();
+		$Hook = new WebHook();
 
 		$Hook->post(
 			$this->_EndPoint,

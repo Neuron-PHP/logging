@@ -38,7 +38,7 @@ class LogMuxTest extends TestCase
 
 	}
 
-	public function testPass()
+	public function testInfoPass()
 	{
 		$this->_Mux->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
@@ -64,6 +64,33 @@ class LogMuxTest extends TestCase
 		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
 	}
 
+	public function testFatalPass()
+	{
+		$this->_Mux->setRunLevel( 'debug' );
+		$test = 'this is a test';
+
+		ob_start();
+
+		$this->_Mux->fatal( $test );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+
+		ob_start();
+
+		$this->_Mux->warning( $test );
+
+		$s = ob_get_contents();
+
+		ob_end_clean();
+
+		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
+	}
+
+
 	public function testFail()
 	{
 		$this->_Mux->setRunLevel( ILogger::INFO );
@@ -80,6 +107,30 @@ class LogMuxTest extends TestCase
 		$this->assertTrue( $s == '' );
 	}
 
+	public function testSetRunLevel()
+	{
+		$this->_Mux->setRunLevelText( 'info' );
+		$this->assertEquals( ILogger::INFO, $this->_Mux->getRunLevel() );
+	}
+
+	public function testGetContext()
+	{
+		$this->_Mux->setContext( 'test', 'testing' );
+		$Contexts = $this->_Mux->getContext( 'test', 'testing' );
+
+		$this->assertStringContainsString( 'testing', $Contexts[ 'test' ] );
+	}
+
+	public function testReset()
+	{
+		$this->_Mux->setContext( 'test', 'testing' );
+		$this->_Mux->reset();
+
+		$Contexts = $this->_Mux->getContext( 'test', 'testing' );
+
+		$this->assertEmpty( $Contexts );
+	}
+
 	public function testAddFilter()
 	{
 		$this->assertTrue( $this->_Mux->addFilter( new ExampleFilter() ) );
@@ -91,23 +142,5 @@ class LogMuxTest extends TestCase
 		$this->_Mux->addFilter( $Filter );
 
 		$this->assertTrue( $this->_Mux->removeFilter( $Filter ) );
-	}
-	
-	public function testFilter()
-	{
-		$Filter = new ExampleFilter();
-		$this->_Mux->addFilter( $Filter );
-
-		$test = 'this is a test';
-
-		ob_start();
-
-		$this->_Mux->error( $test );
-
-		$s = ob_get_contents();
-
-		ob_end_clean();
-
-		$this->assertStringContainsString(  'testing', $s );
 	}
 }

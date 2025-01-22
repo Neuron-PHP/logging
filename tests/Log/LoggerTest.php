@@ -1,17 +1,21 @@
 <?php
 namespace Tests\Log;
 use Exception;
+use Neuron\Log\Destination\Echoer;
+use Neuron\Log\Format\PlainText;
+use Neuron\Log\ILogger;
+use Neuron\Log\Logger;
 use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase
 {
-	public $_Logger;
+	public Logger $_Logger;
 
 	public function setUp() : void
 	{
-		$this->_Logger = new \Neuron\Log\Logger(
-			new \Neuron\Log\Destination\Echoer(
-				new \Neuron\Log\Format\PlainText()
+		$this->_Logger = new Logger(
+			new Echoer(
+				new PlainText()
 			)
 		);
 	}
@@ -25,7 +29,7 @@ class LoggerTest extends TestCase
 
 		$this->assertEquals(
 			$this->_Logger->getRunLevel(),
-			\Neuron\Log\ILogger::INFO
+			ILogger::INFO
 		);
 	}
 
@@ -45,25 +49,93 @@ class LoggerTest extends TestCase
 		$this->assertTrue( $Failed );
 	}
 
+	public function testDebug()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'debug' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testWarning()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'warning' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testError()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'error' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
+	public function testFatal()
+	{
+		$Success = true;
+
+		try
+		{
+			$this->_Logger->setRunLevel( 'fatal' );
+		}
+		catch( Exception $Exception )
+		{
+			$Success = false;
+		}
+
+		$this->assertTrue( $Success );
+
+	}
+
 	public function testDebugPass()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO,);
+		$this->_Logger->debug( $test);
 
 		$s = ob_get_contents();
 
 		ob_end_clean();
 
-		$this->assertTrue( strstr( $s, $test ) ? true : false );
+		$this->assertTrue( (bool)strstr( $s, $test ) );
 	}
 
 	public function testInfoPass()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -79,7 +151,7 @@ class LoggerTest extends TestCase
 
 	public function testWarningPass()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -95,7 +167,7 @@ class LoggerTest extends TestCase
 
 	public function testErrorPass()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -111,7 +183,7 @@ class LoggerTest extends TestCase
 
 	public function testFatalPass()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -127,12 +199,12 @@ class LoggerTest extends TestCase
 
 	public function testFail()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::INFO );
+		$this->_Logger->setRunLevel( ILogger::INFO );
 		$test = 'this is a test';
 
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->log( $test, ILogger::DEBUG );
 
 		$s = ob_get_contents();
 
@@ -141,15 +213,36 @@ class LoggerTest extends TestCase
 		$this->assertTrue( $s == '' );
 	}
 
+	public function testOpenPass()
+	{
+		$this->assertTrue(
+			$this->_Logger->open( [] )
+		);
+	}
+
+	public function testResetPass()
+	{
+		$this->_Logger->reset();
+
+		$this->assertTrue( true );
+	}
+
+	public function testClosePass()
+	{
+		$this->_Logger->close();
+
+		$this->assertTrue( true );
+	}
+
 	public function testSingleContext()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		$this->_Logger->setContext( 'UserId', 1 );
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO );
+		$this->_Logger->log( $test, ILogger::INFO );
 
 		$s = ob_get_contents();
 
@@ -160,14 +253,14 @@ class LoggerTest extends TestCase
 
 	public function testMultipleContext()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		$this->_Logger->setContext( 'UserId', 1 );
 		$this->_Logger->setContext( 'SessionId', 2 );
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO );
+		$this->_Logger->log( $test, ILogger::INFO );
 
 		$s = ob_get_contents();
 
@@ -181,7 +274,7 @@ class LoggerTest extends TestCase
 	 */
 	public function testRemoveContext()
 	{
-		$this->_Logger->setRunLevel( \Neuron\Log\ILogger::DEBUG );
+		$this->_Logger->setRunLevel( ILogger::DEBUG );
 		$test = 'this is a test';
 
 		$this->_Logger->setContext( 'UserId', 1 );
@@ -189,7 +282,7 @@ class LoggerTest extends TestCase
 		$this->_Logger->setContext( "UserId", '' );
 		ob_start();
 
-		$this->_Logger->log( $test, \Neuron\Log\ILogger::INFO );
+		$this->_Logger->log( $test, ILogger::INFO );
 
 		$s = ob_get_contents();
 

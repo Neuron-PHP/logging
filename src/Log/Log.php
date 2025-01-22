@@ -1,5 +1,4 @@
 <?php
-
 namespace Neuron\Log;
 
 use Neuron\Log\Destination\Echoer;
@@ -64,6 +63,16 @@ class Log extends Memory
 
 		$Log->Logger->setRunLevelText( $Level );
 		$Log->serialize();
+	}
+
+	/**
+	 * @return int
+	 */
+	public static function getRunLevel() : int
+	{
+		$Log = self::getInstance();
+		$Log->initIfNeeded();
+		return $Log->Logger->getRunLevel();
 	}
 
 	/**

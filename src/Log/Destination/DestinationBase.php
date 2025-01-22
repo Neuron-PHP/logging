@@ -6,6 +6,7 @@ use \Neuron\Log;
 use \Neuron\Log\Format;
 use \Neuron\Log\Filter;
 use Neuron\Log\ILogger;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Abstract base class for log destinations.
@@ -16,12 +17,12 @@ abstract class DestinationBase
 	private Format\IFormat $_Format;
 	private array    $_Filters = [];
 	private ?ILogger $_Parent  = null;
-
+	private mixed $_StdOut;
+	private mixed $_StdErr;
 
 	/**
 	 * @param Format\IFormat $Format
 	 */
-
 	public function __construct( Format\IFormat $Format )
 	{
 		$this->setFileHandles();
@@ -34,17 +35,25 @@ abstract class DestinationBase
 	 */
 	public function setFileHandles(): void
 	{
-		if( !defined( 'STDERR' ) )
-		{
-			define( 'STDERR', fopen( 'php://stderr', 'w' ) );
-		}
-
-		if( !defined( 'STDOUT' ) )
-		{
-			define( 'STDOUT', fopen( 'php://stdout', 'w' ) );
-		}
+		$this->_StdErr = fopen( 'php://stderr', 'w' );
+		$this->_StdOut = fopen( 'php://stdout', 'w' );
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getStdOut()
+	{
+		return $this->_StdOut;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getStdErr()
+	{
+		return $this->_StdErr;
+	}
 
 	/**
 	 * Sets the parent logger.
@@ -92,7 +101,7 @@ abstract class DestinationBase
 				return "Fatal";
 
 			default:
-				return "Unknown";
+				throw new Exception( "Unknown log level: $Level" );
 		}
 	}
 
