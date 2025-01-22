@@ -1,3 +1,5 @@
+## 0.7.11
+
 ## 0.7.10 2025-01-21
 * Updated tests to 100% coverage.
 * Updated to validation 0.7
