@@ -14,7 +14,7 @@
         "ext-json": "*",
         "ext-sockets": "*",
         "neuron-php/patterns": "0.6.*",
-        "neuron-php/validation": "0.6.*",
+        "neuron-php/validation": "0.7.*",
         "neuron-php/util": "0.6.*"
     },
     "require-dev": {

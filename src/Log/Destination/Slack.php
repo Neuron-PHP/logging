@@ -5,7 +5,7 @@ namespace Neuron\Log\Destination;
 use Neuron\Log;
 use Neuron\Log\Data;
 use Neuron\Util\WebHook;
-use Neuron\Validation\Url;
+use Neuron\Validation\IsUrl;
 
 /**
  * Outputs log data to a Slack channel.
@@ -36,7 +36,7 @@ class Slack extends DestinationBase
 	 */
 	public function open( array $Params ) : bool
 	{
-		$Validator = new Url();
+		$Validator = new IsUrl();
 
 		if( !$Validator->isValid( $Params[ 'endpoint' ] ) )
 		{
