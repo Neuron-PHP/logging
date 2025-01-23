@@ -289,5 +289,6 @@ class LoggerTest extends TestCase
 		ob_end_clean();
 
 		$this->assertStringContainsString( "(SessionId=2) ".$test."\r\n", $s );
+		$this->assertStringNotContainsString( "UserId".$test."\r\n", $s );
 	}
 }

@@ -5,7 +5,6 @@
 * Updated to validation 0.7
 
 ## 0.7.9
-
 ## 0.7.8
 * Added StdOutStdError destination.
 * Updated documentation.
@@ -65,11 +64,9 @@
 * Updated SysLog to use openlog/closelog.
 
 ## 0.6.1 2022-03-17
-
 * Added syslog destination.
 
 ## 0.6.0 2022-03-12
-
 * Converting to PHP8
 * Added util package requirement.
 * Added Log::setRunLevelByText
@@ -77,7 +74,5 @@
 * Updated travis to php 8.1
 
 ## 0.5.3
-
 ## 0.5.2
-
 ## 0.5.1
