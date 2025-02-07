@@ -24,7 +24,7 @@ class StdOutStdErr extends DestinationBase
 
 	public function write( string $Text, Log\Data $Data ): void
 	{
-		if( $Data->Level < Log\ILogger::ERROR )
+		if( $Data->Level->value < Log\RunLevel::ERROR->value )
 		{
 			fwrite( $this->getStdOut(), $Text."\r\n" );
 			return;

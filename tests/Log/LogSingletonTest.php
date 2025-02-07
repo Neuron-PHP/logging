@@ -6,6 +6,7 @@ use Neuron\Log\Format\Raw;
 use Neuron\Log\ILogger;
 use Neuron\Log\Log;
 use Neuron\Log\Logger;
+use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 use Tests\Log\Filter\ExampleFilter;
 
@@ -19,7 +20,7 @@ class LogSingletonTest extends TestCase
 	public function testSetLevelAsString()
 	{
 		Log::setRunLevel( 'DEBUG' );
-		$this->assertEquals( ILogger::DEBUG, Log::getRunLevel() );
+		$this->assertEquals( RunLevel::DEBUG, Log::getRunLevel() );
 	}
 
 	public function testContext()
@@ -45,7 +46,7 @@ class LogSingletonTest extends TestCase
 		);
 
 		$PlainLog = new Logger( $Plain );
-		$PlainLog->setRunLevel( ILogger::INFO );
+		$PlainLog->setRunLevel( RunLevel::INFO );
 		Log::addChannel( 'Test', $PlainLog );
 
 		$test = 'this is a test';
@@ -64,12 +65,12 @@ class LogSingletonTest extends TestCase
 
 	public function testPass()
 	{
-		Log::setRunLevel( ILogger::DEBUG );
+		Log::setRunLevel( RunLevel::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
 
-		Log::staticLog( $test, ILogger::INFO );
+		Log::staticLog( $test, RunLevel::INFO );
 
 		$str = ob_get_contents();
 
@@ -80,12 +81,12 @@ class LogSingletonTest extends TestCase
 
 	public function testFail()
 	{
-		Log::setRunLevel( ILogger::INFO );
+		Log::setRunLevel( RunLevel::INFO );
 		$test = 'this is a test';
 
 		ob_start();
 
-		Log::staticLog( $test, ILogger::DEBUG );
+		Log::staticLog( $test, RunLevel::DEBUG );
 
 		$str = ob_get_contents();
 
@@ -96,7 +97,7 @@ class LogSingletonTest extends TestCase
 
 	public function testDebug()
 	{
-		Log::setRunLevel( ILogger::DEBUG );
+		Log::setRunLevel( RunLevel::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -112,7 +113,7 @@ class LogSingletonTest extends TestCase
 
 	public function testInfo()
 	{
-		Log::setRunLevel( ILogger::INFO );
+		Log::setRunLevel( RunLevel::INFO );
 		$test = 'this is a test';
 
 		ob_start();
@@ -128,7 +129,7 @@ class LogSingletonTest extends TestCase
 
 	public function testWarning()
 	{
-		Log::setRunLevel( ILogger::WARNING );
+		Log::setRunLevel( RunLevel::WARNING );
 		$test = 'this is a test';
 
 		ob_start();
@@ -144,7 +145,7 @@ class LogSingletonTest extends TestCase
 
 	public function testError()
 	{
-		Log::setRunLevel( ILogger::ERROR );
+		Log::setRunLevel( RunLevel::ERROR );
 		$test = 'this is a test';
 
 		ob_start();
@@ -160,7 +161,7 @@ class LogSingletonTest extends TestCase
 
 	public function testFatal()
 	{
-		Log::setRunLevel( ILogger::FATAL );
+		Log::setRunLevel( RunLevel::FATAL );
 		$test = 'this is a test';
 
 		ob_start();
@@ -179,7 +180,7 @@ class LogSingletonTest extends TestCase
 	 */
 	public function testAddChannel()
 	{
-		Log::setRunLevel( ILogger::INFO );
+		Log::setRunLevel( RunLevel::INFO );
 
 		$test = 'this is a test';
 
@@ -188,7 +189,7 @@ class LogSingletonTest extends TestCase
 		);
 
 		$PlainLog = new Logger( $Plain );
-		$PlainLog->setRunLevel( ILogger::INFO );
+		$PlainLog->setRunLevel( RunLevel::INFO );
 		Log::addChannel( 'RealTime', $PlainLog );
 
 		ob_start();

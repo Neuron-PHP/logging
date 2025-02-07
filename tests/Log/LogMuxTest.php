@@ -7,6 +7,7 @@ use Neuron\Log\Format\PlainText;
 use Neuron\Log\ILogger;
 use Neuron\Log\Logger;
 use Neuron\Log\LogMux;
+use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 use Tests\Log\Filter\ExampleFilter;
 
@@ -24,7 +25,7 @@ class LogMuxTest extends TestCase
 					new PlainText( false )
 				)
 			),
-			ILogger::INFO
+			RunLevel::INFO
 		);
 
 		$this->_Mux->addLog(
@@ -33,14 +34,14 @@ class LogMuxTest extends TestCase
 					new JSON()
 				)
 			),
-			ILogger::WARNING
+			RunLevel::WARNING
 		);
 
 	}
 
 	public function testInfoPass()
 	{
-		$this->_Mux->setRunLevel( ILogger::DEBUG );
+		$this->_Mux->setRunLevel( RunLevel::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
@@ -93,7 +94,7 @@ class LogMuxTest extends TestCase
 
 	public function testFail()
 	{
-		$this->_Mux->setRunLevel( ILogger::INFO );
+		$this->_Mux->setRunLevel( RunLevel::INFO );
 		$test = 'this is a test';
 
 		ob_start();
@@ -110,7 +111,7 @@ class LogMuxTest extends TestCase
 	public function testSetRunLevel()
 	{
 		$this->_Mux->setRunLevelText( 'info' );
-		$this->assertEquals( ILogger::INFO, $this->_Mux->getRunLevel() );
+		$this->assertEquals( RunLevel::INFO, $this->_Mux->getRunLevel() );
 	}
 
 	public function testGetContext()

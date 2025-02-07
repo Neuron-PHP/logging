@@ -10,7 +10,7 @@ use Exception;
  */
 class Logger implements ILogger
 {
-	private int             				$_RunLevel = ILogger::ERROR;
+	private RunLevel             			$_RunLevel = RunLevel::ERROR;
 	private Destination\DestinationBase $_Destination;
 	private array           				$_Context = [];
 
@@ -70,39 +70,39 @@ class Logger implements ILogger
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $Level
 	 * @throws Exception
 	 */
-	public function setRunLevelText( string $Text ): void
+	public function setRunLevelText( string $Level ): void
 	{
-		$Level = self::DEBUG;
+		$IntLevel = RunLevel::DEBUG;
 
-		switch( strtolower( $Text ) )
+		switch( strtolower( $Level ) )
 		{
 			case 'debug':
 				break;
 
 			case 'info':
-				$Level = self::INFO;
+				$IntLevel = RunLevel::INFO;
 				break;
 
 			case 'warning':
-				$Level = self::WARNING;
+				$IntLevel = RunLevel::WARNING;
 				break;
 
 			case 'error':
-				$Level = self::ERROR;
+				$IntLevel = RunLevel::ERROR;
 				break;
 
 			case 'fatal':
-				$Level = self::FATAL;
+				$IntLevel = RunLevel::FATAL;
 				break;
 
 			default:
-				throw new Exception( "Unrecognized run level '$Text'" );
+				throw new Exception( "Unrecognized run level '$Level'" );
 		}
 
-		$this->setRunLevel( $Level );
+		$this->setRunLevel( $IntLevel );
 	}
 
 	/**
@@ -117,13 +117,13 @@ class Logger implements ILogger
 			return;
 		}
 
-		$this->_RunLevel = (int)$Level;
+		$this->_RunLevel = $Level;
 	}
 
 	/**
-	 * @return int
+	 * @return RunLevel
 	 */
-	public function getRunLevel() : int
+	public function getRunLevel() : RunLevel
 	{
 		return $this->_RunLevel;
 	}
@@ -146,9 +146,9 @@ class Logger implements ILogger
 
 	/**
 	 * @param string $Text
-	 * @param int $Level
+	 * @param RunLevel $Level
 	 */
-	public function log( string $Text, int $Level ): void
+	public function log( string $Text, RunLevel $Level ): void
 	{
 		$this->getDestination()->log( $Text, $Level );
 	}
@@ -158,7 +158,7 @@ class Logger implements ILogger
 	 */
 	public function debug( string $Text ): void
 	{
-		$this->log( $Text, self::DEBUG );
+		$this->log( $Text, RunLevel::DEBUG );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Logger implements ILogger
 	 */
 	public function info( string $Text ): void
 	{
-		$this->log( $Text, self::INFO );
+		$this->log( $Text, RunLevel::INFO );
 	}
 
 	/**
@@ -174,7 +174,7 @@ class Logger implements ILogger
 	 */
 	public function warning( string $Text ): void
 	{
-		$this->log( $Text, self::WARNING );
+		$this->log( $Text, RunLevel::WARNING );
 	}
 
 	/**
@@ -182,7 +182,7 @@ class Logger implements ILogger
 	 */
 	public function error( string $Text ): void
 	{
-		$this->log( $Text, self::ERROR );
+		$this->log( $Text, RunLevel::ERROR );
 	}
 
 	/**
@@ -190,7 +190,7 @@ class Logger implements ILogger
 	 */
 	public function fatal( string $Text ): void
 	{
-		$this->log( $Text, self::FATAL );
+		$this->log( $Text, RunLevel::FATAL );
 	}
 
 	public function reset(): void

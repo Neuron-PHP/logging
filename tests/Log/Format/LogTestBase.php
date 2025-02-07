@@ -3,6 +3,7 @@ namespace Tests\Log\Format;
 
 use Neuron\Log\Data;
 use Neuron\Log\ILogger;
+use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 
 class LogTestBase extends TestCase
@@ -15,7 +16,7 @@ class LogTestBase extends TestCase
 		$this->Data = new Data(
 			time(),
 			self::INPUT,
-			ILogger::DEBUG,
+			RunLevel::DEBUG,
 			'DEBUG',
 			[
 				'context'

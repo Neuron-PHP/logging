@@ -7,8 +7,8 @@ namespace Neuron\Log;
  */
 class LogMux implements ILogger
 {
-	private array $_Logs     = [];
-	private int   $_RunLevel = 0;
+	private array 		$_Logs     = [];
+	private RunLevel	$_RunLevel = RunLevel::DEBUG;
 
 	/**
 	 * @param ILogger $Log
@@ -139,9 +139,9 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * @return int
+	 * @return RunLevel
 	 */
-	public function getRunLevel(): int
+	public function getRunLevel(): RunLevel
 	{
 		return $this->_RunLevel;
 	}
@@ -150,10 +150,10 @@ class LogMux implements ILogger
 
 	/**
 	 * @param string $Text
-	 * @param int $Level
+	 * @param RunLevel $Level
 	 */
 
-	public function log( string $Text, int $Level ): void
+	public function log( string $Text, RunLevel $Level ): void
 	{
 		foreach( $this->getLogs() as $Log )
 		{
@@ -167,7 +167,7 @@ class LogMux implements ILogger
 
 	public function debug( string $Text ): void
 	{
-		$this->log( $Text, self::DEBUG );
+		$this->log( $Text, RunLevel::DEBUG );
 	}
 
 	/**
@@ -176,7 +176,7 @@ class LogMux implements ILogger
 
 	public function info( string $Text ): void
 	{
-		$this->log( $Text, self::INFO );
+		$this->log( $Text, RunLevel::INFO );
 	}
 
 	/**
@@ -185,7 +185,7 @@ class LogMux implements ILogger
 
 	public function warning( string $Text ): void
 	{
-		$this->log( $Text, self::WARNING );
+		$this->log( $Text, RunLevel::WARNING );
 	}
 
 	/**
@@ -194,7 +194,7 @@ class LogMux implements ILogger
 
 	public function error( string $Text ): void
 	{
-		$this->log( $Text, self::ERROR );
+		$this->log( $Text, RunLevel::ERROR );
 	}
 
 	/**
@@ -203,7 +203,7 @@ class LogMux implements ILogger
 
 	public function fatal( string $Text ): void
 	{
-		$this->log( $Text, self::FATAL );
+		$this->log( $Text, RunLevel::FATAL );
 	}
 	// endregion
 }

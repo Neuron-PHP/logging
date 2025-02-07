@@ -1,5 +1,6 @@
 <?php
 
+use Neuron\Log\Data;
 use PHPUnit\Framework\TestCase;
 use Neuron\Log\Destination\Email;
 use phpmock\phpunit\PHPMock;
@@ -27,6 +28,6 @@ class EmailTest extends TestCase
             'subject' => 'Test Subject'
         ]);
 
-        $email->write('Test message', $this->createMock(\Neuron\Log\Data::class));
+        $email->write('Test message', $this->createMock( Data::class));
     }
 }

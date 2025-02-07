@@ -17,7 +17,7 @@ class RunLevel extends FilterBase
 	 */
 	public function filter( Data $Data ): Data|null
 	{
-		if( $Data->Level >= $this->getParent()->getRunLevel() )
+		if( $Data->Level->value >= $this->getParent()->getRunLevel()->value )
 			return $Data;
 
 		return null;

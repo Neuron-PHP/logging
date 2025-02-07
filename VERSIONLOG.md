@@ -1,4 +1,6 @@
-## 0.7.11
+## 0.8.00
+* Updated to php8.4
+* Switched RunLevel to an enum.
 
 ## 0.7.10 2025-01-21
 * Updated tests to 100% coverage.

@@ -8,17 +8,12 @@ namespace Neuron\Log;
 
 interface ILogger
 {
-	const DEBUG   = 0;		// Log all
-	const INFO    = 10;		// Log informational
-	const WARNING = 20;		// Log warning
-	const ERROR   = 30;		// Log error
-	const FATAL   = 40;		// Log fatal
 
 	/**
 	 * @param string $Text
-	 * @param int $Level
+	 * @param RunLevel $Level
 	 */
-	public function log( string $Text, int $Level ): void;
+	public function log( string $Text, RunLevel $Level ): void;
 
 	/**
 	 * @param int $Level
@@ -34,9 +29,9 @@ interface ILogger
 	public function setRunLevelText( string $Level );
 
 	/**
-	 * @return int
+	 * @return RunLevel
 	 */
-	public function getRunLevel() : int;
+	public function getRunLevel() : RunLevel;
 
 	/**
 	 * @param string $Text

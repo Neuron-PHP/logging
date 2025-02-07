@@ -4,6 +4,7 @@ namespace Tests\Log\Destination;
 
 use Neuron\Log\Destination\Slack;
 use Neuron\Log\Format\Raw;
+use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 
 class SlackTest extends TestCase
@@ -21,7 +22,7 @@ class SlackTest extends TestCase
 
 		$this->assertTrue( $Pass );
 
-		$Slack->log( "Test", \Neuron\Log\ILogger::ERROR );
+		$Slack->log( "Test", RunLevel::ERROR );
 
 		$Slack->close();
 	}
