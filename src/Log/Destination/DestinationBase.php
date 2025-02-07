@@ -76,36 +76,6 @@ abstract class DestinationBase
 	}
 
 	/**
-	 * Gets the text for a log level.
-	 * @param $Level
-	 * @return string
-	 */
-
-	public function getLevelText( int $Level ): string
-	{
-		switch( $Level )
-		{
-			case Log\ILogger::DEBUG:
-				return "Debug";
-
-			case Log\ILogger::INFO:
-				return "Info";
-
-			case Log\ILogger::WARNING:
-				return "Warning";
-
-			case Log\ILogger::ERROR:
-				return "Error";
-
-			case Log\ILogger::FATAL:
-				return "Fatal";
-
-			default:
-				throw new Exception( "Unknown log level: $Level" );
-		}
-	}
-
-	/**
 	 * Sets the formatter.
 	 *
 	 * @param Format\IFormat $Format
@@ -185,13 +155,13 @@ abstract class DestinationBase
 	 * @param $Level - Text output level.
 	 */
 
-	public function log( string $Text, int $Level ): void
+	public function log( string $Text, Log\RunLevel $Level ): void
 	{
 		$Log = new Log\Data(
 			time(),
 			$Text,
 			$Level,
-			$this->getLevelText( $Level ),
+			$Level->getLevel(),
 			$this->getParent() ? $this->getParent()->getContext() : []
 		);
 

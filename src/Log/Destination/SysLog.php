@@ -43,23 +43,23 @@ class SysLog extends DestinationBase
 
 		switch( $Data->Level )
 		{
-			case Log\ILogger::DEBUG:
+			case Log\RunLevel::DEBUG:
 				$Level = LOG_DEBUG;
 				break;
 
-			case Log\ILogger::INFO:
+			case Log\RunLevel::INFO:
 				$Level = LOG_INFO;
 				break;
 
-			case Log\ILogger::WARNING:
+			case Log\RunLevel::WARNING:
 				$Level = LOG_WARNING;
 				break;
 
-			case Log\ILogger::ERROR:
+			case Log\RunLevel::ERROR:
 				$Level = LOG_ERR;
 				break;
 
-			case Log\ILogger::FATAL:
+			case Log\RunLevel::FATAL:
 				$Level = LOG_CRIT;
 				break;
 		}

@@ -47,7 +47,7 @@ class WebHookPost extends DestinationBase
 		$Hook->post(
 			$this->_EndPoint,
 			[
-				'level'      => $Data->Level,
+				'level'      => $Data->Level->value,
 				'level_text' => $Data->LevelText,
 				'text'       => $Text,
 				'timestamp'  => $Data->TimeStamp

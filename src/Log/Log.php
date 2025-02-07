@@ -36,9 +36,9 @@ class Log extends Memory
 
 	/**
 	 * @param string $Text
-	 * @param int $Level
+	 * @param RunLevel $Level
 	 */
-	public static function staticLog( string $Text, int $Level ): void
+	public static function staticLog( string $Text, RunLevel $Level ): void
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
@@ -54,7 +54,7 @@ class Log extends Memory
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
 
-		if( is_int( $Level ) )
+		if( $Level instanceof RunLevel )
 		{
 			$Log->Logger->setRunLevel( $Level );
 			$Log->serialize();
@@ -66,9 +66,9 @@ class Log extends Memory
 	}
 
 	/**
-	 * @return int
+	 * @return RunLevel
 	 */
-	public static function getRunLevel() : int
+	public static function getRunLevel() : RunLevel
 	{
 		$Log = self::getInstance();
 		$Log->initIfNeeded();
@@ -97,7 +97,7 @@ class Log extends Memory
 	 */
 	public static function debug( string $Text ): void
 	{
-		self::staticLog( $Text, ILogger::DEBUG );
+		self::staticLog( $Text, RunLevel::DEBUG );
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Log extends Memory
 	 */
 	public static function info( string $Text ): void
 	{
-		self::staticLog( $Text, ILogger::INFO );
+		self::staticLog( $Text, RunLevel::INFO );
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Log extends Memory
 	 */
 	public static function warning( string $Text ): void
 	{
-		self::staticLog( $Text, ILogger::WARNING );
+		self::staticLog( $Text, RunLevel::WARNING );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class Log extends Memory
 	 */
 	public static function error( string $Text ): void
 	{
-		self::staticLog( $Text, ILogger::ERROR );
+		self::staticLog( $Text, RunLevel::ERROR );
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Log extends Memory
 	 */
 	public static function fatal( string $Text ): void
 	{
-		self::staticLog( $Text, ILogger::FATAL );
+		self::staticLog( $Text, RunLevel::FATAL );
 	}
 
 	public static function addChannel( string $Name, ILogger $Logger ) : void

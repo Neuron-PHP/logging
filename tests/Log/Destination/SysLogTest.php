@@ -5,6 +5,7 @@ use Neuron\Log\Data;
 use Neuron\Log\Destination\SysLog;
 use Neuron\Log\Format\PlainText;
 use Neuron\Log\ILogger;
+use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 
 class SysLogTest extends TestCase
@@ -13,7 +14,7 @@ class SysLogTest extends TestCase
 	{
 		$File = new SysLog( new PlainText() );
 
-		$File->log( "Test", \Neuron\Log\ILogger::ERROR );
+		$File->log( "Test", RunLevel::ERROR );
 
 		$this->assertTrue( true );
 	}
@@ -39,7 +40,7 @@ class SysLogTest extends TestCase
 		$Data = new Data(
 			time(),
 			'test',
-			ILogger::DEBUG,
+			RunLevel::DEBUG,
 			'info',
 			[]
 		);
@@ -56,7 +57,7 @@ class SysLogTest extends TestCase
 		$Data = new Data(
 			time(),
 			'test',
-			ILogger::INFO,
+			RunLevel::INFO,
 			'info',
 			[]
 		);
@@ -72,7 +73,7 @@ class SysLogTest extends TestCase
 		$Data = new Data(
 			time(),
 			'test',
-			ILogger::WARNING,
+			RunLevel::WARNING,
 			'info',
 			[]
 		);
@@ -89,7 +90,7 @@ class SysLogTest extends TestCase
 		$Data = new Data(
 			time(),
 			'test',
-			ILogger::ERROR,
+			RunLevel::ERROR,
 			'info',
 			[]
 		);
@@ -106,7 +107,7 @@ class SysLogTest extends TestCase
 		$Data = new Data(
 			time(),
 			'test',
-			ILogger::FATAL,
+			RunLevel::FATAL,
 			'info',
 			[]
 		);

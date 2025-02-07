@@ -10,19 +10,19 @@ class Data
 {
 	public int $TimeStamp;
 	public string $Text;
-	public int $Level;
+	public RunLevel $Level;
 	public string $LevelText;
 	public array $Context;
 
 	/**
 	 * @param int $TimeStamp
 	 * @param string $Text
-	 * @param int $Level
+	 * @param RunLevel $Level
 	 * @param string $LevelText
 	 * @param array $Context
 	 */
 
-	public function __construct( int $TimeStamp, string $Text, int $Level, string $LevelText, array $Context )
+	public function __construct( int $TimeStamp, string $Text, RunLevel $Level, string $LevelText, array $Context )
 	{
 		$this->TimeStamp = $TimeStamp;
 		$this->Text      = $Text;
