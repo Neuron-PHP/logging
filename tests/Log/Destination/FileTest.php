@@ -36,10 +36,9 @@ class FileTest extends TestCase
 
 		$Pass = $File->open(
 				[
-					'file_name' => "/%DATE%"
+					'file_name' => "//invalid//path/%DATE%"
 				]
 			);
-
 
 		$this->assertFalse( $Pass );
 	}
