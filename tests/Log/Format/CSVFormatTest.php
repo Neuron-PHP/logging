@@ -9,7 +9,7 @@ class CSVFormatTest extends LogTestBase
 	{
 		$Csv = new CSV();
 
-		$out = $Csv->format( $this->Data );
+		$out = $Csv->format( $this->data );
 
 		$aParts = explode( ',', $out );
 

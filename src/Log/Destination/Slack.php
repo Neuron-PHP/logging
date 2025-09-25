@@ -12,8 +12,8 @@ use Neuron\Validation\IsUrl;
  */
 class Slack extends DestinationBase
 {
-	private string $_Webhook;
-	private array $_Params;
+	private string $_webhook;
+	private array $_params;
 
 	/**
 	 * Setup slack logging.
@@ -30,40 +30,40 @@ class Slack extends DestinationBase
 	 *    ]
 	 * ]
 	 * ```
-	 * @param array{endpoint: string, params: array{channel: string, username: string, text: string, icon_emoji?: string, attachments?: array}} $Params
+	 * @param array{endpoint: string, params: array{channel: string, username: string, text: string, icon_emoji?: string, attachments?: array}} $params
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
-		$Validator = new IsUrl();
+		$validator = new IsUrl();
 
-		if( !$Validator->isValid( $Params[ 'endpoint' ] ) )
+		if( !$validator->isValid( $params[ 'endpoint' ] ) )
 		{
-			throw new \Exception( $Params[ 'endpoint' ].' is not a valid url.' );
+			throw new \Exception( $params[ 'endpoint' ].' is not a valid url.' );
 		}
 
-		$this->_Webhook = $Params[ 'endpoint' ];
-		$this->_Params  = $Params[ 'params' ];
+		$this->_webhook = $params[ 'endpoint' ];
+		$this->_params  = $params[ 'params' ];
 
 		return true;
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		$this->_Params[ 'text' ] = $Text;
+		$this->_params[ 'text' ] = $text;
 
-		$DataString = json_encode( $this->_Params );
+		$dataString = json_encode( $this->_params );
 
-		$WebHook = (new WebHook())
-			->postJson( $this->_Webhook, $DataString );
+		$webHook = (new WebHook())
+			->postJson( $this->_webhook, $dataString );
 	}
 }

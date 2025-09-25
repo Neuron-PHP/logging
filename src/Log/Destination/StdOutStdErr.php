@@ -15,21 +15,21 @@ class StdOutStdErr extends DestinationBase
 	/**
 	 * Writes log data to stdout or stderr.
 	 *
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		if( $Data->Level->value < Log\RunLevel::ERROR->value )
+		if( $data->level->value < Log\RunLevel::ERROR->value )
 		{
-			fwrite( $this->getStdOut(), $Text."\r\n" );
+			fwrite( $this->getStdOut(), $text."\r\n" );
 			return;
 		}
 
-		fwrite( $this->getStdErr(), $Text."\r\n" );
+		fwrite( $this->getStdErr(), $text."\r\n" );
 	}
 }

@@ -10,8 +10,8 @@ use Neuron\Log;
 
 class HTML extends Base
 {
-	public function format( Log\Data $Data ) : string
+	public function format( Log\Data $data ) : string
 	{
-		return '<small>'.date( "Y-m-d G:i:s", $Data->TimeStamp )."</small> $Data->LevelText {$this->getContextString($Data->Context)} $Data->Text<br>";
+		return '<small>'.date( "Y-m-d G:i:s", $data->timeStamp )."</small> $data->levelText {$this->getContextString($data->context)} $data->text<br>";
 	}
 }

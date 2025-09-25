@@ -8,10 +8,10 @@ use Neuron\Log\Filter\IFilter;
 
 class ExampleFilter extends FilterBase
 {
-	public function filter( Data $Data ): Data|null
+	public function filter( Data $data ): Data|null
 	{
-		$Data->Text = str_replace( "test", 'testing', $Data->Text );
+		$data->text = str_replace( "test", 'testing', $data->text );
 
-		return $Data;
+		return $data;
 	}
 }

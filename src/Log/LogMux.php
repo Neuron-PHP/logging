@@ -7,59 +7,59 @@ namespace Neuron\Log;
  */
 class LogMux implements ILogger
 {
-	private array 		$_Logs     = [];
-	private RunLevel	$_RunLevel = RunLevel::DEBUG;
+	private array 		$_logs     = [];
+	private RunLevel	$_runLevel = RunLevel::DEBUG;
 
 	/**
-	 * @param ILogger $Log
+	 * @param ILogger $log
 	 */
 
 	/**
-	 * @param ILogger $Log
+	 * @param ILogger $log
 	 * @return void
 	 *
 	 * Adds a logger.
 	 */
-	public function addLog( ILogger $Log ): void
+	public function addLog( ILogger $log ): void
 	{
-		$this->_Logs[] = $Log;
+		$this->_logs[] = $log;
 	}
 
 	/**
 	 * Add a filter to all attached loggers destinations.
 	 *
-	 * @param Filter\IFilter $Filter
+	 * @param Filter\IFilter $filter
 	 * @return bool
 	 */
-	public function addFilter( Filter\IFilter $Filter ): bool
+	public function addFilter( Filter\IFilter $filter ): bool
 	{
-		$Added  = false;
-		foreach( $this->_Logs as $Log )
+		$added  = false;
+		foreach( $this->_logs as $log )
 		{
-			if( $Log->addFilter( $Filter ) )
-				$Added = true;
+			if( $log->addFilter( $filter ) )
+				$added = true;
 		}
 
-		return $Added;
+		return $added;
 	}
 
 	/**
 	 * Removes a filter from all attached loggers destinations.
 	 *
-	 * @param Filter\IFilter $Filter
+	 * @param Filter\IFilter $filter
 	 * @return bool
 	 */
-	public function removeFilter( Filter\IFilter $Filter ): bool
+	public function removeFilter( Filter\IFilter $filter ): bool
 	{
-		$Removed = false;
+		$removed = false;
 
-		foreach( $this->_Logs as $Log )
+		foreach( $this->_logs as $log )
 		{
-			if( $Log->removeFilter( $Filter ) )
-				$Removed = true;
+			if( $log->removeFilter( $filter ) )
+				$removed = true;
 		}
 
-		return $Removed;
+		return $removed;
 	}
 
 	/**
@@ -68,7 +68,7 @@ class LogMux implements ILogger
 
 	public function reset(): void
 	{
-		$this->_Logs = [];
+		$this->_logs = [];
 	}
 
 	/**
@@ -79,21 +79,21 @@ class LogMux implements ILogger
 
 	public function getLogs(): array
 	{
-		return $this->_Logs;
+		return $this->_logs;
 	}
 
 	/**
 	 * Adds context for all loggers.
 	 *
-	 * @param string $Name
-	 * @param string $Value
+	 * @param string $name
+	 * @param string $value
 	 * @return void
 	 */
-	public function setContext( string $Name, string $Value ): void
+	public function setContext( string $name, string $value ): void
 	{
-		foreach( $this->getLogs() as $Log )
+		foreach( $this->getLogs() as $log )
 		{
-			$Log->setContext( $Name, $Value );
+			$log->setContext( $name, $value );
 		}
 	}
 
@@ -104,9 +104,9 @@ class LogMux implements ILogger
 	 */
 	public function getContext() : array
 	{
-		foreach( $this->getLogs() as $Log )
+		foreach( $this->getLogs() as $log )
 		{
-			return $Log->getContext();
+			return $log->getContext();
 		}
 
 		return [];
@@ -115,26 +115,26 @@ class LogMux implements ILogger
 	/**
 	 * Sync run levels for all loggers.
 	 *
-	 * @param mixed $Level
+	 * @param mixed $level
 	 */
 
-	public function setRunLevel( mixed $Level ): void
+	public function setRunLevel( mixed $level ): void
 	{
-		foreach( $this->getLogs() as $Log )
+		foreach( $this->getLogs() as $log )
 		{
-			$Log->setRunLevel( $Level );
+			$log->setRunLevel( $level );
 
-			$this->_RunLevel = $Log->getRunLevel();
+			$this->_runLevel = $log->getRunLevel();
 		}
 	}
 
-	public function setRunLevelText( string $Level ): void
+	public function setRunLevelText( string $level ): void
 	{
-		foreach( $this->getLogs() as $Log )
+		foreach( $this->getLogs() as $log )
 		{
-			$Log->setRunLevelText( $Level );
+			$log->setRunLevelText( $level );
 
-			$this->_RunLevel = $Log->getRunLevel();
+			$this->_runLevel = $log->getRunLevel();
 		}
 	}
 
@@ -143,67 +143,67 @@ class LogMux implements ILogger
 	 */
 	public function getRunLevel(): RunLevel
 	{
-		return $this->_RunLevel;
+		return $this->_runLevel;
 	}
 
 	// region ILogger
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
 	 */
 
-	public function log( string $Text, RunLevel $Level ): void
+	public function log( string $text, RunLevel $level ): void
 	{
-		foreach( $this->getLogs() as $Log )
+		foreach( $this->getLogs() as $log )
 		{
-			$Log->log( $Text, $Level );
+			$log->log( $text, $level );
 		}
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
 
-	public function debug( string $Text ): void
+	public function debug( string $text ): void
 	{
-		$this->log( $Text, RunLevel::DEBUG );
+		$this->log( $text, RunLevel::DEBUG );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
 
-	public function info( string $Text ): void
+	public function info( string $text ): void
 	{
-		$this->log( $Text, RunLevel::INFO );
+		$this->log( $text, RunLevel::INFO );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
 
-	public function warning( string $Text ): void
+	public function warning( string $text ): void
 	{
-		$this->log( $Text, RunLevel::WARNING );
+		$this->log( $text, RunLevel::WARNING );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
 
-	public function error( string $Text ): void
+	public function error( string $text ): void
 	{
-		$this->log( $Text, RunLevel::ERROR );
+		$this->log( $text, RunLevel::ERROR );
 	}
 
 	/**
-	 * @param $Text
+	 * @param $text
 	 */
 
-	public function fatal( string $Text ): void
+	public function fatal( string $text ): void
 	{
-		$this->log( $Text, RunLevel::FATAL );
+		$this->log( $text, RunLevel::FATAL );
 	}
 	// endregion
 }

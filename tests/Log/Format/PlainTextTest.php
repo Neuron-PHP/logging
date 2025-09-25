@@ -7,9 +7,9 @@ class PlainTextTest extends LogTestBase
 {
 	public function testFormat()
 	{
-		$Text = new PlainText();
+		$text = new PlainText();
 
-		$out = $Text->format( $this->Data );
+		$out = $text->format( $this->data );
 
 		$this->assertTrue(
 			strstr( $out, self::INPUT ) != false

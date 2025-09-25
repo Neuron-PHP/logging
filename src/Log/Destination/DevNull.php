@@ -12,11 +12,11 @@ use Neuron\Log\Data;
 class DevNull extends DestinationBase
 {
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 */
-	public function write( string $Text, Log\Data $Data ) : void
+	public function write( string $text, Log\Data $data ) : void
 	{
 		// asm nop;
 	}

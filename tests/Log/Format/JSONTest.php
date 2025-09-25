@@ -7,9 +7,9 @@ class JSONTest extends LogTestBase
 {
 	public function testFormat()
 	{
-		$Json = new JSON();
+		$json = new JSON();
 
-		$out = $Json->format( $this->Data );
+		$out = $json->format( $this->data );
 
 		$decoded = json_decode( $out, true );
 

@@ -10,8 +10,8 @@ use Neuron\Log\Data;
  */
 class Socket extends DestinationBase
 {
-	private string $_Address;
-	private int    $_Port;
+	private string $_address;
+	private int    $_port;
 
 	/**
 	 * Configure the socket.
@@ -19,13 +19,13 @@ class Socket extends DestinationBase
 	 * ip_address - IP address of the socket.
 	 * port       - Port of the socket.
 	 *
-	 * @param array $Params
+	 * @param array $params
 	 * @return bool
 	 */
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
-		$this->_Address = $Params[ 'ip_address' ];
-		$this->_Port    = $Params[ 'port' ];
+		$this->_address = $params[ 'ip_address' ];
+		$this->_port    = $params[ 'port' ];
 
 		return true;
 	}
@@ -37,22 +37,22 @@ class Socket extends DestinationBase
 
 	public function error( string $sMsg )
 	{
-		$ErrorCode = socket_last_error();
-		$ErrorMsg  = socket_strerror($ErrorCode);
+		$errorCode = socket_last_error();
+		$errorMsg  = socket_strerror($errorCode);
 
-		throw new \Exception( "$sMsg: [$ErrorCode] $ErrorMsg\n" );
+		throw new \Exception( "$sMsg: [$errorCode] $errorMsg\n" );
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @throws \Exception
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
 		try
 		{
@@ -61,12 +61,12 @@ class Socket extends DestinationBase
 				$this->error( 'Could not create socket' );
 			}
 
-			if( !socket_connect($sock , $this->_Address , $this->_Port ) )
+			if( !socket_connect($sock , $this->_address , $this->_port ) )
 			{
 				$this->error( 'Could not connect' );
 			}
 
-			if( !socket_send ( $sock , $Text, strlen( $Text ) , 0))
+			if( !socket_send ( $sock , $text, strlen( $text ) , 0))
 			{
 				$this->error( 'Write failed' );
 			}

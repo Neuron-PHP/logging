@@ -36,18 +36,18 @@ class LoggerTest extends TestCase
 
 	public function testSetRunLevelFail()
 	{
-		$Failed = false;
+		$failed = false;
 
 		try
 		{
 			$this->_Logger->setRunLevel( 'fail' );
 		}
-		catch( Exception $Exception )
+		catch( Exception $exception )
 		{
-			$Failed = true;
+			$failed = true;
 		}
 
-		$this->assertTrue( $Failed );
+		$this->assertTrue( $failed );
 	}
 
 	public function testDebug()
@@ -58,7 +58,7 @@ class LoggerTest extends TestCase
 		{
 			$this->_Logger->setRunLevel( 'debug' );
 		}
-		catch( Exception $Exception )
+		catch( Exception $exception )
 		{
 			$Success = false;
 		}
@@ -75,7 +75,7 @@ class LoggerTest extends TestCase
 		{
 			$this->_Logger->setRunLevel( 'warning' );
 		}
-		catch( Exception $Exception )
+		catch( Exception $exception )
 		{
 			$Success = false;
 		}
@@ -92,7 +92,7 @@ class LoggerTest extends TestCase
 		{
 			$this->_Logger->setRunLevel( 'error' );
 		}
-		catch( Exception $Exception )
+		catch( Exception $exception )
 		{
 			$Success = false;
 		}
@@ -109,7 +109,7 @@ class LoggerTest extends TestCase
 		{
 			$this->_Logger->setRunLevel( 'fatal' );
 		}
-		catch( Exception $Exception )
+		catch( Exception $exception )
 		{
 			$Success = false;
 		}

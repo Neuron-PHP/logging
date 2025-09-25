@@ -9,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 class LogTestBase extends TestCase
 {
 	const INPUT = 'Test log.';
-	public Data $Data;
+	public Data $data;
 
 	public function setUp() : void
 	{
-		$this->Data = new Data(
+		$this->data = new Data(
 			time(),
 			self::INPUT,
 			RunLevel::DEBUG,

@@ -65,6 +65,7 @@ The logging component supports writing to various destinations:
 - **Slack**: Post to Slack channels
 - **Webhook**: Send to custom webhooks
 - **Socket**: Send over network sockets
+- **Nightwatch**: Send to Laravel Nightwatch monitoring service
 
 ### Formats
 
@@ -77,6 +78,7 @@ Each destination can use different formatting:
 - **HTMLEmail**: HTML optimized for emails
 - **Raw**: Unformatted output
 - **Slack**: Slack-specific formatting
+- **Nightwatch**: Laravel Nightwatch-specific JSON formatting
 
 ## Usage Examples
 
@@ -158,6 +160,45 @@ Log::getInstance()->Logger->addLog($slackLogger);
 Log::error('Critical system error');
 ```
 
+### Laravel Nightwatch Integration
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Nightwatch;
+use Neuron\Log\Format\Nightwatch as NightwatchFormat;
+
+// Create Nightwatch destination
+$nightwatch = new Nightwatch(new NightwatchFormat('app', 'my-application'));
+$nightwatch->open([
+    'token' => $_ENV['NIGHTWATCH_TOKEN'],  // Your Nightwatch API token
+    'endpoint' => 'https://nightwatch.laravel.com/api/logs', // Optional, uses default
+    'batch_size' => 10,  // Optional: batch logs for better performance
+    'timeout' => 5       // Optional: API request timeout in seconds
+]);
+
+$nightwatchLogger = new Logger($nightwatch);
+$nightwatchLogger->setRunLevel('info');
+
+// Log messages will be sent to Nightwatch
+$nightwatchLogger->info('Application started');
+$nightwatchLogger->error('Database connection failed', [
+    'host' => 'db.example.com',
+    'port' => 3306,
+    'error' => 'Connection timeout'
+]);
+
+// For production use with the singleton
+use Neuron\Log\Log;
+
+// Add Nightwatch to the global logger
+Log::getInstance()->Logger->addLog($nightwatchLogger);
+
+// Now all logs at info level and above go to Nightwatch
+Log::info('User logged in', ['user_id' => 123]);
+Log::warning('API rate limit approaching', ['requests' => 950, 'limit' => 1000]);
+Log::error('Payment processing failed', ['transaction_id' => 'txn_abc123']);
+```
+
 ### Contextual Logging
 
 ```php
@@ -201,8 +242,8 @@ Log::addChannel('audit', $auditLogger);
 Log::addChannel('alerts', $alertLogger);
 
 // Use specific channels
-Log::getChannel('audit')->info('User login', ['user' => $username]);
-Log::getChannel('alerts')->critical('System down!');
+Log::channel('audit')->info('User login', ['user' => $username]);
+Log::channel('alerts')->critical('System down!');
 ```
 
 ### Multiplexer (Multiple Destinations)

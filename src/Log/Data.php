@@ -8,26 +8,26 @@ namespace Neuron\Log;
 
 class Data
 {
-	public int $TimeStamp;
-	public string $Text;
-	public RunLevel $Level;
-	public string $LevelText;
-	public array $Context;
+	public int $timeStamp;
+	public string $text;
+	public RunLevel $level;
+	public string $levelText;
+	public array $context;
 
 	/**
-	 * @param int $TimeStamp
-	 * @param string $Text
-	 * @param RunLevel $Level
-	 * @param string $LevelText
-	 * @param array $Context
+	 * @param int $timeStamp
+	 * @param string $text
+	 * @param RunLevel $level
+	 * @param string $levelText
+	 * @param array $context
 	 */
 
-	public function __construct( int $TimeStamp, string $Text, RunLevel $Level, string $LevelText, array $Context )
+	public function __construct( int $timeStamp, string $text, RunLevel $level, string $levelText, array $context )
 	{
-		$this->TimeStamp = $TimeStamp;
-		$this->Text      = $Text;
-		$this->Level     = $Level;
-		$this->LevelText = $LevelText;
-		$this->Context   = $Context;
+		$this->timeStamp = $timeStamp;
+		$this->text      = $text;
+		$this->level     = $level;
+		$this->levelText = $levelText;
+		$this->context   = $context;
 	}
 }

@@ -10,23 +10,23 @@ interface ILogger
 {
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
 	 */
-	public function log( string $Text, RunLevel $Level ): void;
+	public function log( string $text, RunLevel $level ): void;
 
 	/**
-	 * @param int $Level
+	 * @param int $level
 	 * @return void
 	 */
-	public function setRunLevel( mixed $Level ): void;
+	public function setRunLevel( mixed $level ): void;
 
 	/**
 	 * Sets the run level by text.
 	 * Valid values are: debug, info, warning, error, fatal
-	 * @param string $Level
+	 * @param string $level
 	 */
-	public function setRunLevelText( string $Level );
+	public function setRunLevelText( string $level );
 
 	/**
 	 * @return RunLevel
@@ -34,43 +34,43 @@ interface ILogger
 	public function getRunLevel() : RunLevel;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 * @return void
 	 */
-	public function debug( string $Text ): void;
+	public function debug( string $text ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 * @return void
 	 */
-	public function info( string $Text ): void;
+	public function info( string $text ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 * @return void
 	 */
-	public function warning( string $Text ): void;
+	public function warning( string $text ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 * @return void
 	 */
-	public function error( string $Text ): void;
+	public function error( string $text ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 * @return void
 	 */
-	public function fatal( string $Text ): void;
+	public function fatal( string $text ): void;
 
 	/**
 	 * Add a context value to the log. Contexts are prepended to each log entry.
 	 *
-	 * @param string $Name
-	 * @param string $Value
+	 * @param string $name
+	 * @param string $value
 	 * @return void
 	 */
-	public function setContext( string $Name, string $Value ) : void;
+	public function setContext( string $name, string $value ) : void;
 
 	/**
 	 * @return array

@@ -10,55 +10,55 @@ use Exception;
  */
 class Logger implements ILogger
 {
-	private RunLevel             			$_RunLevel = RunLevel::ERROR;
-	private Destination\DestinationBase $_Destination;
-	private array           				$_Context = [];
+	private RunLevel             			$_runLevel = RunLevel::ERROR;
+	private Destination\DestinationBase $_destination;
+	private array           				$_context = [];
 
 	/**
-	 * @param Destination\DestinationBase $Dest
+	 * @param Destination\DestinationBase $dest
 	 */
-	public function __construct( Destination\DestinationBase $Dest )
+	public function __construct( Destination\DestinationBase $dest )
 	{
-		$this->setDestination( $Dest );
+		$this->setDestination( $dest );
 
 		$this->addFilter( new Filter\RunLevel() );
 	}
 
-	public function addFilter( Filter\FilterBase $Filter ): bool
+	public function addFilter( Filter\FilterBase $filter ): bool
 	{
-		$Filter->setParent( $this );
-		return $this->_Destination->addFilter( $Filter );
+		$filter->setParent( $this );
+		return $this->_destination->addFilter( $filter );
 	}
 
-	public function removeFilter( Filter\IFilter $Filter ): bool
+	public function removeFilter( Filter\IFilter $filter ): bool
 	{
-		return $this->_Destination->removeFilter( $Filter );
+		return $this->_destination->removeFilter( $filter );
 	}
 
-	public function setContext( string $Name, string $Value ) : void
+	public function setContext( string $name, string $value ) : void
 	{
-		if( !$Value )
+		if( !$value )
 		{
-			unset( $this->_Context[ $Name ] );
+			unset( $this->_context[ $name ] );
 			return;
 		}
 
-		$this->_Context[ $Name ] = $Value;
+		$this->_context[ $name ] = $value;
 	}
 
 	public function getContext() : array
 	{
-		return $this->_Context;
+		return $this->_context;
 	}
 
 	/**
-	 * @param Destination\DestinationBase $Dest
+	 * @param Destination\DestinationBase $dest
 	 */
-	public function setDestination( Destination\DestinationBase $Dest ): void
+	public function setDestination( Destination\DestinationBase $dest ): void
 	{
-		$Dest->setParent( $this );
+		$dest->setParent( $this );
 
-		$this->_Destination = $Dest;
+		$this->_destination = $dest;
 	}
 
 	/**
@@ -66,58 +66,58 @@ class Logger implements ILogger
 	 */
 	public function getDestination(): Destination\DestinationBase
 	{
-		return $this->_Destination;
+		return $this->_destination;
 	}
 
 	/**
-	 * @param string $Level
+	 * @param string $level
 	 * @throws Exception
 	 */
-	public function setRunLevelText( string $Level ): void
+	public function setRunLevelText( string $level ): void
 	{
-		$IntLevel = RunLevel::DEBUG;
+		$intLevel = RunLevel::DEBUG;
 
-		switch( strtolower( $Level ) )
+		switch( strtolower( $level ) )
 		{
 			case 'debug':
 				break;
 
 			case 'info':
-				$IntLevel = RunLevel::INFO;
+				$intLevel = RunLevel::INFO;
 				break;
 
 			case 'warning':
-				$IntLevel = RunLevel::WARNING;
+				$intLevel = RunLevel::WARNING;
 				break;
 
 			case 'error':
-				$IntLevel = RunLevel::ERROR;
+				$intLevel = RunLevel::ERROR;
 				break;
 
 			case 'fatal':
-				$IntLevel = RunLevel::FATAL;
+				$intLevel = RunLevel::FATAL;
 				break;
 
 			default:
-				throw new Exception( "Unrecognized run level '$Level'" );
+				throw new Exception( "Unrecognized run level '$level'" );
 		}
 
-		$this->setRunLevel( $IntLevel );
+		$this->setRunLevel( $intLevel );
 	}
 
 	/**
-	 * @param $Level string|int either the run level or a string representation of it.
+	 * @param $level string|int either the run level or a string representation of it.
 	 * @throws Exception
 	 */
-	public function setRunLevel( mixed $Level ): void
+	public function setRunLevel( mixed $level ): void
 	{
-		if( is_string( $Level ) )
+		if( is_string( $level ) )
 		{
-			$this->setRunLevelText( $Level );
+			$this->setRunLevelText( $level );
 			return;
 		}
 
-		$this->_RunLevel = $Level;
+		$this->_runLevel = $level;
 	}
 
 	/**
@@ -125,15 +125,15 @@ class Logger implements ILogger
 	 */
 	public function getRunLevel() : RunLevel
 	{
-		return $this->_RunLevel;
+		return $this->_runLevel;
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function open( array $Params ): mixed
+	public function open( array $params ): mixed
 	{
-		return $this->getDestination()->open( $Params );
+		return $this->getDestination()->open( $params );
 	}
 
 	/**
@@ -145,52 +145,52 @@ class Logger implements ILogger
 	}
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
 	 */
-	public function log( string $Text, RunLevel $Level ): void
+	public function log( string $text, RunLevel $level ): void
 	{
-		$this->getDestination()->log( $Text, $Level );
+		$this->getDestination()->log( $text, $level );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public function debug( string $Text ): void
+	public function debug( string $text ): void
 	{
-		$this->log( $Text, RunLevel::DEBUG );
+		$this->log( $text, RunLevel::DEBUG );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public function info( string $Text ): void
+	public function info( string $text ): void
 	{
-		$this->log( $Text, RunLevel::INFO );
+		$this->log( $text, RunLevel::INFO );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public function warning( string $Text ): void
+	public function warning( string $text ): void
 	{
-		$this->log( $Text, RunLevel::WARNING );
+		$this->log( $text, RunLevel::WARNING );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public function error( string $Text ): void
+	public function error( string $text ): void
 	{
-		$this->log( $Text, RunLevel::ERROR );
+		$this->log( $text, RunLevel::ERROR );
 	}
 
 	/**
-	 * @param string  $Text
+	 * @param string  $text
 	 */
-	public function fatal( string $Text ): void
+	public function fatal( string $text ): void
 	{
-		$this->log( $Text, RunLevel::FATAL );
+		$this->log( $text, RunLevel::FATAL );
 	}
 
 	public function reset(): void

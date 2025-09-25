@@ -12,8 +12,8 @@ use Neuron\Log\Data;
 
 class File extends DestinationBase
 {
-	private string $_Name;
-	private $_File;
+	private string $_name;
+	private $_file;
 
 	/**
 	 * @return string
@@ -21,7 +21,7 @@ class File extends DestinationBase
 
 	public function getFileName() : string
 	{
-		return $this->_Name;
+		return $this->_name;
 	}
 
 	/**
@@ -29,31 +29,31 @@ class File extends DestinationBase
 	 * for example:
 	 * 2021-06-03.log
 	 *
-	 * @param string $Mask
+	 * @param string $mask
 	 * @return string
 	 */
 
-	public function buildFileName( string $Mask ) : string
+	public function buildFileName( string $mask ) : string
 	{
-		return str_replace( "%DATE%", date( "Y-m-d" ).".log", $Mask );
+		return str_replace( "%DATE%", date( "Y-m-d" ).".log", $mask );
 	}
 
 	/**
-	 * @param array $Params
+	 * @param array $params
 	 * @return bool
 	 */
 
 	/**
-	 * @param array $Params [ 'file_name' => string ]
+	 * @param array $params [ 'file_name' => string ]
 	 * @return bool
 	 */
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
-		$this->_Name = $this->buildFileName( $Params[ 'file_name' ] );
+		$this->_name = $this->buildFileName( $params[ 'file_name' ] );
 
-		$this->_File = @fopen( $this->_Name, 'a' );
+		$this->_file = @fopen( $this->_name, 'a' );
 
-		if( !$this->_File )
+		if( !$this->_file )
 		{
 			return false;
 		}
@@ -67,23 +67,23 @@ class File extends DestinationBase
 
 	public function close(): void
 	{
-		if( $this->_File )
+		if( $this->_file )
 		{
-			fclose( $this->_File );
+			fclose( $this->_file );
 		}
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		fwrite(	$this->_File,
-					"$Text\r\n" );
+		fwrite(	$this->_file,
+					"$text\r\n" );
 	}
 }

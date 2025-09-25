@@ -54,7 +54,7 @@ class LogSingletonTest extends TestCase
 		Log::setContext( 'UserId', 1 );
 		ob_start();
 
-		Log::getChannel( 'Test' )->error( $test );
+		Log::channel( 'Test' )->error( $test );
 
 		$s = ob_get_contents();
 
@@ -194,7 +194,7 @@ class LogSingletonTest extends TestCase
 
 		ob_start();
 
-		Log::getChannel( 'RealTime' )->info( $test );
+		Log::channel( 'RealTime' )->info( $test );
 
 		$str = ob_get_contents();
 
@@ -206,7 +206,7 @@ class LogSingletonTest extends TestCase
 	public function testMissingChannel()
 	{
 		$this->assertNotNull(
-			Log::getChannel( 'Missing' )
+			Log::channel( 'Missing' )
 		);
 	}
 

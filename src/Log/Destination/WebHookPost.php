@@ -12,45 +12,45 @@ use Neuron\Validation\IsUrl;
  */
 class WebHookPost extends DestinationBase
 {
-	private string $_EndPoint;
+	private string $_endPoint;
 
 	/**
-	 * @param array $Params [ 'endpoint' => string ]
+	 * @param array $params [ 'endpoint' => string ]
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
-		$Validator = new IsUrl();
+		$validator = new IsUrl();
 
-		if( !$Validator->isValid( $Params[ 'endpoint' ] ) )
+		if( !$validator->isValid( $params[ 'endpoint' ] ) )
 		{
-			throw new \Exception( $Params[ 'endpoint' ].' is not a valid url.' );
+			throw new \Exception( $params[ 'endpoint' ].' is not a valid url.' );
 		}
 
-		$this->_EndPoint = $Params[ 'endpoint' ];
+		$this->_endPoint = $params[ 'endpoint' ];
 
 		return true;
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		$Hook = new WebHook();
+		$hook = new WebHook();
 
-		$Hook->post(
-			$this->_EndPoint,
+		$hook->post(
+			$this->_endPoint,
 			[
-				'level'      => $Data->Level->value,
-				'level_text' => $Data->LevelText,
-				'text'       => $Text,
-				'timestamp'  => $Data->TimeStamp
+				'level'      => $data->level->value,
+				'level_text' => $data->levelText,
+				'text'       => $text,
+				'timestamp'  => $data->timeStamp
 			]
 		);
 	}

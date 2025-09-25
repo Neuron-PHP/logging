@@ -10,36 +10,36 @@ use Neuron\Log;
  */
 class Memory extends DestinationBase
 {
-	private string $_Data = '';
+	private string $_data = '';
 
 	/**
 	 * @return string
 	 */
 	public function getData(): string
 	{
-		return $this->_Data;
+		return $this->_data;
 	}
 
 	/**
-	 * @param string $Data
+	 * @param string $data
 	 * @return Memory
 	 */
-	public function setData( string $Data ): Memory
+	public function setData( string $data ): Memory
 	{
-		$this->_Data = $Data;
+		$this->_data = $data;
 		return $this;
 	}
 
 
 	/**
-	 * @param string $Text
-	 * @param Log\Data $Data
+	 * @param string $text
+	 * @param Log\Data $data
 	 * @return void
 	 */
-	protected function write( string $Text, Log\Data $Data ): void
+	protected function write( string $text, Log\Data $data ): void
 	{
 		$this->setData(
-			$this->getData().$Text."\n"
+			$this->getData().$text."\n"
 		);
 	}
 }

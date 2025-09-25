@@ -1,4 +1,6 @@
-## 0.8.1
+## 0.9.0
+* Added Laravel Nightwatch integration.
+* Refactored all code to camelCase.
 
 ## 0.8.1
 

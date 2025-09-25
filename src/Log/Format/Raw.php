@@ -13,8 +13,8 @@ class Raw extends Base
 	/**
 	 * @inheritDoc
 	 */
-	public function format( Log\Data $Data ): string
+	public function format( Log\Data $data ): string
 	{
-		return $Data->Text;
+		return $data->text;
 	}
 }

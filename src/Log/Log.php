@@ -10,19 +10,19 @@ use Neuron\Patterns\Singleton\Memory;
  */
 class Log extends Memory
 {
-	public ?ILogger $Logger = null;
-	public array $Channels = [];
+	public ?ILogger $logger = null;
+	public array $channels = [];
 
 	/**
 	 * Creates and initializes the core logger if needed.
 	 */
 	public function initIfNeeded(): void
 	{
-		if( !$this->Logger )
+		if( !$this->logger )
 		{
-			$this->Logger = new LogMux();
+			$this->logger = new LogMux();
 
-			$this->Logger->addLog(
+			$this->logger->addLog(
 				new Logger(
 					new Echoer(
 						new PlainText()
@@ -35,34 +35,34 @@ class Log extends Memory
 	}
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
 	 */
-	public static function staticLog( string $Text, RunLevel $Level ): void
+	public static function staticLog( string $text, RunLevel $level ): void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->log( $Text, $Level );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->log( $text, $level );
 	}
 
 	/**
-	 * @param int $Level
+	 * @param int $level
 	 */
-	public static function setRunLevel( mixed $Level ): void
+	public static function setRunLevel( mixed $level ): void
 	{
-		/** @var Log $Log */
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		/** @var Log $log */
+		$log = self::getInstance();
+		$log->initIfNeeded();
 
-		if( $Level instanceof RunLevel )
+		if( $level instanceof RunLevel )
 		{
-			$Log->Logger->setRunLevel( $Level );
-			$Log->serialize();
+			$log->logger->setRunLevel( $level );
+			$log->serialize();
 			return;
 		}
 
-		$Log->Logger->setRunLevelText( $Level );
-		$Log->serialize();
+		$log->logger->setRunLevelText( $level );
+		$log->serialize();
 	}
 
 	/**
@@ -70,100 +70,100 @@ class Log extends Memory
 	 */
 	public static function getRunLevel() : RunLevel
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		return $Log->Logger->getRunLevel();
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		return $log->logger->getRunLevel();
 	}
 
 	/**
-	 * @param string $Name
-	 * @param string $Value
+	 * @param string $name
+	 * @param string $value
 	 * @return void
 	 */
-	public static function setContext( string $Name, string $Value ) : void
+	public static function setContext( string $name, string $value ) : void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->setContext( $Name, $Value );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->setContext( $name, $value );
 
-		foreach( $Log->Channels as $Channel )
-			$Channel->setContext( $Name, $Value );
+		foreach( $log->channels as $channel )
+			$channel->setContext( $name, $value );
 
-		$Log->serialize();
+		$log->serialize();
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public static function debug( string $Text ): void
+	public static function debug( string $text ): void
 	{
-		self::staticLog( $Text, RunLevel::DEBUG );
+		self::staticLog( $text, RunLevel::DEBUG );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public static function info( string $Text ): void
+	public static function info( string $text ): void
 	{
-		self::staticLog( $Text, RunLevel::INFO );
+		self::staticLog( $text, RunLevel::INFO );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public static function warning( string $Text ): void
+	public static function warning( string $text ): void
 	{
-		self::staticLog( $Text, RunLevel::WARNING );
+		self::staticLog( $text, RunLevel::WARNING );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public static function error( string $Text ): void
+	public static function error( string $text ): void
 	{
-		self::staticLog( $Text, RunLevel::ERROR );
+		self::staticLog( $text, RunLevel::ERROR );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
 	 */
-	public static function fatal( string $Text ): void
+	public static function fatal( string $text ): void
 	{
-		self::staticLog( $Text, RunLevel::FATAL );
+		self::staticLog( $text, RunLevel::FATAL );
 	}
 
-	public static function addChannel( string $Name, ILogger $Logger ) : void
+	public static function addChannel( string $name, ILogger $logger ) : void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		$log = self::getInstance();
+		$log->initIfNeeded();
 
-		if( !array_key_exists( $Name, $Log->Channels ) )
+		if( !array_key_exists( $name, $log->channels ) )
 		{
-			$Log->Channels[ $Name ] = new LogMux();
+			$log->channels[ $name ] = new LogMux();
 		}
 
-		$Log->Channels[ $Name ]->addLog( $Logger );
+		$log->channels[ $name ]->addLog( $logger );
 
-		$Log->serialize();
+		$log->serialize();
 	}
 
-	public static function getChannel( string $Name ) : LogMux
+	public static function channel( string $name ) : LogMux
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		$log = self::getInstance();
+		$log->initIfNeeded();
 
-		if( !array_key_exists( $Name, $Log->Channels ) )
+		if( !array_key_exists( $name, $log->channels ) )
 		{
-			$Log->Channels[ $Name ] = new LogMux();
+			$log->channels[ $name ] = new LogMux();
 		}
 
-		return $Log->Channels[ $Name ];
+		return $log->channels[ $name ];
 	}
 
-	public static function addFilter( Filter\IFilter $Filter ) : void
+	public static function addFilter( Filter\IFilter $filter ) : void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->addFilter( $Filter );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->addFilter( $filter );
 	}
 }

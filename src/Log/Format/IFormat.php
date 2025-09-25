@@ -43,8 +43,8 @@ use Neuron\Log;
 interface IFormat
 {
 	/**
-	 * @param Log\Data $Data
+	 * @param Log\Data $data
 	 * @return string
 	 */
-	public function format( Log\Data $Data ) : string;
+	public function format( Log\Data $data ) : string;
 }

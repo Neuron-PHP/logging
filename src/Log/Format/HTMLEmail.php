@@ -9,7 +9,7 @@ use Neuron\Log;
  */
 class HTMLEmail extends Base
 {
-	public function format( Log\Data $Data ): string
+	public function format( Log\Data $data ): string
 	{
 		return
 			'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -21,10 +21,10 @@ class HTMLEmail extends Base
 				</head>
 				<body>
 					<table>
-						<tr><td>Time</td><td>'.date( "[Y-m-d G:i:s]", $Data->TimeStamp ).'</td></tr>
-						<tr><td>Type</td><td>'.$Data->LevelText.'</td></tr>
-						<tr><td>Context</td><td>'.$this->getContextString( $Data->Context ).'</td></tr>
-						<tr><td>Text</td><td>'.$Data->Text.'</td></tr>
+						<tr><td>Time</td><td>'.date( "[Y-m-d G:i:s]", $data->timeStamp ).'</td></tr>
+						<tr><td>Type</td><td>'.$data->levelText.'</td></tr>
+						<tr><td>Context</td><td>'.$this->getContextString( $data->context ).'</td></tr>
+						<tr><td>Text</td><td>'.$data->text.'</td></tr>
 					</table>
 				</body>
 			</html>';

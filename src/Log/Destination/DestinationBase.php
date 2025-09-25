@@ -45,19 +45,19 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 abstract class DestinationBase
 {
-	private Format\IFormat $_Format;
-	private array    $_Filters = [];
-	private ?ILogger $_Parent  = null;
-	private mixed $_StdOut;
-	private mixed $_StdErr;
+	private Format\IFormat $_format;
+	private array    $_filters = [];
+	private ?ILogger $_parent  = null;
+	private mixed $_stdOut;
+	private mixed $_stdErr;
 
 	/**
-	 * @param Format\IFormat $Format
+	 * @param Format\IFormat $format
 	 */
-	public function __construct( Format\IFormat $Format )
+	public function __construct( Format\IFormat $format )
 	{
 		$this->setFileHandles();
-		$this->setFormat( $Format );
+		$this->setFormat( $format );
 	}
 
 	/**
@@ -66,8 +66,8 @@ abstract class DestinationBase
 	 */
 	public function setFileHandles(): void
 	{
-		$this->_StdErr = fopen( 'php://stderr', 'w' );
-		$this->_StdOut = fopen( 'php://stdout', 'w' );
+		$this->_stdErr = fopen( 'php://stderr', 'w' );
+		$this->_stdOut = fopen( 'php://stdout', 'w' );
 	}
 
 	/**
@@ -75,7 +75,7 @@ abstract class DestinationBase
 	 */
 	public function getStdOut()
 	{
-		return $this->_StdOut;
+		return $this->_stdOut;
 	}
 
 	/**
@@ -83,17 +83,17 @@ abstract class DestinationBase
 	 */
 	public function getStdErr()
 	{
-		return $this->_StdErr;
+		return $this->_stdErr;
 	}
 
 	/**
 	 * Sets the parent logger.
 	 *
-	 * @param ILogger $Logger
+	 * @param ILogger $logger
 	 */
-	public function setParent( ILogger $Logger ) : void
+	public function setParent( ILogger $logger ) : void
 	{
-		$this->_Parent = $Logger;
+		$this->_parent = $logger;
 	}
 
 	/**
@@ -103,49 +103,49 @@ abstract class DestinationBase
 	 */
 	public function getParent() : ?ILogger
 	{
-		return $this->_Parent;
+		return $this->_parent;
 	}
 
 	/**
 	 * Sets the formatter.
 	 *
-	 * @param Format\IFormat $Format
+	 * @param Format\IFormat $format
 	 */
 
-	public function setFormat( Format\IFormat $Format ): void
+	public function setFormat( Format\IFormat $format ): void
 	{
-		$this->_Format = $Format;
+		$this->_format = $format;
 	}
 
 	/**
 	 * Adds a logging filter.
 	 *
-	 * @param Filter\IFilter $Filter
+	 * @param Filter\IFilter $filter
 	 * @return bool
 	 */
-	public function addFilter( Filter\IFilter $Filter ): bool
+	public function addFilter( Filter\IFilter $filter ): bool
 	{
-		$this->_Filters[] = $Filter;
+		$this->_filters[] = $filter;
 		return true;
 	}
 
 	/**
 	 * Removes a logging filter.
 	 *
-	 * @param Filter\IFilter $RemoveFilter
+	 * @param Filter\IFilter $removeFilter
 	 * @return bool
 	 */
-	public function removeFilter( Filter\IFilter $RemoveFilter ): bool
+	public function removeFilter( Filter\IFilter $removeFilter ): bool
 	{
-		$BeforeSize = count( $this->_Filters );
-		$this->_Filters = array_filter( $this->_Filters, function ($filter) use ($RemoveFilter)
+		$beforeSize = count( $this->_filters );
+		$this->_filters = array_filter( $this->_filters, function ($filter) use ($removeFilter)
 			{
 				// Use strict comparison to ensure exact object match
-				return $filter !== $RemoveFilter;
+				return $filter !== $removeFilter;
 			}
 		);
 
-		return count( $this->_Filters ) < $BeforeSize;
+		return count( $this->_filters ) < $beforeSize;
 	}
 
 	/**
@@ -155,22 +155,22 @@ abstract class DestinationBase
 	 * to define how log data is actually written to their specific output target.
 	 * The text has already been formatted and filtered when this method is called.
 	 *
-	 * @param string $Text The formatted log message ready for output
-	 * @param Log\Data $Data The complete log data object containing metadata
+	 * @param string $text The formatted log message ready for output
+	 * @param Log\Data $data The complete log data object containing metadata
 	 * @return void
 	 */
 
-	protected abstract function write( string $Text, Log\Data $Data ): void;
+	protected abstract function write( string $text, Log\Data $data ): void;
 
 	/**
 	 * Opens the destination. Destinations may require parameters to be passed in.
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-	 * @param array $Params
+	 * @param array $params
 	 * @return mixed
 	 */
 
-	public function open( array $Params ): bool
+	public function open( array $params ): bool
 	{
 		return true;
 	}
@@ -186,29 +186,29 @@ abstract class DestinationBase
 	/**
 	 * Handles writing the log data after filtering and formatting.
 	 *
-	 * @param $Text - Output that has been run through the formatter.
-	 * @param $Level - Text output level.
+	 * @param $text - Output that has been run through the formatter.
+	 * @param $level - Text output level.
 	 */
 
-	public function log( string $Text, Log\RunLevel $Level ): void
+	public function log( string $text, Log\RunLevel $level ): void
 	{
-		$Log = new Log\Data(
+		$log = new Log\Data(
 			time(),
-			$Text,
-			$Level,
-			$Level->getLevel(),
+			$text,
+			$level,
+			$level->getLevel(),
 			$this->getParent() ? $this->getParent()->getContext() : []
 		);
 
-		foreach( $this->_Filters as $Filter )
+		foreach( $this->_filters as $filter )
 		{
-			$Log = $Filter->filter( $Log );
-			if( !$Log )
+			$log = $filter->filter( $log );
+			if( !$log )
 				return;
 		}
 
-		$Text = $this->_Format->format( $Log );
+		$text = $this->_format->format( $log );
 
-		$this->write( $Text, $Log );
+		$this->write( $text, $log );
 	}
 }

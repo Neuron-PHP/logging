@@ -7,27 +7,27 @@ use Neuron\Log\Format\IFormat;
 
 abstract class Base implements IFormat
 {
-	protected function getContextString( array $ContextList ) : string
+	protected function getContextString( array $contextList ) : string
 	{
-		$Context = '';
+		$context = '';
 
-		foreach( $ContextList as $Name => $Value )
+		foreach( $contextList as $name => $value )
 		{
-			if( strlen( $Context ) )
+			if( strlen( $context ) )
 			{
-				$Context .= '|';
+				$context .= '|';
 			}
 
-			$Context .= "$Name=$Value";
+			$context .= "$name=$value";
 		}
 
-		if( $Context )
+		if( $context )
 		{
-			return $Context;
+			return $context;
 		}
 
 		return "";
 	}
 
-	abstract public function format( Log\Data $Data ): string;
+	abstract public function format( Log\Data $data ): string;
 }
