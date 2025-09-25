@@ -9,6 +9,7 @@ class LogMux implements ILogger
 {
 	private array 		$_logs     = [];
 	private RunLevel	$_runLevel = RunLevel::DEBUG;
+	private ?string		$channel   = null;
 
 	/**
 	 * @param ILogger $log
@@ -22,6 +23,12 @@ class LogMux implements ILogger
 	 */
 	public function addLog( ILogger $log ): void
 	{
+		// Set channel on the logger if we have one
+		if( $this->channel !== null && method_exists( $log, 'setChannel' ) )
+		{
+			$log->setChannel( $this->channel );
+		}
+
 		$this->_logs[] = $log;
 	}
 
@@ -110,6 +117,36 @@ class LogMux implements ILogger
 		}
 
 		return [];
+	}
+
+	/**
+	 * Set the channel name for this LogMux and all attached loggers.
+	 *
+	 * @param string|null $channel
+	 * @return void
+	 */
+	public function setChannel( ?string $channel ): void
+	{
+		$this->channel = $channel;
+
+		// Propagate to all child loggers
+		foreach( $this->_logs as $log )
+		{
+			if( method_exists( $log, 'setChannel' ) )
+			{
+				$log->setChannel( $channel );
+			}
+		}
+	}
+
+	/**
+	 * Get the channel name for this LogMux.
+	 *
+	 * @return string|null
+	 */
+	public function getChannel(): ?string
+	{
+		return $this->channel;
 	}
 
 	/**

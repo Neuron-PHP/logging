@@ -140,6 +140,11 @@ class Log extends Memory
 		if( !array_key_exists( $name, $log->channels ) )
 		{
 			$log->channels[ $name ] = new LogMux();
+			// Set the channel name on the LogMux
+			if( method_exists( $log->channels[ $name ], 'setChannel' ) )
+			{
+				$log->channels[ $name ]->setChannel( $name );
+			}
 		}
 
 		$log->channels[ $name ]->addLog( $logger );
@@ -155,6 +160,11 @@ class Log extends Memory
 		if( !array_key_exists( $name, $log->channels ) )
 		{
 			$log->channels[ $name ] = new LogMux();
+			// Set the channel name on the LogMux
+			if( method_exists( $log->channels[ $name ], 'setChannel' ) )
+			{
+				$log->channels[ $name ]->setChannel( $name );
+			}
 		}
 
 		return $log->channels[ $name ];

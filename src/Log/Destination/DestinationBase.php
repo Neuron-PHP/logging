@@ -192,12 +192,20 @@ abstract class DestinationBase
 
 	public function log( string $text, Log\RunLevel $level ): void
 	{
+		// Get channel from parent logger if available
+		$channel = null;
+		if( $this->getParent() && method_exists( $this->getParent(), 'getChannel' ) )
+		{
+			$channel = $this->getParent()->getChannel();
+		}
+
 		$log = new Log\Data(
 			time(),
 			$text,
 			$level,
 			$level->getLevel(),
-			$this->getParent() ? $this->getParent()->getContext() : []
+			$this->getParent() ? $this->getParent()->getContext() : [],
+			$channel
 		);
 
 		foreach( $this->_filters as $filter )

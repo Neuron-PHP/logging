@@ -15,16 +15,16 @@ use Neuron\Log\RunLevel;
  */
 class Nightwatch extends Base
 {
-	private string $channel;
+	private string $defaultChannel;
 	private string $applicationName;
 
 	/**
-	 * @param string $channel The logging channel name (default: 'neuron')
+	 * @param string $defaultChannel Default channel if none provided by Data (default: 'neuron')
 	 * @param string $applicationName Optional application identifier
 	 */
-	public function __construct( string $channel = 'neuron', string $applicationName = '' )
+	public function __construct( string $defaultChannel = 'neuron', string $applicationName = '' )
 	{
-		$this->channel = $channel;
+		$this->defaultChannel = $defaultChannel;
 		$this->applicationName = $applicationName;
 	}
 
@@ -36,11 +36,14 @@ class Nightwatch extends Base
 	 */
 	public function format( Log\Data $data ): string
 	{
+		// Use channel from Data object if available, otherwise use default
+		$channel = $data->channel ?? $this->defaultChannel;
+
 		$nightwatchData = [
 			'level'     => $this->mapLogLevel( $data->level ),
 			'message'   => $data->text,
 			'context'   => $data->context,
-			'channel'   => $this->channel,
+			'channel'   => $channel,
 			'datetime'  => date( 'Y-m-d\TH:i:s.uP', $data->timeStamp ),
 			'extra'     => [
 				'neuron_level' => $data->levelText,

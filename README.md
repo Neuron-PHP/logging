@@ -167,8 +167,8 @@ use Neuron\Log\Logger;
 use Neuron\Log\Destination\Nightwatch;
 use Neuron\Log\Format\Nightwatch as NightwatchFormat;
 
-// Create Nightwatch destination
-$nightwatch = new Nightwatch(new NightwatchFormat('app', 'my-application'));
+// Create Nightwatch destination with default channel
+$nightwatch = new Nightwatch(new NightwatchFormat());
 $nightwatch->open([
     'token' => $_ENV['NIGHTWATCH_TOKEN'],  // Your Nightwatch API token
     'endpoint' => 'https://nightwatch.laravel.com/api/logs', // Optional, uses default
@@ -198,6 +198,42 @@ Log::info('User logged in', ['user_id' => 123]);
 Log::warning('API rate limit approaching', ['requests' => 950, 'limit' => 1000]);
 Log::error('Payment processing failed', ['transaction_id' => 'txn_abc123']);
 ```
+
+#### Nightwatch with Channels
+
+The channel name is automatically passed to Nightwatch when using named channels:
+
+```php
+use Neuron\Log\Log;
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Nightwatch;
+use Neuron\Log\Format\Nightwatch as NightwatchFormat;
+
+// Create a single Nightwatch format instance
+$nightwatchFormat = new NightwatchFormat('neuron', 'my-app');
+
+// Create Nightwatch destination
+$nightwatch = new Nightwatch($nightwatchFormat);
+$nightwatch->open(['token' => $_ENV['NIGHTWATCH_TOKEN']]);
+
+// Create logger and add to multiple channels
+$logger = new Logger($nightwatch);
+Log::addChannel('audit', $logger);
+Log::addChannel('security', $logger);
+Log::addChannel('payments', $logger);
+
+// Logs automatically include the channel name
+Log::channel('audit')->info('User updated profile', ['user_id' => 123]);
+// Nightwatch receives: {"channel": "audit", "message": "User updated profile", ...}
+
+Log::channel('security')->warning('Failed login attempt', ['ip' => '192.168.1.1']);
+// Nightwatch receives: {"channel": "security", "message": "Failed login attempt", ...}
+
+Log::channel('payments')->error('Payment failed', ['amount' => 99.99]);
+// Nightwatch receives: {"channel": "payments", "message": "Payment failed", ...}
+```
+
+The channel name appears in the Nightwatch dashboard for easy filtering and monitoring.
 
 ### Contextual Logging
 

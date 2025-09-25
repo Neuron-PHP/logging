@@ -13,6 +13,7 @@ class Logger implements ILogger
 	private RunLevel             			$_runLevel = RunLevel::ERROR;
 	private Destination\DestinationBase $_destination;
 	private array           				$_context = [];
+	private ?string              			$channel = null;
 
 	/**
 	 * @param Destination\DestinationBase $dest
@@ -49,6 +50,27 @@ class Logger implements ILogger
 	public function getContext() : array
 	{
 		return $this->_context;
+	}
+
+	/**
+	 * Set the channel name for this logger.
+	 *
+	 * @param string|null $channel
+	 * @return void
+	 */
+	public function setChannel( ?string $channel ): void
+	{
+		$this->channel = $channel;
+	}
+
+	/**
+	 * Get the channel name for this logger.
+	 *
+	 * @return string|null
+	 */
+	public function getChannel(): ?string
+	{
+		return $this->channel;
 	}
 
 	/**

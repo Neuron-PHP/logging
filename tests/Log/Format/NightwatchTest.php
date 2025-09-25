@@ -29,13 +29,54 @@ class NightwatchTest extends LogTestBase
 
 	public function testFormatWithApplicationName()
 	{
-		$format = new Nightwatch( 'custom-channel', 'test-app' );
+		$format = new Nightwatch( 'default-channel', 'test-app' );
 		$output = $format->format( $this->data );
 
 		$decoded = json_decode( $output, true );
 
-		$this->assertEquals( 'custom-channel', $decoded['channel'] );
+		$this->assertEquals( 'default-channel', $decoded['channel'] );
 		$this->assertEquals( 'test-app', $decoded['extra']['application'] );
+	}
+
+	public function testFormatWithChannelFromData()
+	{
+		// Create data with channel set
+		$data = new Data(
+			time(),
+			'Channel test message',
+			RunLevel::INFO,
+			'INFO',
+			[ 'user_id' => 123 ],
+			'audit'  // Channel set in Data
+		);
+
+		$format = new Nightwatch( 'default-channel', 'test-app' );
+		$output = $format->format( $data );
+		$decoded = json_decode( $output, true );
+
+		// Should use channel from Data, not default
+		$this->assertEquals( 'audit', $decoded['channel'] );
+		$this->assertEquals( 'test-app', $decoded['extra']['application'] );
+	}
+
+	public function testFormatUsesDefaultWhenNoChannelInData()
+	{
+		// Create data without channel (null)
+		$data = new Data(
+			time(),
+			'No channel message',
+			RunLevel::WARNING,
+			'WARNING',
+			[ 'error' => 'test' ],
+			null  // No channel in Data
+		);
+
+		$format = new Nightwatch( 'fallback-channel' );
+		$output = $format->format( $data );
+		$decoded = json_decode( $output, true );
+
+		// Should use default channel
+		$this->assertEquals( 'fallback-channel', $decoded['channel'] );
 	}
 
 	public function testLogLevelMapping()
