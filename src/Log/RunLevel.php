@@ -1,6 +1,54 @@
 <?php
 namespace Neuron\Log;
 
+/**
+ * Logging run level enumeration for message prioritization and filtering.
+ * 
+ * This enum defines the standard logging levels used throughout the Neuron
+ * logging system for message classification, filtering, and prioritization.
+ * Each level has a numeric value that allows for easy comparison and
+ * hierarchical filtering, where higher values represent more critical messages.
+ * 
+ * Logging level hierarchy (lowest to highest priority):
+ * - DEBUG (0): Detailed diagnostic information for development and troubleshooting
+ * - INFO (10): General informational messages about application flow
+ * - WARNING (20): Warning messages about potentially harmful situations
+ * - ERROR (30): Error events that allow the application to continue running
+ * - FATAL (40): Critical errors that may cause the application to terminate
+ * 
+ * Key features:
+ * - Numeric values allow easy level comparison and filtering
+ * - String representation for human-readable output
+ * - Integration with log destinations and filters
+ * - Support for minimum level filtering
+ * - Consistent severity classification across all loggers
+ * 
+ * @package Neuron\Log
+ * @author Neuron-PHP Framework
+ * @version 3.0.0
+ * @since 1.0.0
+ * 
+ * @example
+ * ```php
+ * // Using run levels in logging
+ * $logger = new Logger();
+ * $logger->setMinimumLevel(RunLevel::WARNING);
+ * 
+ * // These will be logged (WARNING and above)
+ * $logger->log(RunLevel::WARNING, 'Deprecated function used');
+ * $logger->log(RunLevel::ERROR, 'Database connection failed');
+ * $logger->log(RunLevel::FATAL, 'Critical system failure');
+ * 
+ * // These will be filtered out (below WARNING)
+ * $logger->log(RunLevel::DEBUG, 'Variable value: ' . $var);
+ * $logger->log(RunLevel::INFO, 'User logged in');
+ * 
+ * // Level comparison
+ * if ($currentLevel->value >= RunLevel::ERROR->value) {
+ *     $this->sendAlertEmail($message);
+ * }
+ * ```
+ */
 enum RunLevel : int
 {
 	case DEBUG   = 0;		// Log all

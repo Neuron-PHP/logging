@@ -1,134 +1,370 @@
-[![Build Status](https://app.travis-ci.com/Neuron-PHP/logging.svg?token=F8zCwpT7x7Res7J2N4vF&branch=master)](https://app.travis-ci.com/Neuron-PHP/logging)
+[![CI](https://github.com/Neuron-PHP/logging/actions/workflows/ci.yml/badge.svg)](https://github.com/Neuron-PHP/logging/actions)
 # Neuron-PHP Logging
 
-## Overview
+A flexible and powerful logging component for PHP 8.4+ applications, part of the Neuron-PHP framework.
+
+## Features
+
+- **Multiple Destinations**: Write logs to files, console, Slack, webhooks, syslog, and more
+- **Flexible Formatting**: Support for plain text, JSON, HTML, CSV, and custom formats
+- **Log Levels**: Full support for standard log levels (debug, info, warning, error, critical, alert, emergency)
+- **Contextual Logging**: Attach contextual data to log entries for better debugging
+- **Channels**: Manage multiple independent loggers with different configurations
+- **Filters**: Apply custom filters to control which logs are written
+- **Multiplexing**: Write to multiple destinations simultaneously with different run levels
+- **PSR-3 Compatible**: Follows PHP logging standards
+
+## Requirements
+
+- PHP 8.4 or higher
+- ext-curl (for webhook/Slack destinations)
+- ext-json (for JSON formatting)
+- ext-sockets (for socket destination)
 
 ## Installation
 
-Install php composer from https://getcomposer.org/
+Install via Composer:
 
-Install the neuron logging component:
+```bash
+composer require neuron-php/logging
+```
 
-    composer require neuron-php/logging
+## Quick Start
 
-## Logging
+The simplest way to start logging is using the singleton facade:
 
-A logger writes log entries to a destination using a specific format.
+```php
+use Neuron\Log\Log;
 
-### Destinations
+// Set the minimum log level
+Log::setRunLevel('debug');
 
-* Echo
-* Email
-* File
-* Memory
-* Null
-* Slack
-* Socket
-* StErr
-* StdOut
-* StdOutStdErr
-* SysLog
-* Webhook
+// Write log messages
+Log::debug('Debug message');
+Log::info('Information message');
+Log::warning('Warning message');
+Log::error('Error message');
+Log::critical('Critical error');
+```
+
+## Destinations
+
+The logging component supports writing to various destinations:
+
+### Available Destinations
+
+- **Echo**: Output to browser/console
+- **File**: Write to log files
+- **StdOut**: Write to standard output
+- **StdErr**: Write to standard error
+- **StdOutStdErr**: Write to both stdout and stderr based on level
+- **SysLog**: System logging
+- **Memory**: Store logs in memory for testing
+- **Null**: Discard logs (useful for testing)
+- **Email**: Send logs via email
+- **Slack**: Post to Slack channels
+- **Webhook**: Send to custom webhooks
+- **Socket**: Send over network sockets
 
 ### Formats
 
-* CSV
-* HTML
-* HTMLEmail
-* JSON
-* PlainText
-* Raw
-* Slack
+Each destination can use different formatting:
 
-## Multiplexer
+- **PlainText**: Human-readable text format
+- **JSON**: Structured JSON output
+- **CSV**: Comma-separated values
+- **HTML**: HTML formatted output
+- **HTMLEmail**: HTML optimized for emails
+- **Raw**: Unformatted output
+- **Slack**: Slack-specific formatting
 
-A LogMux implements the ILogger interface but contains and writes to multiple logs
-simultaneously. Each Logger can have a separate run level so only certain logs may
-be written to depending on the run level of the independent Logger.
+## Usage Examples
 
+### Basic Logging
 
-## Logger Singleton
+```php
+use Neuron\Log\Log;
 
-The logger singleton is a LogMux wrapper that exists as a singleton/cross-cutting concern
-so it can be accessed anywhere in the code base.
+// Configure run level
+Log::setRunLevel('debug');
 
-The default log is the Echoer using plain text format.
+// Write log messages at different levels
+Log::debug('Debug information');
+Log::info('Application started');
+Log::warning('Memory usage high');
+Log::error('Failed to connect to database');
+Log::critical('System failure');
+```
 
-## Examples
+### File Logging
 
-### Logger Singleton
-The quickest way to get started is using the singleton
-facade:
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Format\PlainText;
 
-    Log::setRunLevel( 'debug' );
-    Log::debug( "Log message." );
-    
-### Slack
-To configure slack:
+// Create a file logger
+$fileDestination = new File(new PlainText());
+$fileDestination->open(['path' => '/var/log/app.log']);
 
-    $Log = Log::getInstance();
+$logger = new Logger($fileDestination);
+$logger->setRunLevel('info');
+$logger->info('Application event logged to file');
+```
 
-    $Slack = new Slack(
-        new PlainText( true )
-    );
+### JSON Logging
 
-    $Slack->open(
-        [
-            'endpoint' => env( 'LOG_SLACK_WEBHOOK_URL' ),
-            'params' => [
-                'channel'  => env( 'LOG_SLACK_CHANNEL' ),
-                'username' => 'Log'
-            ]
-        ]
-    );
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Format\JSON;
 
-    $SlackLogger = new Logger( $Slack );
-    $SlackLogger->setRunLevel( 'error' );
-    $Log->Logger->addLog( $SlackLogger );
+// Log in JSON format for structured logging
+$jsonDestination = new File(new JSON());
+$jsonDestination->open(['path' => '/var/log/app.json']);
 
-In this example, any log with a level of ERROR or
-higher will be written to the slack channel.
+$jsonLogger = new Logger($jsonDestination);
+$jsonLogger->error('Database error', [
+    'query' => 'SELECT * FROM users',
+    'error_code' => 1054
+]);
+```
 
-### Contexts
+### Slack Integration
 
-    Log::setContext( 'UserId', $UserId );
-    Log::setContext( 'SessionId', $SessionId );
+```php
+use Neuron\Log\Log;
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Slack;
+use Neuron\Log\Format\SlackFormat;
 
-    Log::info( "New login." );
+$slack = new Slack(new SlackFormat());
+$slack->open([
+    'endpoint' => $_ENV['LOG_SLACK_WEBHOOK_URL'],
+    'params' => [
+        'channel'  => '#alerts',
+        'username' => 'AppLogger',
+        'icon_emoji' => ':warning:'
+    ]
+]);
 
-Outputs:
+$slackLogger = new Logger($slack);
+$slackLogger->setRunLevel('error');
 
-[2022-06-03 12:00:00][Info] [UserId=15, SessionId=1234] New Login.
+// Add to the multiplexer
+Log::getInstance()->Logger->addLog($slackLogger);
 
-### Channels
+// Now errors and above will also go to Slack
+Log::error('Critical system error');
+```
 
-Channels are independent loggers that can be accessed by name.
+### Contextual Logging
 
-    $Log = Log::getInstance();
+```php
+use Neuron\Log\Log;
 
-    $Slack = new Slack(
-        new PlainText( true )
-    );
+// Set global context
+Log::setContext('request_id', uniqid());
+Log::setContext('user_id', $userId);
+Log::setContext('session_id', session_id());
 
-    $Slack->open(
-        [
-            'endpoint' => env( 'LOG_SLACK_WEBHOOK_URL' ),
-            'params' => [
-                'channel'  => env( 'LOG_SLACK_CHANNEL' ),
-                'username' => 'Log'
-            ]
-        ]
-    );
+// All subsequent logs will include this context
+Log::info('User action performed');
+// Output: [2025-01-08 10:30:45][Info] [request_id=abc123, user_id=42, session_id=xyz789] User action performed
+```
 
-    $SlackLogger = new Logger( $Slack );
-    $SlackLogger->setRunLevel( 'info' );
+### Multiple Channels
 
-    Log::addChannel( 'RealTime', $SlackLogger );
+```php
+use Neuron\Log\Log;
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Destination\Slack;
+use Neuron\Log\Format\PlainText;
+use Neuron\Log\Format\SlackFormat;
 
-    // Write directly to slack an any time..
+// Create an audit logger
+$auditFile = new File(new PlainText());
+$auditFile->open(['path' => '/var/log/audit.log']);
+$auditLogger = new Logger($auditFile);
 
-    Log::getChannel( 'RealTime' )->info( "Slack notification." );
+// Create a real-time alerts logger
+$alertSlack = new Slack(new SlackFormat());
+$alertSlack->open([
+    'endpoint' => $_ENV['SLACK_WEBHOOK'],
+    'params' => ['channel' => '#alerts']
+]);
+$alertLogger = new Logger($alertSlack);
 
-# More Information
+// Register channels
+Log::addChannel('audit', $auditLogger);
+Log::addChannel('alerts', $alertLogger);
 
-You can read more about the Neuron components at [neuronphp.com](http://neuronphp.com)
+// Use specific channels
+Log::getChannel('audit')->info('User login', ['user' => $username]);
+Log::getChannel('alerts')->critical('System down!');
+```
+
+### Multiplexer (Multiple Destinations)
+
+```php
+use Neuron\Log\LogMux;
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Destination\StdErr;
+use Neuron\Log\Format\PlainText;
+use Neuron\Log\Format\JSON;
+
+// Create multiple loggers
+$fileLogger = new Logger(new File(new JSON()));
+$fileLogger->getDestination()->open(['path' => '/var/log/app.json']);
+$fileLogger->setRunLevel('debug');
+
+$consoleLogger = new Logger(new StdErr(new PlainText()));
+$consoleLogger->setRunLevel('warning');
+
+// Create multiplexer
+$mux = new LogMux();
+$mux->addLog($fileLogger);
+$mux->addLog($consoleLogger);
+
+// Logs go to both destinations based on their run levels
+$mux->debug('Debug info');     // Only to file
+$mux->warning('Warning!');     // To both file and console
+$mux->error('Error occurred'); // To both file and console
+```
+
+### Custom Filters
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Filter\IFilter;
+use Neuron\Log\RunLevel;
+
+class ProductionFilter implements IFilter {
+    public function shouldLog(RunLevel $level, string $message, array $context): bool {
+        // Don't log debug messages in production
+        if ($level === RunLevel::DEBUG && $_ENV['APP_ENV'] === 'production') {
+            return false;
+        }
+        
+        // Don't log sensitive data
+        if (str_contains($message, 'password') || str_contains($message, 'token')) {
+            return false;
+        }
+        
+        return true;
+    }
+}
+
+$logger = new Logger($destination);
+$logger->addFilter(new ProductionFilter());
+```
+
+## Advanced Configuration
+
+### Environment-Based Configuration
+
+```php
+use Neuron\Log\Log;
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Destination\StdOut;
+use Neuron\Log\Format\JSON;
+use Neuron\Log\Format\PlainText;
+
+$environment = $_ENV['APP_ENV'] ?? 'development';
+
+if ($environment === 'production') {
+    // Production: JSON to file
+    $destination = new File(new JSON());
+    $destination->open(['path' => '/var/log/app.json']);
+    $runLevel = 'warning';
+} else {
+    // Development: Plain text to console
+    $destination = new StdOut(new PlainText(true));
+    $runLevel = 'debug';
+}
+
+$logger = new Logger($destination);
+$logger->setRunLevel($runLevel);
+
+Log::getInstance()->Logger->addLog($logger);
+```
+
+### Testing with Memory Logger
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Memory;
+use Neuron\Log\Format\Raw;
+
+// For unit testing
+$memoryDestination = new Memory(new Raw());
+$testLogger = new Logger($memoryDestination);
+
+$testLogger->error('Test error');
+$testLogger->info('Test info');
+
+// Retrieve logged messages
+$logs = $memoryDestination->getLogs();
+assert(count($logs) === 2);
+assert($logs[0]['level'] === 'error');
+```
+
+## API Reference
+
+### Log Levels
+
+The following log levels are supported (from lowest to highest severity):
+
+- `debug` - Detailed debug information
+- `info` - Informational messages
+- `notice` - Normal but significant events
+- `warning` - Warning messages
+- `error` - Error conditions
+- `critical` - Critical conditions
+- `alert` - Action must be taken immediately
+- `emergency` - System is unusable
+
+### Logger Methods
+
+```php
+$logger->debug(string $message, array $context = []);
+$logger->info(string $message, array $context = []);
+$logger->notice(string $message, array $context = []);
+$logger->warning(string $message, array $context = []);
+$logger->error(string $message, array $context = []);
+$logger->critical(string $message, array $context = []);
+$logger->alert(string $message, array $context = []);
+$logger->emergency(string $message, array $context = []);
+$logger->log(RunLevel $level, string $message, array $context = []);
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+./vendor/bin/phpunit tests
+```
+
+Run tests with coverage:
+
+```bash
+./vendor/bin/phpunit tests --coverage-text
+```
+
+## Contributing
+
+Contributions are welcome! Please ensure all tests pass and maintain code coverage above 95%.
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## More Information
+
+- Full documentation: [neuronphp.com](http://neuronphp.com)
+- GitHub: [github.com/neuron-php/logging](https://github.com/neuron-php/logging)
+- Issues: [github.com/neuron-php/logging/issues](https://github.com/neuron-php/logging/issues)

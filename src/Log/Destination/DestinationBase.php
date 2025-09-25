@@ -9,7 +9,38 @@ use Neuron\Log\ILogger;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
- * Abstract base class for log destinations.
+ * Abstract base class for all logging destinations in the Neuron logging system.
+ * 
+ * This class provides the foundation for implementing various logging outputs
+ * such as files, databases, remote services, or console output. It handles
+ * common functionality like formatting, filtering, and parent logger relationships.
+ * 
+ * Concrete implementations must implement the write() method to define how
+ * log data is actually output to their specific destination.
+ * 
+ * Key responsibilities:
+ * - Manages log formatters and filters
+ * - Handles parent logger relationships
+ * - Provides standard file handles for STDOUT/STDERR
+ * - Orchestrates the filtering and formatting pipeline
+ * - Defines the contract for destination-specific writing
+ * 
+ * @package Neuron\Log\Destination
+ * @author Neuron-PHP Framework
+ * @version 3.0.0
+ * @since 1.0.0
+ * 
+ * @example
+ * ```php
+ * class CustomDestination extends DestinationBase
+ * {
+ *     protected function write(string $text, Log\Data $data): void
+ *     {
+ *         // Custom implementation for writing log data
+ *         file_put_contents('/var/log/custom.log', $text, FILE_APPEND);
+ *     }
+ * }
+ * ```
  */
 
 abstract class DestinationBase
@@ -118,11 +149,15 @@ abstract class DestinationBase
 	}
 
 	/**
-	 * Writes the log data to the destination.
+	 * Writes the formatted log data to the specific destination.
+	 * 
+	 * This abstract method must be implemented by concrete destination classes
+	 * to define how log data is actually written to their specific output target.
+	 * The text has already been formatted and filtered when this method is called.
 	 *
-	 * @param $Text - Text m
-	 * @param Log\Data $Data
-	 * @return mixed
+	 * @param string $Text The formatted log message ready for output
+	 * @param Log\Data $Data The complete log data object containing metadata
+	 * @return void
 	 */
 
 	protected abstract function write( string $Text, Log\Data $Data ): void;
