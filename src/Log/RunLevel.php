@@ -24,9 +24,6 @@ namespace Neuron\Log;
  * - Consistent severity classification across all loggers
  * 
  * @package Neuron\Log
- * @author Neuron-PHP Framework
- * @version 3.0.0
- * @since 1.0.0
  * 
  * @example
  * ```php

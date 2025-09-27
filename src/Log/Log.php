@@ -37,12 +37,13 @@ class Log extends Memory
 	/**
 	 * @param string $text
 	 * @param RunLevel $level
+	 * @param array $context
 	 */
-	public static function staticLog( string $text, RunLevel $level ): void
+	public static function staticLog( string $text, RunLevel $level, array $context = [] ): void
 	{
 		$log = self::getInstance();
 		$log->initIfNeeded();
-		$log->logger->log( $text, $level );
+		$log->logger->log( $text, $level, $context );
 	}
 
 	/**
@@ -77,10 +78,10 @@ class Log extends Memory
 
 	/**
 	 * @param string $name
-	 * @param string $value
+	 * @param mixed $value Can be string, array, or other scalar/object types
 	 * @return void
 	 */
-	public static function setContext( string $name, string $value ) : void
+	public static function setContext( string $name, mixed $value ) : void
 	{
 		$log = self::getInstance();
 		$log->initIfNeeded();
@@ -94,42 +95,47 @@ class Log extends Memory
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public static function debug( string $text ): void
+	public static function debug( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::DEBUG );
+		self::staticLog( $text, RunLevel::DEBUG, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public static function info( string $text ): void
+	public static function info( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::INFO );
+		self::staticLog( $text, RunLevel::INFO, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public static function warning( string $text ): void
+	public static function warning( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::WARNING );
+		self::staticLog( $text, RunLevel::WARNING, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public static function error( string $text ): void
+	public static function error( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::ERROR );
+		self::staticLog( $text, RunLevel::ERROR, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public static function fatal( string $text ): void
+	public static function fatal( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::FATAL );
+		self::staticLog( $text, RunLevel::FATAL, $context );
 	}
 
 	public static function addChannel( string $name, ILogger $logger ) : void

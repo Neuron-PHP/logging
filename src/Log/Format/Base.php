@@ -18,7 +18,9 @@ abstract class Base implements IFormat
 				$context .= '|';
 			}
 
-			$context .= "$name=$value";
+			// Convert value to string representation
+			$stringValue = $this->valueToString( $value );
+			$context .= "$name=$stringValue";
 		}
 
 		if( $context )
@@ -27,6 +29,52 @@ abstract class Base implements IFormat
 		}
 
 		return "";
+	}
+
+	/**
+	 * Converts a value to string representation for logging.
+	 *
+	 * @param mixed $value
+	 * @return string
+	 */
+	protected function valueToString( mixed $value ): string
+	{
+		if( is_null( $value ) )
+		{
+			return 'null';
+		}
+
+		if( is_bool( $value ) )
+		{
+			return $value ? 'true' : 'false';
+		}
+
+		if( is_scalar( $value ) )
+		{
+			return (string) $value;
+		}
+
+		if( is_array( $value ) )
+		{
+			return json_encode( $value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		}
+
+		if( is_object( $value ) )
+		{
+			if( method_exists( $value, '__toString' ) )
+			{
+				return (string) $value;
+			}
+
+			if( $value instanceof \Throwable )
+			{
+				return get_class( $value ) . ': ' . $value->getMessage();
+			}
+
+			return get_class( $value );
+		}
+
+		return gettype( $value );
 	}
 
 	abstract public function format( Log\Data $data ): string;

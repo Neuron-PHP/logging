@@ -36,9 +36,9 @@ class Logger implements ILogger
 		return $this->_destination->removeFilter( $filter );
 	}
 
-	public function setContext( string $name, string $value ) : void
+	public function setContext( string $name, mixed $value ) : void
 	{
-		if( !$value )
+		if( $value === null || $value === '' )
 		{
 			unset( $this->_context[ $name ] );
 			return;
@@ -167,52 +167,86 @@ class Logger implements ILogger
 	}
 
 	/**
+	 * Interpolates context values into the message placeholders.
+	 * Implements PSR-3 style message interpolation.
+	 *
+	 * @param string $message
+	 * @param array $context
+	 * @return string
+	 */
+	private function interpolate( string $message, array $context ): string
+	{
+		$replace = [];
+		foreach( $context as $key => $val )
+		{
+			// Only interpolate scalar values and objects with __toString
+			if( !is_array( $val ) && (!is_object( $val ) || method_exists( $val, '__toString' )) )
+			{
+				$replace['{' . $key . '}'] = (string) $val;
+			}
+		}
+		return strtr( $message, $replace );
+	}
+
+	/**
 	 * @param string $text
 	 * @param RunLevel $level
+	 * @param array $context
 	 */
-	public function log( string $text, RunLevel $level ): void
+	public function log( string $text, RunLevel $level, array $context = [] ): void
 	{
-		$this->getDestination()->log( $text, $level );
+		// Interpolate context values into message
+		if( !empty( $context ) )
+		{
+			$text = $this->interpolate( $text, $context );
+		}
+
+		$this->getDestination()->log( $text, $level, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public function debug( string $text ): void
+	public function debug( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::DEBUG );
+		$this->log( $text, RunLevel::DEBUG, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public function info( string $text ): void
+	public function info( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::INFO );
+		$this->log( $text, RunLevel::INFO, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public function warning( string $text ): void
+	public function warning( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::WARNING );
+		$this->log( $text, RunLevel::WARNING, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
-	public function error( string $text ): void
+	public function error( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::ERROR );
+		$this->log( $text, RunLevel::ERROR, $context );
 	}
 
 	/**
-	 * @param string  $text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public function fatal( string $text ): void
+	public function fatal( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::FATAL );
+		$this->log( $text, RunLevel::FATAL, $context );
 	}
 
 	public function reset(): void

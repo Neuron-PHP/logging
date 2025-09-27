@@ -93,10 +93,10 @@ class LogMux implements ILogger
 	 * Adds context for all loggers.
 	 *
 	 * @param string $name
-	 * @param string $value
+	 * @param mixed $value
 	 * @return void
 	 */
-	public function setContext( string $name, string $value ): void
+	public function setContext( string $name, mixed $value ): void
 	{
 		foreach( $this->getLogs() as $log )
 		{
@@ -188,59 +188,65 @@ class LogMux implements ILogger
 	/**
 	 * @param string $text
 	 * @param RunLevel $level
+	 * @param array $context
 	 */
 
-	public function log( string $text, RunLevel $level ): void
+	public function log( string $text, RunLevel $level, array $context = [] ): void
 	{
 		foreach( $this->getLogs() as $log )
 		{
-			$log->log( $text, $level );
+			$log->log( $text, $level, $context );
 		}
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
 
-	public function debug( string $text ): void
+	public function debug( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::DEBUG );
+		$this->log( $text, RunLevel::DEBUG, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
 
-	public function info( string $text ): void
+	public function info( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::INFO );
+		$this->log( $text, RunLevel::INFO, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
 
-	public function warning( string $text ): void
+	public function warning( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::WARNING );
+		$this->log( $text, RunLevel::WARNING, $context );
 	}
 
 	/**
 	 * @param string $text
+	 * @param array $context
 	 */
 
-	public function error( string $text ): void
+	public function error( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::ERROR );
+		$this->log( $text, RunLevel::ERROR, $context );
 	}
 
 	/**
-	 * @param $text
+	 * @param string $text
+	 * @param array $context
 	 */
 
-	public function fatal( string $text ): void
+	public function fatal( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::FATAL );
+		$this->log( $text, RunLevel::FATAL, $context );
 	}
 	// endregion
 }

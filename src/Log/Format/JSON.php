@@ -19,10 +19,21 @@ class JSON extends Base
 		$aData = [
 			'date'	 => date( "Y-m-d G:i:s", $data->timeStamp ),
 			'level'	 => $data->levelText,
-			'context' => $this->getContextString( $data->context ),
-			'text'	 => $data->text
+			'message' => $data->text
 		];
 
-		return json_encode( $aData );
+		// Add channel if present
+		if( $data->channel !== null )
+		{
+			$aData['channel'] = $data->channel;
+		}
+
+		// Add context as structured data if present
+		if( !empty( $data->context ) )
+		{
+			$aData['context'] = $data->context;
+		}
+
+		return json_encode( $aData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 	}
 }

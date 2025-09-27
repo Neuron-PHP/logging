@@ -26,9 +26,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  * - Defines the contract for destination-specific writing
  * 
  * @package Neuron\Log\Destination
- * @author Neuron-PHP Framework
- * @version 3.0.0
- * @since 1.0.0
  * 
  * @example
  * ```php
@@ -188,9 +185,10 @@ abstract class DestinationBase
 	 *
 	 * @param $text - Output that has been run through the formatter.
 	 * @param $level - Text output level.
+	 * @param $context - Optional context array
 	 */
 
-	public function log( string $text, Log\RunLevel $level ): void
+	public function log( string $text, Log\RunLevel $level, array $context = [] ): void
 	{
 		// Get channel from parent logger if available
 		$channel = null;
@@ -199,12 +197,18 @@ abstract class DestinationBase
 			$channel = $this->getParent()->getChannel();
 		}
 
+		// Merge global context with per-call context
+		$mergedContext = $this->getParent() ? $this->getParent()->getContext() : [];
+
+		// Per-call context takes precedence
+		$mergedContext = array_merge( $mergedContext, $context );
+
 		$log = new Log\Data(
 			time(),
 			$text,
 			$level,
 			$level->getLevel(),
-			$this->getParent() ? $this->getParent()->getContext() : [],
+			$mergedContext,
 			$channel
 		);
 

@@ -62,7 +62,7 @@ class LogMuxTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
+		$this->assertStringContainsString( "\"message\":\"$test\"", $s );
 	}
 
 	public function testFatalPass()
@@ -88,7 +88,7 @@ class LogMuxTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
+		$this->assertStringContainsString( "\"message\":\"$test\"", $s );
 	}
 
 

@@ -1,6 +1,9 @@
 ## 0.9.0
 * Added Laravel Nightwatch integration.
 * Refactored all code to camelCase.
+* Added websocket log destination.
+* Added complex data logging.
+* Refactored channels to be part of the log data.
 
 ## 0.8.1
 

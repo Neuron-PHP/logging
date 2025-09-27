@@ -24,9 +24,6 @@ use Neuron\Log\Data;
  * - Each filter receives the output of the previous filter in the chain
  * 
  * @package Neuron\Log\Filter
- * @author Neuron-PHP Framework
- * @version 3.0.0
- * @since 1.0.0
  * 
  * @example
  * ```php
