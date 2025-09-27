@@ -4,6 +4,7 @@
 * Added websocket log destination.
 * Added complex data logging.
 * Refactored channels to be part of the log data.
+* Added papertrail log destination.
 
 ## 0.8.1
 

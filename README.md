@@ -64,31 +64,33 @@ The logging component supports writing to various destinations:
 ### Available Destinations
 
 - **Echo**: Output to browser/console
+- **Email**: Send logs via email
 - **File**: Write to log files
-- **StdOut**: Write to standard output
+- **Memory**: Store logs in memory for testing
+- **Nightwatch**: Send to Laravel Nightwatch monitoring service
+- **Null**: Discard logs (useful for testing)
+- **Papertrail**: Send to Papertrail cloud logging service
+- **Slack**: Post to Slack channels
+- **Socket**: Send over network sockets
 - **StdErr**: Write to standard error
+- **StdOut**: Write to standard output
 - **StdOutStdErr**: Write to both stdout and stderr based on level
 - **SysLog**: System logging
-- **Memory**: Store logs in memory for testing
-- **Null**: Discard logs (useful for testing)
-- **Email**: Send logs via email
-- **Slack**: Post to Slack channels
 - **Webhook**: Send to custom webhooks
-- **Socket**: Send over network sockets
-- **Nightwatch**: Send to Laravel Nightwatch monitoring service
+- **WebSocket**: Stream logs in real-time via WebSocket
 
 ### Formats
 
 Each destination can use different formatting:
 
-- **PlainText**: Human-readable text format
-- **JSON**: Structured JSON output
 - **CSV**: Comma-separated values
 - **HTML**: HTML formatted output
 - **HTMLEmail**: HTML optimized for emails
+- **JSON**: Structured JSON output
+- **Nightwatch**: Laravel Nightwatch-specific JSON formatting
+- **PlainText**: Human-readable text format
 - **Raw**: Unformatted output
 - **Slack**: Slack-specific formatting
-- **Nightwatch**: Laravel Nightwatch-specific JSON formatting
 
 ## Usage Examples
 
@@ -263,6 +265,87 @@ Log::channel( 'payments' )->error( 'Payment failed', [ 'amount' => 99.99 ] );
 ```
 
 The channel name appears in the Nightwatch dashboard for easy filtering and monitoring.
+
+### Papertrail Integration
+
+Papertrail is a cloud-based logging service that aggregates and centralizes logs from multiple sources. The Papertrail destination sends logs using the remote syslog protocol with optional TLS encryption.
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Papertrail;
+use Neuron\Log\Format\PlainText;
+
+// Create Papertrail destination
+$papertrail = new Papertrail( new PlainText() );
+$papertrail->open( [
+	'host' => 'logs5.papertrailapp.com',  // Your Papertrail host
+	'port' => 12345,                       // Your Papertrail port
+	'system_name' => 'my-app-prod',        // Optional: System name (defaults to hostname)
+	'use_tls' => true,                     // Optional: Use TLS encryption (default: true)
+	'facility' => 16,                      // Optional: Syslog facility (default: 16 for local0)
+	'sd_id' => 'mycompany@12345'          // Optional: Structured Data ID (default: 'neuron@32473')
+] );
+
+$papertrailLogger = new Logger( $papertrail );
+$papertrailLogger->setRunLevel( 'info' );
+
+// Logs are sent to Papertrail with structured data
+$papertrailLogger->error( 'Payment processing failed', [
+	'transaction_id' => 'txn_12345',
+	'amount' => 99.99,
+	'currency' => 'USD',
+	'error_code' => 'INSUFFICIENT_FUNDS'
+] );
+
+// Context is included as structured data in syslog format
+$papertrailLogger->info( 'User action', [
+	'user_id' => 456,
+	'action' => 'purchase',
+	'items' => [ 'SKU-123', 'SKU-456' ]
+] );
+```
+
+The Papertrail destination:
+- Sends logs using RFC 5424 syslog format over TCP/TLS
+- Automatically maps log levels to syslog severities
+- Includes context as structured data for easy filtering in Papertrail
+- Supports automatic reconnection if the connection is lost
+- Allows custom SD-ID for organizations with IANA Private Enterprise Numbers
+
+### WebSocket Real-Time Streaming
+
+Stream logs in real-time to web browsers or monitoring dashboards using WebSocket connections:
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\WebSocket;
+use Neuron\Log\Format\JSON;
+
+// Create WebSocket destination
+$websocket = new WebSocket( new JSON() );
+$websocket->open( [
+	'url' => 'ws://localhost:8080/logs',  // WebSocket server URL
+	'max_reconnect_attempts' => 5,        // Optional: Max reconnection attempts (default: 5)
+	'reconnect_delay' => 1.0              // Optional: Initial reconnect delay in seconds
+] );
+
+$wsLogger = new Logger( $websocket );
+$wsLogger->setRunLevel( 'debug' );
+
+// Logs are streamed in real-time to connected WebSocket clients
+$wsLogger->info( 'Real-time event', [
+	'event_type' => 'user_login',
+	'user_id' => 123,
+	'timestamp' => time()
+] );
+```
+
+The WebSocket destination:
+- Maintains persistent WebSocket connections
+- Automatically reconnects with exponential backoff
+- Sends logs as WebSocket text frames
+- Perfect for real-time monitoring dashboards
+- Works with any WebSocket server implementation
 
 ### Array Context Support (PSR-3 Compatible)
 
