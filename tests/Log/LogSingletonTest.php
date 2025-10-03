@@ -159,14 +159,14 @@ class LogSingletonTest extends TestCase
 		$this->assertTrue( (bool)strstr( $str, $test ) );
 	}
 
-	public function testFatal()
+	public function testCritical()
 	{
-		Log::setRunLevel( RunLevel::FATAL );
+		Log::setRunLevel( RunLevel::CRITICAL );
 		$test = 'this is a test';
 
 		ob_start();
 
-		Log::fatal( $test );
+		Log::critical( $test );
 
 		$str = ob_get_contents();
 

@@ -72,6 +72,7 @@ The logging component supports writing to various destinations:
 - **Papertrail**: Send to Papertrail cloud logging service
 - **Slack**: Post to Slack channels
 - **Socket**: Send over network sockets
+- **Sqs**: Send to Amazon SQS for queue-based processing
 - **StdErr**: Write to standard error
 - **StdOut**: Write to standard output
 - **StdOutStdErr**: Write to both stdout and stderr based on level
@@ -311,6 +312,64 @@ The Papertrail destination:
 - Includes context as structured data for easy filtering in Papertrail
 - Supports automatic reconnection if the connection is lost
 - Allows custom SD-ID for organizations with IANA Private Enterprise Numbers
+
+### Amazon SQS Integration
+
+Send logs to Amazon SQS for scalable, queue-based processing:
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Destination\Sqs;
+use Neuron\Log\Format\JSON;
+
+// Create SQS destination
+$sqs = new Sqs( new JSON() );
+$sqs->open( [
+	'queue_url' => 'https://sqs.us-east-1.amazonaws.com/123456789/my-log-queue',
+	'region' => 'us-east-1',
+	'credentials' => [                    // Optional: Use IAM role if not provided
+		'key' => $_ENV['AWS_ACCESS_KEY'],
+		'secret' => $_ENV['AWS_SECRET_KEY']
+	],
+	'batch_size' => 10,                   // Optional: Batch messages (1-10, default 1)
+	'attributes' => [                     // Optional: Message attributes
+		'Environment' => 'production',
+		'Application' => 'neuron-app'
+	],
+	'max_retries' => 3,                   // Optional: Retry attempts (default 3)
+	'retry_delay' => 1.0                  // Optional: Initial retry delay in seconds
+] );
+
+$sqsLogger = new Logger( $sqs );
+$sqsLogger->setRunLevel( 'info' );
+
+// Logs are sent to SQS with automatic batching
+$sqsLogger->error( 'Critical system error', [
+	'service' => 'payment-processor',
+	'error_code' => 'GATEWAY_TIMEOUT',
+	'retry_count' => 3
+] );
+
+// Context and channel are included in message body
+$sqsLogger->info( 'Order processed', [
+	'order_id' => 'ORD-12345',
+	'amount' => 299.99,
+	'items' => 5
+] );
+```
+
+The SQS destination:
+- Sends logs as JSON messages to SQS queues
+- Supports batching up to 10 messages for improved performance
+- Automatic retry with exponential backoff
+- Message attributes for filtering and routing
+- Works with IAM roles or explicit credentials
+- Includes log level and channel as message attributes
+
+**Required**: Install the AWS SDK via Composer:
+```bash
+composer require aws/aws-sdk-php
+```
 
 ### WebSocket Real-Time Streaming
 

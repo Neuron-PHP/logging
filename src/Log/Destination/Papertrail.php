@@ -133,11 +133,14 @@ class Papertrail extends DestinationBase
 	private function getSeverity( Log\RunLevel $level ): int
 	{
 		return match( $level ) {
-			Log\RunLevel::DEBUG => 7,   // Debug
-			Log\RunLevel::INFO => 6,    // Informational
-			Log\RunLevel::WARNING => 4, // Warning
-			Log\RunLevel::ERROR => 3,   // Error
-			Log\RunLevel::FATAL => 2,   // Critical
+			Log\RunLevel::DEBUG => 7,     // Debug
+			Log\RunLevel::INFO => 6,      // Informational
+			Log\RunLevel::NOTICE => 5,    // Notice
+			Log\RunLevel::WARNING => 4,   // Warning
+			Log\RunLevel::ERROR => 3,     // Error
+			Log\RunLevel::CRITICAL => 2,  // Critical
+			Log\RunLevel::ALERT => 1,     // Alert
+			Log\RunLevel::EMERGENCY => 0, // Emergency
 		};
 	}
 

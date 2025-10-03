@@ -65,14 +65,14 @@ class LogMuxTest extends TestCase
 		$this->assertStringContainsString( "\"message\":\"$test\"", $s );
 	}
 
-	public function testFatalPass()
+	public function testCriticalPass()
 	{
 		$this->_Mux->setRunLevel( 'debug' );
 		$test = 'this is a test';
 
 		ob_start();
 
-		$this->_Mux->fatal( $test );
+		$this->_Mux->critical( $test );
 
 		$s = ob_get_contents();
 

@@ -83,7 +83,7 @@ class PapertrailTest extends TestCase
 			RunLevel::INFO,
 			RunLevel::WARNING,
 			RunLevel::ERROR,
-			RunLevel::FATAL
+			RunLevel::CRITICAL
 		];
 
 		foreach( $levels as $level )

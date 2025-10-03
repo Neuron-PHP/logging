@@ -115,6 +115,15 @@ class Log extends Memory
 	 * @param string $text
 	 * @param array $context
 	 */
+	public static function notice( string $text, array $context = [] ): void
+	{
+		self::staticLog( $text, RunLevel::NOTICE, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
 	public static function warning( string $text, array $context = [] ): void
 	{
 		self::staticLog( $text, RunLevel::WARNING, $context );
@@ -133,9 +142,27 @@ class Log extends Memory
 	 * @param string $text
 	 * @param array $context
 	 */
-	public static function fatal( string $text, array $context = [] ): void
+	public static function critical( string $text, array $context = [] ): void
 	{
-		self::staticLog( $text, RunLevel::FATAL, $context );
+		self::staticLog( $text, RunLevel::CRITICAL, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public static function alert( string $text, array $context = [] ): void
+	{
+		self::staticLog( $text, RunLevel::ALERT, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public static function emergency( string $text, array $context = [] ): void
+	{
+		self::staticLog( $text, RunLevel::EMERGENCY, $context );
 	}
 
 	public static function addChannel( string $name, ILogger $logger ) : void

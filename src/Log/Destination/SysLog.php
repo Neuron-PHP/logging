@@ -51,6 +51,10 @@ class SysLog extends DestinationBase
 				$level = LOG_INFO;
 				break;
 
+			case Log\RunLevel::NOTICE:
+				$level = LOG_NOTICE;
+				break;
+
 			case Log\RunLevel::WARNING:
 				$level = LOG_WARNING;
 				break;
@@ -59,8 +63,16 @@ class SysLog extends DestinationBase
 				$level = LOG_ERR;
 				break;
 
-			case Log\RunLevel::FATAL:
+			case Log\RunLevel::CRITICAL:
 				$level = LOG_CRIT;
+				break;
+
+			case Log\RunLevel::ALERT:
+				$level = LOG_ALERT;
+				break;
+
+			case Log\RunLevel::EMERGENCY:
+				$level = LOG_EMERG;
 				break;
 		}
 

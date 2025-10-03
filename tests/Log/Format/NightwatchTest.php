@@ -87,9 +87,12 @@ class NightwatchTest extends LogTestBase
 		$levels = [
 			[ RunLevel::DEBUG, 'debug' ],
 			[ RunLevel::INFO, 'info' ],
+			[ RunLevel::NOTICE, 'notice' ],
 			[ RunLevel::WARNING, 'warning' ],
 			[ RunLevel::ERROR, 'error' ],
-			[ RunLevel::FATAL, 'critical' ]
+			[ RunLevel::CRITICAL, 'critical' ],
+			[ RunLevel::ALERT, 'alert' ],
+			[ RunLevel::EMERGENCY, 'emergency' ]
 		];
 
 		foreach( $levels as $level )

@@ -136,11 +136,14 @@ class Nightwatch extends Base
 	{
 		return match( $level )
 		{
-			RunLevel::DEBUG   => 'debug',
-			RunLevel::INFO    => 'info',
-			RunLevel::WARNING => 'warning',
-			RunLevel::ERROR   => 'error',
-			RunLevel::FATAL   => 'critical'
+			RunLevel::DEBUG     => 'debug',
+			RunLevel::INFO      => 'info',
+			RunLevel::NOTICE    => 'notice',
+			RunLevel::WARNING   => 'warning',
+			RunLevel::ERROR     => 'error',
+			RunLevel::CRITICAL  => 'critical',
+			RunLevel::ALERT     => 'alert',
+			RunLevel::EMERGENCY => 'emergency'
 		};
 	}
 }

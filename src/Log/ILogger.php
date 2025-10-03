@@ -24,7 +24,7 @@ interface ILogger
 
 	/**
 	 * Sets the run level by text.
-	 * Valid values are: debug, info, warning, error, fatal
+	 * Valid values are: debug, info, notice, warning, error, critical, alert, emergency
 	 * @param string $level
 	 */
 	public function setRunLevelText( string $level );
@@ -67,7 +67,28 @@ interface ILogger
 	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function fatal( string $text, array $context = [] ): void;
+	public function notice( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function critical( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function alert( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function emergency( string $text, array $context = [] ): void;
 
 	/**
 	 * Add a context value to the log. Contexts are prepended to each log entry.

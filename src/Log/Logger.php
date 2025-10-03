@@ -108,6 +108,10 @@ class Logger implements ILogger
 				$intLevel = RunLevel::INFO;
 				break;
 
+			case 'notice':
+				$intLevel = RunLevel::NOTICE;
+				break;
+
 			case 'warning':
 				$intLevel = RunLevel::WARNING;
 				break;
@@ -116,8 +120,17 @@ class Logger implements ILogger
 				$intLevel = RunLevel::ERROR;
 				break;
 
-			case 'fatal':
-				$intLevel = RunLevel::FATAL;
+			case 'critical':
+			case 'fatal': // Keep for backwards compatibility
+				$intLevel = RunLevel::CRITICAL;
+				break;
+
+			case 'alert':
+				$intLevel = RunLevel::ALERT;
+				break;
+
+			case 'emergency':
+				$intLevel = RunLevel::EMERGENCY;
 				break;
 
 			default:
@@ -226,6 +239,15 @@ class Logger implements ILogger
 	 * @param string $text
 	 * @param array $context
 	 */
+	public function notice( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::NOTICE, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
 	public function warning( string $text, array $context = [] ): void
 	{
 		$this->log( $text, RunLevel::WARNING, $context );
@@ -244,9 +266,27 @@ class Logger implements ILogger
 	 * @param string $text
 	 * @param array $context
 	 */
-	public function fatal( string $text, array $context = [] ): void
+	public function critical( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::FATAL, $context );
+		$this->log( $text, RunLevel::CRITICAL, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public function alert( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::ALERT, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public function emergency( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::EMERGENCY, $context );
 	}
 
 	public function reset(): void

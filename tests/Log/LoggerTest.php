@@ -182,14 +182,14 @@ class LoggerTest extends TestCase
 		$this->assertTrue( strstr( $s, $test ) ? true : false );
 	}
 
-	public function testFatalPass()
+	public function testCriticalPass()
 	{
 		$this->_Logger->setRunLevel( RunLevel::DEBUG );
 		$test = 'this is a test';
 
 		ob_start();
 
-		$this->_Logger->fatal( $test );
+		$this->_Logger->critical( $test );
 
 		$s = ob_get_contents();
 

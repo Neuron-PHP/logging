@@ -12,9 +12,12 @@ namespace Neuron\Log;
  * Logging level hierarchy (lowest to highest priority):
  * - DEBUG (0): Detailed diagnostic information for development and troubleshooting
  * - INFO (10): General informational messages about application flow
+ * - NOTICE (15): Normal but significant events
  * - WARNING (20): Warning messages about potentially harmful situations
  * - ERROR (30): Error events that allow the application to continue running
- * - FATAL (40): Critical errors that may cause the application to terminate
+ * - CRITICAL (40): Critical conditions that need attention
+ * - ALERT (45): Action must be taken immediately
+ * - EMERGENCY (50): System is unusable
  * 
  * Key features:
  * - Numeric values allow easy level comparison and filtering
@@ -34,7 +37,7 @@ namespace Neuron\Log;
  * // These will be logged (WARNING and above)
  * $logger->log(RunLevel::WARNING, 'Deprecated function used');
  * $logger->log(RunLevel::ERROR, 'Database connection failed');
- * $logger->log(RunLevel::FATAL, 'Critical system failure');
+ * $logger->log(RunLevel::CRITICAL, 'Critical system failure');
  * 
  * // These will be filtered out (below WARNING)
  * $logger->log(RunLevel::DEBUG, 'Variable value: ' . $var);
@@ -48,21 +51,27 @@ namespace Neuron\Log;
  */
 enum RunLevel : int
 {
-	case DEBUG   = 0;		// Log all
-	case INFO    = 10;		// Log informational
-	case WARNING = 20;		// Log warning
-	case ERROR   = 30;		// Log error
-	case FATAL   = 40;		// Log fatal
+	case DEBUG     = 0;		// Log all
+	case INFO      = 10;		// Log informational
+	case NOTICE    = 15;		// Log normal but significant events
+	case WARNING   = 20;		// Log warning
+	case ERROR     = 30;		// Log error
+	case CRITICAL  = 40;		// Log critical conditions
+	case ALERT     = 45;		// Action must be taken immediately
+	case EMERGENCY = 50;		// System is unusable
 
 	public function getLevel() : string
 	{
 		return match( $this )
 		{
-			RunLevel::DEBUG	=> "Debug",
-			RunLevel::INFO		=> "Info",
-			RunLevel::WARNING	=> "Warning",
-			RunLevel::ERROR	=> "Error",
-			RunLevel::FATAL	=> "Fatal"
+			RunLevel::DEBUG     => "Debug",
+			RunLevel::INFO      => "Info",
+			RunLevel::NOTICE    => "Notice",
+			RunLevel::WARNING   => "Warning",
+			RunLevel::ERROR     => "Error",
+			RunLevel::CRITICAL  => "Critical",
+			RunLevel::ALERT     => "Alert",
+			RunLevel::EMERGENCY => "Emergency"
 		};
 	}
 }

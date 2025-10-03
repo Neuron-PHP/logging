@@ -6,8 +6,8 @@ use Neuron\Log;
 use Neuron\Log\Data;
 
 /**
- * Outputs debug, info and warn to STDOUT.
- * Outputs error and fatal to STDERR.
+ * Outputs debug, info, notice, and warning to STDOUT.
+ * Outputs error, critical, alert, and emergency to STDERR.
  */
 
 class StdOutStdErr extends DestinationBase

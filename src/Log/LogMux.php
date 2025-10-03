@@ -224,6 +224,16 @@ class LogMux implements ILogger
 	 * @param array $context
 	 */
 
+	public function notice( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::NOTICE, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+
 	public function warning( string $text, array $context = [] ): void
 	{
 		$this->log( $text, RunLevel::WARNING, $context );
@@ -244,9 +254,29 @@ class LogMux implements ILogger
 	 * @param array $context
 	 */
 
-	public function fatal( string $text, array $context = [] ): void
+	public function critical( string $text, array $context = [] ): void
 	{
-		$this->log( $text, RunLevel::FATAL, $context );
+		$this->log( $text, RunLevel::CRITICAL, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+
+	public function alert( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::ALERT, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+
+	public function emergency( string $text, array $context = [] ): void
+	{
+		$this->log( $text, RunLevel::EMERGENCY, $context );
 	}
 	// endregion
 }

@@ -100,14 +100,14 @@ class SysLogTest extends TestCase
 		$this->assertTrue( true );
 	}
 
-	public function testWriteFatal()
+	public function testWriteCritical()
 	{
 		$File = new SysLog( new PlainText() );
 
 		$data = new Data(
 			time(),
 			'test',
-			RunLevel::FATAL,
+			RunLevel::CRITICAL,
 			'info',
 			[]
 		);
