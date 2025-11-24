@@ -8,7 +8,7 @@ A flexible and powerful logging component for PHP 8.4+ applications, part of the
 - **PSR-3 Compatible**: Full PSR-3 logger interface with array contexts and message interpolation
 - **Multiple Destinations**: Write logs to files, console, Slack, webhooks, syslog, Nightwatch, and more
 - **Flexible Formatting**: Support for plain text, JSON, HTML, CSV, and custom formats
-- **Log Levels**: Full support for standard log levels (debug, info, warning, error, fatal)
+- **Log Levels**: Full PSR-3 compliant log levels (debug, info, notice, warning, error, critical, alert, emergency)
 - **Array Context Support**: Pass complex arrays, objects, and exceptions as context
 - **Message Interpolation**: Use `{placeholders}` in messages for automatic substitution
 - **Channels**: Manage multiple independent loggers with automatic channel tracking
@@ -45,9 +45,12 @@ Log::setRunLevel( 'debug' );
 // Write log messages
 Log::debug( 'Debug message' );
 Log::info( 'Information message' );
+Log::notice( 'Notice: user registration started' );
 Log::warning( 'Warning message' );
 Log::error( 'Error message' );
-Log::fatal( 'Fatal error' );
+Log::critical( 'Critical: database connection lost' );
+Log::alert( 'Alert: disk space critically low' );
+Log::emergency( 'Emergency: system is shutting down' );
 
 // With array context and interpolation (PSR-3 style)
 Log::error( 'User {userId} failed login from {ip}', [
@@ -515,7 +518,7 @@ Log::addChannel( 'alerts', $alertLogger );
 
 // Use specific channels
 Log::channel( 'audit' )->info( 'User login', [ 'user' => $username ] );
-Log::channel( 'alerts' )->fatal( 'System down!' );
+Log::channel( 'alerts' )->emergency( 'System down!' );
 ```
 
 ### Multiplexer (Multiple Destinations)
@@ -546,6 +549,116 @@ $mux->debug( 'Debug info' );     // Only to file
 $mux->warning( 'Warning!' );     // To both file and console
 $mux->error( 'Error occurred' ); // To both file and console
 ```
+
+### PSR-3 Adapter
+
+The Neuron logging component provides a PSR-3 adapter that allows you to use Neuron loggers with any library or framework that expects a PSR-3 compliant logger (like Symfony, Laravel packages, Monolog alternatives, etc.).
+
+#### Basic Usage
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Adapter\Psr3Adapter;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Format\JSON;
+
+// Create a Neuron logger
+$destination = new File( new JSON() );
+$destination->open( [ 'path' => '/var/log/app.json' ] );
+$neuronLogger = new Logger( $destination );
+$neuronLogger->setRunLevel( 'info' );
+
+// Wrap it with the PSR-3 adapter
+$psr3Logger = new Psr3Adapter( $neuronLogger );
+
+// Now use it with any PSR-3 expecting code
+$psr3Logger->info( 'Application started' );
+$psr3Logger->error( 'Database connection failed', [
+	'host' => 'db.example.com',
+	'error' => 'Connection timeout'
+] );
+```
+
+#### Framework Integration
+
+The adapter makes it easy to integrate Neuron logging into frameworks that expect PSR-3:
+
+```php
+use Neuron\Log\Log;
+use Neuron\Log\Adapter\Psr3Adapter;
+
+// Get Neuron's singleton logger and wrap it
+$psr3Logger = new Psr3Adapter( Log::getInstance()->Logger );
+
+// Use with Symfony components
+$httpClient = new \Symfony\Component\HttpClient\CurlHttpClient( [
+	'logger' => $psr3Logger
+] );
+
+// Use with Guzzle
+$guzzleClient = new \GuzzleHttp\Client( [
+	'handler' => $handlerStack,
+	'logger' => $psr3Logger
+] );
+
+// Use with any PSR-3 compatible library
+$thirdPartyService = new ThirdPartyService( $psr3Logger );
+```
+
+#### Level Mapping
+
+The adapter automatically maps PSR-3 log levels to Neuron's RunLevel enum:
+
+| PSR-3 Level | Neuron RunLevel | Numeric Value |
+|-------------|-----------------|---------------|
+| emergency   | EMERGENCY       | 50            |
+| alert       | ALERT           | 45            |
+| critical    | CRITICAL        | 40            |
+| error       | ERROR           | 30            |
+| warning     | WARNING         | 20            |
+| notice      | NOTICE          | 15            |
+| info        | INFO            | 10            |
+| debug       | DEBUG           | 0             |
+
+#### Advanced Features
+
+The adapter maintains full compatibility with Neuron's advanced features:
+
+```php
+use Neuron\Log\Logger;
+use Neuron\Log\Adapter\Psr3Adapter;
+use Neuron\Log\Destination\File;
+use Neuron\Log\Format\JSON;
+
+// Create Neuron logger with multiple destinations
+$fileLogger = new Logger( new File( new JSON() ) );
+$fileLogger->getDestination()->open( [ 'path' => '/var/log/app.json' ] );
+
+// Add filters, context, and other Neuron features
+$fileLogger->setContext( 'app_version', '2.0.0' );
+$fileLogger->setContext( 'environment', 'production' );
+
+// Wrap with PSR-3 adapter
+$psr3Logger = new Psr3Adapter( $fileLogger );
+
+// PSR-3 calls use Neuron features underneath
+$psr3Logger->warning( 'API rate limit approaching', [
+	'requests' => 950,
+	'limit' => 1000
+] );
+// Context includes: app_version, environment, requests, limit
+
+// Access the underlying Neuron logger if needed
+$neuronLogger = $psr3Logger->getNeuronLogger();
+$neuronLogger->setRunLevel( 'debug' );
+```
+
+#### Why Use the Adapter?
+
+1. **Framework Integration**: Use Neuron's powerful logging with any PSR-3 expecting library
+2. **Gradual Migration**: Migrate from other PSR-3 loggers without changing application code
+3. **Best of Both Worlds**: Keep Neuron's advanced features (multiple destinations, formats, filters) while maintaining PSR-3 compatibility
+4. **Drop-in Replacement**: Works as a drop-in replacement for Monolog, PSR-3 Log, or other PSR-3 implementations
 
 ### Custom Filters
 
@@ -636,23 +749,41 @@ assert( $logs[0]['level'] === 'error' );
 
 ### Log Levels
 
-The following log levels are supported (from lowest to highest severity):
+The following PSR-3 compliant log levels are supported (from lowest to highest severity):
 
-- `debug` - Detailed debug information
-- `info` - Informational messages
-- `warning` - Warning messages
-- `error` - Error conditions
-- `fatal` - Fatal conditions
+- `debug` (0) - Detailed debug information for development and troubleshooting
+- `info` (10) - Informational messages about application flow
+- `notice` (15) - Normal but significant events
+- `warning` (20) - Warning messages about potentially harmful situations
+- `error` (30) - Error events that allow the application to continue running
+- `critical` (40) - Critical conditions that need immediate attention
+- `alert` (45) - Action must be taken immediately
+- `emergency` (50) - System is unusable, requires immediate intervention
 
 ### Logger Methods
+
+All logger methods accept an optional array context for additional data:
 
 ```php
 $logger->debug( string $message, array $context = [] );
 $logger->info( string $message, array $context = [] );
+$logger->notice( string $message, array $context = [] );
 $logger->warning( string $message, array $context = [] );
 $logger->error( string $message, array $context = [] );
-$logger->fatal( string $message, array $context = [] );
-$logger->log( RunLevel $level, string $message, array $context = [] );
+$logger->critical( string $message, array $context = [] );
+$logger->alert( string $message, array $context = [] );
+$logger->emergency( string $message, array $context = [] );
+$logger->log( string $message, RunLevel $level, array $context = [] );
+
+// Set minimum log level
+$logger->setRunLevel( mixed $level );           // Accepts RunLevel enum or string
+$logger->setRunLevelText( string $level );      // Set by text: 'debug', 'info', etc.
+$logger->getRunLevel(): RunLevel;               // Get current run level
+
+// Context management
+$logger->setContext( string $name, mixed $value );  // Add global context
+$logger->getContext(): array;                       // Get all context
+$logger->reset();                                   // Clear all context
 ```
 
 ## Testing
