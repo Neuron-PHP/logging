@@ -11,18 +11,29 @@ use \Neuron\Log;
 class JSON extends Base
 {
 	/**
-	 * @param Log\Data $Data
+	 * @param Log\Data $data
 	 * @return string
 	 */
-	public function format( Log\Data $Data ) : string
+	public function format( Log\Data $data ) : string
 	{
 		$aData = [
-			'date'	 => date( "Y-m-d G:i:s", $Data->TimeStamp ),
-			'level'	 => $Data->LevelText,
-			'context' => $this->getContextString( $Data->Context ),
-			'text'	 => $Data->Text
+			'date'	 => date( "Y-m-d G:i:s", $data->timeStamp ),
+			'level'	 => $data->levelText,
+			'message' => $data->text
 		];
 
-		return json_encode( $aData );
+		// Add channel if present
+		if( $data->channel !== null )
+		{
+			$aData['channel'] = $data->channel;
+		}
+
+		// Add context as structured data if present
+		if( !empty( $data->context ) )
+		{
+			$aData['context'] = $data->context;
+		}
+
+		return json_encode( $aData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 	}
 }

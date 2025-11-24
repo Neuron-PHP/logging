@@ -62,17 +62,17 @@ class LogMuxTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
+		$this->assertStringContainsString( "\"message\":\"$test\"", $s );
 	}
 
-	public function testFatalPass()
+	public function testCriticalPass()
 	{
 		$this->_Mux->setRunLevel( 'debug' );
 		$test = 'this is a test';
 
 		ob_start();
 
-		$this->_Mux->fatal( $test );
+		$this->_Mux->critical( $test );
 
 		$s = ob_get_contents();
 
@@ -88,7 +88,7 @@ class LogMuxTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertStringContainsString( "\"text\":\"$test\"", $s );
+		$this->assertStringContainsString( "\"message\":\"$test\"", $s );
 	}
 
 
@@ -117,9 +117,9 @@ class LogMuxTest extends TestCase
 	public function testGetContext()
 	{
 		$this->_Mux->setContext( 'test', 'testing' );
-		$Contexts = $this->_Mux->getContext( 'test', 'testing' );
+		$contexts = $this->_Mux->getContext( 'test', 'testing' );
 
-		$this->assertStringContainsString( 'testing', $Contexts[ 'test' ] );
+		$this->assertStringContainsString( 'testing', $contexts[ 'test' ] );
 	}
 
 	public function testReset()
@@ -127,9 +127,9 @@ class LogMuxTest extends TestCase
 		$this->_Mux->setContext( 'test', 'testing' );
 		$this->_Mux->reset();
 
-		$Contexts = $this->_Mux->getContext( 'test', 'testing' );
+		$contexts = $this->_Mux->getContext( 'test', 'testing' );
 
-		$this->assertEmpty( $Contexts );
+		$this->assertEmpty( $contexts );
 	}
 
 	public function testAddFilter()
@@ -139,9 +139,9 @@ class LogMuxTest extends TestCase
 
 	public function testRemoveFilter()
 	{
-		$Filter = new ExampleFilter();
-		$this->_Mux->addFilter( $Filter );
+		$filter = new ExampleFilter();
+		$this->_Mux->addFilter( $filter );
 
-		$this->assertTrue( $this->_Mux->removeFilter( $Filter ) );
+		$this->assertTrue( $this->_Mux->removeFilter( $filter ) );
 	}
 }

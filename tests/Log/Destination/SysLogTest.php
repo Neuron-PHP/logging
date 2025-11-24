@@ -37,7 +37,7 @@ class SysLogTest extends TestCase
 	{
 		$File = new SysLog( new PlainText() );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
 			RunLevel::DEBUG,
@@ -46,7 +46,7 @@ class SysLogTest extends TestCase
 		);
 
 
-		$File->write( "Test", $Data );
+		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
 
@@ -54,7 +54,7 @@ class SysLogTest extends TestCase
 	{
 		$File = new SysLog( new PlainText() );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
 			RunLevel::INFO,
@@ -62,7 +62,7 @@ class SysLogTest extends TestCase
 			[]
 		);
 
-		$File->write( "Test", $Data );
+		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
 
@@ -70,7 +70,7 @@ class SysLogTest extends TestCase
 	{
 		$File = new SysLog( new PlainText() );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
 			RunLevel::WARNING,
@@ -79,7 +79,7 @@ class SysLogTest extends TestCase
 		);
 
 
-		$File->write( "Test", $Data );
+		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
 
@@ -87,7 +87,7 @@ class SysLogTest extends TestCase
 	{
 		$File = new SysLog( new PlainText() );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
 			RunLevel::ERROR,
@@ -96,23 +96,23 @@ class SysLogTest extends TestCase
 		);
 
 
-		$File->write( "Test", $Data );
+		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
 
-	public function testWriteFatal()
+	public function testWriteCritical()
 	{
 		$File = new SysLog( new PlainText() );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
-			RunLevel::FATAL,
+			RunLevel::CRITICAL,
 			'info',
 			[]
 		);
 
-		$File->write( "Test", $Data );
+		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
 }

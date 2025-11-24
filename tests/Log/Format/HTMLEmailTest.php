@@ -12,7 +12,7 @@ class HTMLEmailTest extends LogTestBase
 	{
 		$Html = new HTMLEmail();
 
-		$out = $Html->format( $this->Data );
+		$out = $Html->format( $this->data );
 
 		$this->assertTrue(
 			strstr( $out, 'DOCTYPE' ) != false

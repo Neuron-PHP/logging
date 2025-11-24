@@ -11,13 +11,13 @@ use Neuron\Log\Data;
 class SysLog extends DestinationBase
 {
 	/**
-	 * @param array $Params
+	 * @param array $params
 	 * @return bool
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
 		openlog('neuron', LOG_PID, LOG_USER );
 
@@ -30,40 +30,52 @@ class SysLog extends DestinationBase
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		$Level = 0;
+		$level = 0;
 
-		switch( $Data->Level )
+		switch( $data->level )
 		{
 			case Log\RunLevel::DEBUG:
-				$Level = LOG_DEBUG;
+				$level = LOG_DEBUG;
 				break;
 
 			case Log\RunLevel::INFO:
-				$Level = LOG_INFO;
+				$level = LOG_INFO;
+				break;
+
+			case Log\RunLevel::NOTICE:
+				$level = LOG_NOTICE;
 				break;
 
 			case Log\RunLevel::WARNING:
-				$Level = LOG_WARNING;
+				$level = LOG_WARNING;
 				break;
 
 			case Log\RunLevel::ERROR:
-				$Level = LOG_ERR;
+				$level = LOG_ERR;
 				break;
 
-			case Log\RunLevel::FATAL:
-				$Level = LOG_CRIT;
+			case Log\RunLevel::CRITICAL:
+				$level = LOG_CRIT;
+				break;
+
+			case Log\RunLevel::ALERT:
+				$level = LOG_ALERT;
+				break;
+
+			case Log\RunLevel::EMERGENCY:
+				$level = LOG_EMERG;
 				break;
 		}
 
-		syslog( $Level, $Text );
+		syslog( $level, $text );
 	}
 }

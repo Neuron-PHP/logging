@@ -6,15 +6,15 @@ use Neuron\Log\ILogger;
 
 abstract class FilterBase implements IFilter
 {
-	private ILogger $_Parent;
+	private ILogger $_parent;
 
-	public function setParent( ILogger $_Parent ) : void
+	public function setParent( ILogger $_parent ) : void
 	{
-		$this->_Parent = $_Parent;
+		$this->_parent = $_parent;
 	}
 
 	public function getParent() : ILogger
 	{
-		return $this->_Parent;
+		return $this->_parent;
 	}
 }

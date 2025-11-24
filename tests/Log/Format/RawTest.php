@@ -9,7 +9,7 @@ class RawTest extends LogTestBase
 	{
 		$Raw = new Raw();
 
-		$Out = $Raw->format( $this->Data );
+		$Out = $Raw->format( $this->data );
 
 		$this->assertEquals(
 			$this::INPUT,

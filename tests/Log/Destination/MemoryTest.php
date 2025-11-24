@@ -13,13 +13,13 @@ class MemoryTest extends TestCase
 	{
 		$Mem = new Memory( new Raw() );
 
-		$Text = "Test";
+		$text = "Test";
 
-		$Mem->log( $Text, RunLevel::ERROR );
-		$Mem->log( $Text, RunLevel::ERROR );
+		$Mem->log( $text, RunLevel::ERROR );
+		$Mem->log( $text, RunLevel::ERROR );
 
 		$this->assertEquals(
-			$Text."\n".$Text."\n",
+			$text."\n".$text."\n",
 			$Mem->getData()
 		);
 	}

@@ -1,6 +1,14 @@
-## 0.8.1
-
-## 0.8.1
+## 0.9.0 2025-11-24
+* BREAKING CHANGE: Renamed `FATAL` log level to `CRITICAL` for PSR-3 compliance
+* Added three new log levels for full PSR-3 compliance: `NOTICE`, `ALERT`, `EMERGENCY`
+* Added PSR-3 adapter class (`Psr3Adapter`) for full PSR-3 LoggerInterface compatibility
+* Added Laravel Nightwatch integration
+* Added WebSocket log destination for real-time log streaming
+* Added Papertrail log destination with configurable SD-ID support
+* Refactored all code to camelCase
+* Refactored channels to be part of the log data
+* Added complex data logging support
+* Added Sqs log destination
 
 ## 0.8.00 2025-02-07
 * Updated to php8.4

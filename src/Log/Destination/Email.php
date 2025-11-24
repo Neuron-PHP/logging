@@ -9,43 +9,43 @@ use Neuron\Log;
  */
 class Email
 {
-	private string $_To;
-	private string $_From;
-	private string $_Subject;
+	private string $_to;
+	private string $_from;
+	private string $_subject;
 
 	/**
-	 * @param array $Params
+	 * @param array $params
 	 * @return bool
 	 */
 
 	/**
-	 * @param array $Params [ 'to' => string, 'from' => string, 'subject' => string ]
+	 * @param array $params [ 'to' => string, 'from' => string, 'subject' => string ]
 	 * @return bool
 	 */
-	public function open( array $Params ) : bool
+	public function open( array $params ) : bool
 	{
-		$this->_To      = $Params[ 'to' ];
-		$this->_From    = $Params[ 'from' ];
-		$this->_Subject = $Params[ 'subject' ];
+		$this->_to      = $params[ 'to' ];
+		$this->_from    = $params[ 'from' ];
+		$this->_subject = $params[ 'subject' ];
 
 		return true;
 	}
 
 	/**
-	 * @param string $Text
-	 * @param Log\Data $Data
+	 * @param string $text
+	 * @param Log\Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
 		mail(
-			$this->_To,
-			$this->_Subject,
-			$Text,
-			"From: ".$this->_From
+			$this->_to,
+			$this->_subject,
+			$text,
+			"From: ".$this->_from
 		);
 	}
 }

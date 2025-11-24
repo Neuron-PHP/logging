@@ -13,67 +13,67 @@ class WebHookPostTest extends TestCase
 {
 	public function testOpenFail()
 	{
-		$Post = new WebHookPost( new CSV() );
+		$post = new WebHookPost( new CSV() );
 
-		$Fail = false;
+		$fail = false;
 		try
 		{
-			$Post->open(
+			$post->open(
 				[
 					'endpoint' => 'fail'
 				]
 			);
 		}
-		catch( \Exception $Exception )
+		catch( \Exception $exception )
 		{
-			$Fail = true;
+			$fail = true;
 		}
 
-		$this->assertTrue( $Fail );
+		$this->assertTrue( $fail );
 	}
 
 	public function testOpenPass()
 	{
-		$Post = new WebHookPost( new CSV() );
+		$post = new WebHookPost( new CSV() );
 
-		$Fail = false;
+		$fail = false;
 		try
 		{
-			$Post->open(
+			$post->open(
 				[
 					'endpoint' => 'http://www.example.org'
 				]
 			);
 		}
-		catch( \Exception $Exception )
+		catch( \Exception $exception )
 		{
-			$Fail = true;
+			$fail = true;
 		}
 
-		$this->assertFalse( $Fail );
+		$this->assertFalse( $fail );
 	}
 
 	public function testWrite()
 	{
-		$Post = new WebHookPost( new CSV() );
+		$post = new WebHookPost( new CSV() );
 
-		$Fail = false;
+		$fail = false;
 		try
 		{
-			$Post->open(
+			$post->open(
 				[
 					'endpoint' => 'http://www.example.org'
 				]
 			);
 		}
-		catch( \Exception $Exception )
+		catch( \Exception $exception )
 		{
-			$Fail = true;
+			$fail = true;
 		}
 
-		$this->assertFalse( $Fail );
+		$this->assertFalse( $fail );
 
-		$Data = new Data(
+		$data = new Data(
 			time(),
 			'test',
 			RunLevel::INFO,
@@ -81,6 +81,6 @@ class WebHookPostTest extends TestCase
 			[]
 		);
 
-		$Post->write( 'test', $Data );
+		$post->write( 'test', $data );
 	}
 }

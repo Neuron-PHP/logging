@@ -10,19 +10,19 @@ use Neuron\Patterns\Singleton\Memory;
  */
 class Log extends Memory
 {
-	public ?ILogger $Logger = null;
-	public array $Channels = [];
+	public ?ILogger $logger = null;
+	public array $channels = [];
 
 	/**
 	 * Creates and initializes the core logger if needed.
 	 */
 	public function initIfNeeded(): void
 	{
-		if( !$this->Logger )
+		if( !$this->logger )
 		{
-			$this->Logger = new LogMux();
+			$this->logger = new LogMux();
 
-			$this->Logger->addLog(
+			$this->logger->addLog(
 				new Logger(
 					new Echoer(
 						new PlainText()
@@ -35,34 +35,35 @@ class Log extends Memory
 	}
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
+	 * @param array $context
 	 */
-	public static function staticLog( string $Text, RunLevel $Level ): void
+	public static function staticLog( string $text, RunLevel $level, array $context = [] ): void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->log( $Text, $Level );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->log( $text, $level, $context );
 	}
 
 	/**
-	 * @param int $Level
+	 * @param int $level
 	 */
-	public static function setRunLevel( mixed $Level ): void
+	public static function setRunLevel( mixed $level ): void
 	{
-		/** @var Log $Log */
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		/** @var Log $log */
+		$log = self::getInstance();
+		$log->initIfNeeded();
 
-		if( $Level instanceof RunLevel )
+		if( $level instanceof RunLevel )
 		{
-			$Log->Logger->setRunLevel( $Level );
-			$Log->serialize();
+			$log->logger->setRunLevel( $level );
+			$log->serialize();
 			return;
 		}
 
-		$Log->Logger->setRunLevelText( $Level );
-		$Log->serialize();
+		$log->logger->setRunLevelText( $level );
+		$log->serialize();
 	}
 
 	/**
@@ -70,100 +71,142 @@ class Log extends Memory
 	 */
 	public static function getRunLevel() : RunLevel
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		return $Log->Logger->getRunLevel();
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		return $log->logger->getRunLevel();
 	}
 
 	/**
-	 * @param string $Name
-	 * @param string $Value
+	 * @param string $name
+	 * @param mixed $value Can be string, array, or other scalar/object types
 	 * @return void
 	 */
-	public static function setContext( string $Name, string $Value ) : void
+	public static function setContext( string $name, mixed $value ) : void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->setContext( $Name, $Value );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->setContext( $name, $value );
 
-		foreach( $Log->Channels as $Channel )
-			$Channel->setContext( $Name, $Value );
+		foreach( $log->channels as $channel )
+			$channel->setContext( $name, $value );
 
-		$Log->serialize();
+		$log->serialize();
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public static function debug( string $Text ): void
+	public static function debug( string $text, array $context = [] ): void
 	{
-		self::staticLog( $Text, RunLevel::DEBUG );
+		self::staticLog( $text, RunLevel::DEBUG, $context );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public static function info( string $Text ): void
+	public static function info( string $text, array $context = [] ): void
 	{
-		self::staticLog( $Text, RunLevel::INFO );
+		self::staticLog( $text, RunLevel::INFO, $context );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public static function warning( string $Text ): void
+	public static function notice( string $text, array $context = [] ): void
 	{
-		self::staticLog( $Text, RunLevel::WARNING );
+		self::staticLog( $text, RunLevel::NOTICE, $context );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public static function error( string $Text ): void
+	public static function warning( string $text, array $context = [] ): void
 	{
-		self::staticLog( $Text, RunLevel::ERROR );
+		self::staticLog( $text, RunLevel::WARNING, $context );
 	}
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context
 	 */
-	public static function fatal( string $Text ): void
+	public static function error( string $text, array $context = [] ): void
 	{
-		self::staticLog( $Text, RunLevel::FATAL );
+		self::staticLog( $text, RunLevel::ERROR, $context );
 	}
 
-	public static function addChannel( string $Name, ILogger $Logger ) : void
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public static function critical( string $text, array $context = [] ): void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		self::staticLog( $text, RunLevel::CRITICAL, $context );
+	}
 
-		if( !array_key_exists( $Name, $Log->Channels ) )
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public static function alert( string $text, array $context = [] ): void
+	{
+		self::staticLog( $text, RunLevel::ALERT, $context );
+	}
+
+	/**
+	 * @param string $text
+	 * @param array $context
+	 */
+	public static function emergency( string $text, array $context = [] ): void
+	{
+		self::staticLog( $text, RunLevel::EMERGENCY, $context );
+	}
+
+	public static function addChannel( string $name, ILogger $logger ) : void
+	{
+		$log = self::getInstance();
+		$log->initIfNeeded();
+
+		if( !array_key_exists( $name, $log->channels ) )
 		{
-			$Log->Channels[ $Name ] = new LogMux();
+			$log->channels[ $name ] = new LogMux();
+			// Set the channel name on the LogMux
+			if( method_exists( $log->channels[ $name ], 'setChannel' ) )
+			{
+				$log->channels[ $name ]->setChannel( $name );
+			}
 		}
 
-		$Log->Channels[ $Name ]->addLog( $Logger );
+		$log->channels[ $name ]->addLog( $logger );
 
-		$Log->serialize();
+		$log->serialize();
 	}
 
-	public static function getChannel( string $Name ) : LogMux
+	public static function channel( string $name ) : LogMux
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
+		$log = self::getInstance();
+		$log->initIfNeeded();
 
-		if( !array_key_exists( $Name, $Log->Channels ) )
+		if( !array_key_exists( $name, $log->channels ) )
 		{
-			$Log->Channels[ $Name ] = new LogMux();
+			$log->channels[ $name ] = new LogMux();
+			// Set the channel name on the LogMux
+			if( method_exists( $log->channels[ $name ], 'setChannel' ) )
+			{
+				$log->channels[ $name ]->setChannel( $name );
+			}
 		}
 
-		return $Log->Channels[ $Name ];
+		return $log->channels[ $name ];
 	}
 
-	public static function addFilter( Filter\IFilter $Filter ) : void
+	public static function addFilter( Filter\IFilter $filter ) : void
 	{
-		$Log = self::getInstance();
-		$Log->initIfNeeded();
-		$Log->Logger->addFilter( $Filter );
+		$log = self::getInstance();
+		$log->initIfNeeded();
+		$log->logger->addFilter( $filter );
 	}
 }

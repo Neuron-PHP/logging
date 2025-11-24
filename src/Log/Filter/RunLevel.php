@@ -10,15 +10,15 @@ use Neuron\Log\Data;
 class RunLevel extends FilterBase
 {
 	/**
-	 * @param Data $Data
+	 * @param Data $data
 	 * @return Data|null
 	 *
 	 * Filters on run-level.
 	 */
-	public function filter( Data $Data ): Data|null
+	public function filter( Data $data ): Data|null
 	{
-		if( $Data->Level->value >= $this->getParent()->getRunLevel()->value )
-			return $Data;
+		if( $data->level->value >= $this->getParent()->getRunLevel()->value )
+			return $data;
 
 		return null;
 	}

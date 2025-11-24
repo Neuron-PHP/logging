@@ -10,23 +10,24 @@ interface ILogger
 {
 
 	/**
-	 * @param string $Text
-	 * @param RunLevel $Level
+	 * @param string $text
+	 * @param RunLevel $level
+	 * @param array $context Optional context array
 	 */
-	public function log( string $Text, RunLevel $Level ): void;
+	public function log( string $text, RunLevel $level, array $context = [] ): void;
 
 	/**
-	 * @param int $Level
+	 * @param int $level
 	 * @return void
 	 */
-	public function setRunLevel( mixed $Level ): void;
+	public function setRunLevel( mixed $level ): void;
 
 	/**
 	 * Sets the run level by text.
-	 * Valid values are: debug, info, warning, error, fatal
-	 * @param string $Level
+	 * Valid values are: debug, info, notice, warning, error, critical, alert, emergency
+	 * @param string $level
 	 */
-	public function setRunLevelText( string $Level );
+	public function setRunLevelText( string $level );
 
 	/**
 	 * @return RunLevel
@@ -34,43 +35,69 @@ interface ILogger
 	public function getRunLevel() : RunLevel;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function debug( string $Text ): void;
+	public function debug( string $text, array $context = [] ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function info( string $Text ): void;
+	public function info( string $text, array $context = [] ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function warning( string $Text ): void;
+	public function warning( string $text, array $context = [] ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function error( string $Text ): void;
+	public function error( string $text, array $context = [] ): void;
 
 	/**
-	 * @param string $Text
+	 * @param string $text
+	 * @param array $context Optional context array
 	 * @return void
 	 */
-	public function fatal( string $Text ): void;
+	public function notice( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function critical( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function alert( string $text, array $context = [] ): void;
+
+	/**
+	 * @param string $text
+	 * @param array $context Optional context array
+	 * @return void
+	 */
+	public function emergency( string $text, array $context = [] ): void;
 
 	/**
 	 * Add a context value to the log. Contexts are prepended to each log entry.
 	 *
-	 * @param string $Name
-	 * @param string $Value
+	 * @param string $name
+	 * @param mixed $value Can be string, array, or other scalar/object types
 	 * @return void
 	 */
-	public function setContext( string $Name, string $Value ) : void;
+	public function setContext( string $name, mixed $value ) : void;
 
 	/**
 	 * @return array

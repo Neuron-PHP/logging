@@ -13,17 +13,17 @@ class Slack extends Base
 	/**
 	 * @inheritDoc
 	 */
-	public function format( Log\Data $Data ): string
+	public function format( Log\Data $data ): string
 	{
-		$Output = date( "[Y-m-d G:i:s]", $Data->TimeStamp );
+		$output = date( "[Y-m-d G:i:s]", $data->timeStamp );
 
-		$Context = $this->getContextString( $Data->Context );
+		$context = $this->getContextString( $data->context );
 
-		$Output .= " *$Data->LevelText* ";
+		$output .= " *$data->levelText* ";
 
-		if( $Context )
-			$Output .= "_({$this->getContextString( $Data->Context )})_";
+		if( $context )
+			$output .= "_({$this->getContextString( $data->context )})_";
 
-		return $Output." `".$Data->Text."`";
+		return $output." `".$data->text."`";
 	}
 }

@@ -12,15 +12,15 @@ use Neuron\Log\Data;
 class Echoer extends DestinationBase
 {
 	/**
-	 * @param string $Text
-	 * @param Data $Data
+	 * @param string $text
+	 * @param Data $data
 	 * @return void
 	 *
 	 * @SuppressWarnings(PHPMD)
 	 */
 
-	public function write( string $Text, Log\Data $Data ): void
+	public function write( string $text, Log\Data $data ): void
 	{
-		echo $Text."\r\n";
+		echo $text."\r\n";
 	}
 }

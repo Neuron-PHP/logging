@@ -10,37 +10,37 @@ use \Neuron\Log;
 
 class PlainText extends Base
 {
-	private bool $_ShowDate;
+	private bool $_showDate;
 
 	/**
 	 * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
 	 * PlainText constructor.
-	 * @param bool $ShowDate
+	 * @param bool $showDate
 	 */
-	public function __construct( bool $ShowDate = true )
+	public function __construct( bool $showDate = true )
 	{
-		$this->_ShowDate = $ShowDate;
+		$this->_showDate = $showDate;
 	}
 
 	/**
-	 * @param Log\Data $Data
+	 * @param Log\Data $data
 	 * @return string
 	 */
-	public function format( Log\Data $Data ) : string
+	public function format( Log\Data $data ) : string
 	{
-		$Output = '';
+		$output = '';
 
-		if( $this->_ShowDate )
+		if( $this->_showDate )
 		{
-			$Output .= date( "[Y-m-d G:i:s]", $Data->TimeStamp );
+			$output .= date( "[Y-m-d G:i:s]", $data->timeStamp );
 		}
 
-		$Context = $this->getContextString( $Data->Context );
-		$Output .= " /$Data->LevelText/ ";
-		if( $Context )
-			$Output .= "({$this->getContextString( $Data->Context )})";
+		$context = $this->getContextString( $data->context );
+		$output .= " /$data->levelText/ ";
+		if( $context )
+			$output .= "({$this->getContextString( $data->context )})";
 		
-		return $Output." ".$Data->Text;
+		return $output." ".$data->text;
 	}
 }
 

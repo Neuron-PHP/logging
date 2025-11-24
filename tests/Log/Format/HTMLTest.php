@@ -10,7 +10,7 @@ class HTMLTest extends LogTestBase
 	{
 		$Html = new HTML();
 
-		$out = $Html->format( $this->Data );
+		$out = $Html->format( $this->data );
 
 		$this->assertTrue(
 			strstr( $out, '<small>' ) != false
