@@ -1,4 +1,4 @@
-## 0.9.0
+## 0.9.0 2025-11-24
 * BREAKING CHANGE: Renamed `FATAL` log level to `CRITICAL` for PSR-3 compliance
 * Added three new log levels for full PSR-3 compliance: `NOTICE`, `ALERT`, `EMERGENCY`
 * Added PSR-3 adapter class (`Psr3Adapter`) for full PSR-3 LoggerInterface compatibility
