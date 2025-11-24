@@ -1,6 +1,5 @@
 ## 0.9.0
 * BREAKING CHANGE: Renamed `FATAL` log level to `CRITICAL` for PSR-3 compliance
-* BREAKING CHANGE:.uo3;aequ,3';
 * Added three new log levels for full PSR-3 compliance: `NOTICE`, `ALERT`, `EMERGENCY`
 * Added PSR-3 adapter class (`Psr3Adapter`) for full PSR-3 LoggerInterface compatibility
 * Added Laravel Nightwatch integration
