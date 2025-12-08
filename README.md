@@ -1,4 +1,5 @@
 [![CI](https://github.com/Neuron-PHP/logging/actions/workflows/ci.yml/badge.svg)](https://github.com/Neuron-PHP/logging/actions)
+[![codecov](https://codecov.io/gh/Neuron-PHP/logging/graph/badge.svg)](https://codecov.io/gh/Neuron-PHP/logging)
 # Neuron-PHP Logging
 
 A flexible and powerful logging component for PHP 8.4+ applications, part of the Neuron-PHP framework.
