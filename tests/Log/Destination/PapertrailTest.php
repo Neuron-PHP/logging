@@ -209,4 +209,291 @@ class PapertrailTest extends TestCase
 
 		$this->assertTrue( true );
 	}
+
+	public function testGetSeverityForAllLevels()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345,
+			'use_tls' => false
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'getSeverity' );
+		$method->setAccessible( true );
+
+		// Test all log levels map to correct syslog severities
+		$this->assertEquals( 7, $method->invoke( $papertrail, RunLevel::DEBUG ) );
+		$this->assertEquals( 6, $method->invoke( $papertrail, RunLevel::INFO ) );
+		$this->assertEquals( 5, $method->invoke( $papertrail, RunLevel::NOTICE ) );
+		$this->assertEquals( 4, $method->invoke( $papertrail, RunLevel::WARNING ) );
+		$this->assertEquals( 3, $method->invoke( $papertrail, RunLevel::ERROR ) );
+		$this->assertEquals( 2, $method->invoke( $papertrail, RunLevel::CRITICAL ) );
+		$this->assertEquals( 1, $method->invoke( $papertrail, RunLevel::ALERT ) );
+		$this->assertEquals( 0, $method->invoke( $papertrail, RunLevel::EMERGENCY ) );
+	}
+
+	public function testBuildStructuredDataWithEmptyContext()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'buildStructuredData' );
+		$method->setAccessible( true );
+
+		$result = $method->invoke( $papertrail, [] );
+		$this->assertEquals( '-', $result );
+	}
+
+	public function testBuildStructuredDataWithVariousTypes()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'buildStructuredData' );
+		$method->setAccessible( true );
+
+		$context = [
+			'string_val' => 'test',
+			'int_val' => 123,
+			'bool_true' => true,
+			'bool_false' => false,
+			'null_val' => null,
+			'array_val' => [ 'nested' => 'data' ],
+			'special-chars' => 'test@value',
+			'escape_quote' => 'has "quotes"',
+			'escape_backslash' => 'has\\backslash',
+			'escape_bracket' => 'has]bracket'
+		];
+
+		$result = $method->invoke( $papertrail, $context );
+
+		$this->assertStringContainsString( '[neuron@32473', $result );
+		$this->assertStringContainsString( 'string_val="test"', $result );
+		$this->assertStringContainsString( 'int_val="123"', $result );
+		$this->assertStringContainsString( 'bool_true="true"', $result );
+		$this->assertStringContainsString( 'bool_false="false"', $result );
+		$this->assertStringContainsString( 'null_val="null"', $result );
+		$this->assertStringContainsString( 'array_val=', $result );
+		$this->assertStringContainsString( 'special_chars="test@value"', $result );
+		$this->assertStringContainsString( '\\"', $result ); // Escaped quote
+		$this->assertStringContainsString( '\\\\', $result ); // Escaped backslash
+		$this->assertStringContainsString( '\\]', $result ); // Escaped bracket
+	}
+
+	public function testFormatSyslogMessage()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345,
+			'facility' => 16, // local0
+			'system_name' => 'test-system'
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'formatSyslogMessage' );
+		$method->setAccessible( true );
+
+		$data = new Data(
+			time(),
+			'Test message',
+			RunLevel::INFO,
+			'INFO',
+			[ 'user_id' => 42 ],
+			'my-channel'
+		);
+
+		$result = $method->invoke( $papertrail, 'Test message', $data );
+
+		// Priority calculation: facility(16) * 8 + severity(6 for INFO) = 134
+		$this->assertStringStartsWith( '<134>1 ', $result );
+		$this->assertStringContainsString( 'test-system', $result );
+		$this->assertStringContainsString( 'my-channel', $result );
+		$this->assertStringContainsString( 'user_id="42"', $result );
+		$this->assertStringContainsString( 'Test message', $result );
+	}
+
+	public function testFormatSyslogMessageWithoutChannel()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'formatSyslogMessage' );
+		$method->setAccessible( true );
+
+		$data = new Data(
+			time(),
+			'Test message',
+			RunLevel::ERROR,
+			'ERROR',
+			[]
+		);
+
+		$result = $method->invoke( $papertrail, 'Test message', $data );
+
+		$this->assertStringContainsString( 'neuron', $result ); // Default app name
+		$this->assertStringContainsString( 'Test message', $result );
+	}
+
+	public function testFormatSyslogMessageWithEmergencyLevel()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345,
+			'facility' => 20 // local4
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'formatSyslogMessage' );
+		$method->setAccessible( true );
+
+		$data = new Data(
+			time(),
+			'Emergency!',
+			RunLevel::EMERGENCY,
+			'EMERGENCY',
+			[]
+		);
+
+		$result = $method->invoke( $papertrail, 'Emergency!', $data );
+
+		// Priority: facility(20) * 8 + severity(0 for EMERGENCY) = 160
+		$this->assertStringStartsWith( '<160>1 ', $result );
+	}
+
+	public function testDestructor()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		// Destructor should call close without error
+		unset( $papertrail );
+
+		$this->assertTrue( true );
+	}
+
+	public function testOpenWithDefaultSystemName()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+
+		$result = $papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		// Should use gethostname() as default
+		$this->assertIsBool( $result );
+	}
+
+	public function testOpenWithDefaultTls()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+
+		// Default should be TLS enabled
+		$result = $papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+			// use_tls not specified, should default to true
+		] );
+
+		$this->assertIsBool( $result );
+	}
+
+	public function testOpenWithDefaultFacility()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+
+		$result = $papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+			// facility not specified, should default to 16 (local0)
+		] );
+
+		$this->assertIsBool( $result );
+	}
+
+	public function testOpenWithDefaultSdId()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+
+		$result = $papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+			// sd_id not specified, should default to 'neuron@32473'
+		] );
+
+		$this->assertIsBool( $result );
+	}
+
+	public function testFormatMessageWithoutContext()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345,
+			'system_name' => 'test-system'
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'formatSyslogMessage' );
+		$method->setAccessible( true );
+
+		$data = new Data(
+			time(),
+			'Simple message',
+			RunLevel::INFO,
+			'INFO',
+			[] // Empty context
+		);
+
+		$result = $method->invoke( $papertrail, 'Simple message', $data );
+
+		// Should contain '-' for empty structured data
+		$this->assertStringContainsString( ' - Simple message', $result );
+	}
+
+	public function testGetProcId()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+		$method = $reflection->getMethod( 'formatSyslogMessage' );
+		$method->setAccessible( true );
+
+		$data = new Data(
+			time(),
+			'Test',
+			RunLevel::INFO,
+			'INFO',
+			[]
+		);
+
+		$result = $method->invoke( $papertrail, 'Test', $data );
+
+		// Should contain process ID
+		$pid = getmypid() ?: '-';
+		$this->assertStringContainsString( (string) $pid, $result );
+	}
 }

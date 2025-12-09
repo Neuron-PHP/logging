@@ -144,4 +144,67 @@ class LogMuxTest extends TestCase
 
 		$this->assertTrue( $this->_Mux->removeFilter( $filter ) );
 	}
+
+	public function testNotice()
+	{
+		$this->_Mux->setRunLevel( RunLevel::DEBUG );
+		$test = 'notice message';
+
+		ob_start();
+		$this->_Mux->notice( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testAlert()
+	{
+		$this->_Mux->setRunLevel( RunLevel::DEBUG );
+		$test = 'alert message';
+
+		ob_start();
+		$this->_Mux->alert( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testEmergency()
+	{
+		$this->_Mux->setRunLevel( RunLevel::DEBUG );
+		$test = 'emergency message';
+
+		ob_start();
+		$this->_Mux->emergency( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testSetChannel()
+	{
+		$this->_Mux->setChannel( 'test-channel' );
+		$this->assertEquals( 'test-channel', $this->_Mux->getChannel() );
+	}
+
+	public function testSetChannelPropagatesOnAddLog()
+	{
+		$mux = new LogMux();
+		$mux->setChannel( 'my-channel' );
+
+		$logger = new Logger( new Echoer( new PlainText( false ) ) );
+		$mux->addLog( $logger );
+
+		$this->assertEquals( 'my-channel', $logger->getChannel() );
+	}
+
+	public function testGetContextEmptyWhenNoLogs()
+	{
+		$mux = new LogMux();
+		$context = $mux->getContext();
+		$this->assertEmpty( $context );
+	}
 }

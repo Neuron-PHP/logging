@@ -115,4 +115,52 @@ class SysLogTest extends TestCase
 		$File->write( "Test", $data );
 		$this->assertTrue( true );
 	}
+
+	public function testWriteNotice()
+	{
+		$File = new SysLog( new PlainText() );
+
+		$data = new Data(
+			time(),
+			'test',
+			RunLevel::NOTICE,
+			'notice',
+			[]
+		);
+
+		$File->write( "Test", $data );
+		$this->assertTrue( true );
+	}
+
+	public function testWriteAlert()
+	{
+		$File = new SysLog( new PlainText() );
+
+		$data = new Data(
+			time(),
+			'test',
+			RunLevel::ALERT,
+			'alert',
+			[]
+		);
+
+		$File->write( "Test", $data );
+		$this->assertTrue( true );
+	}
+
+	public function testWriteEmergency()
+	{
+		$File = new SysLog( new PlainText() );
+
+		$data = new Data(
+			time(),
+			'test',
+			RunLevel::EMERGENCY,
+			'emergency',
+			[]
+		);
+
+		$File->write( "Test", $data );
+		$this->assertTrue( true );
+	}
 }

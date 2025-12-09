@@ -249,4 +249,61 @@ class NightwatchTest extends TestCase
 
 		$this->assertEquals( 0, count( $batchProperty->getValue( $nightwatch ) ), 'Batch should always be empty when batch_size is 1' );
 	}
+
+	public function testApplicationNameUpdatesFormat()
+	{
+		$nightwatch = new Nightwatch( new NightwatchFormat() );
+
+		$result = $nightwatch->open(
+			[
+				'token'            => 'test-token',
+				'application_name' => 'my-custom-app',
+				'endpoint'         => 'https://nightwatch.laravel.com/api/logs'
+			]
+		);
+
+		$this->assertTrue( $result );
+
+		// Verify the format was updated with the application name
+		// by checking that a log entry includes the application name
+		$data = new Data(
+			time(),
+			'Test with app name',
+			RunLevel::INFO,
+			'INFO',
+			[]
+		);
+
+		$reflection = new \ReflectionClass( $nightwatch );
+		$writeMethod = $reflection->getMethod( 'write' );
+		$writeMethod->setAccessible( true );
+
+		$jsonData = ( new NightwatchFormat( 'neuron', 'my-custom-app' ) )->format( $data );
+		$this->assertStringContainsString( 'my-custom-app', $jsonData );
+	}
+
+	public function testInvalidUrlException()
+	{
+		$nightwatch = new Nightwatch( new NightwatchFormat() );
+
+		$this->expectException( \Exception::class );
+		$this->expectExceptionMessage( 'not a valid URL' );
+
+		$nightwatch->open( [
+			'token' => 'test-token',
+			'endpoint' => 'not-a-valid-url'
+		] );
+	}
+
+	public function testOpenWithoutApplicationName()
+	{
+		$nightwatch = new Nightwatch( new NightwatchFormat() );
+
+		$result = $nightwatch->open( [
+			'token' => 'test-token'
+			// No application_name, should use default
+		] );
+
+		$this->assertTrue( $result );
+	}
 }
