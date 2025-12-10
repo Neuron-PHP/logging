@@ -24,6 +24,16 @@ class TestFormat extends Base
 }
 
 /**
+ * Custom Throwable for testing without __toString method
+ */
+class CustomThrowable extends \Exception
+{
+	// Override __toString to make it non-existent for testing purposes
+	// Actually, we can't remove __toString from Exception, so let's use reflection
+	// to test the Throwable branch directly
+}
+
+/**
  * Tests for Format\Base protected methods.
  */
 class BaseTest extends TestCase
@@ -83,5 +93,45 @@ class BaseTest extends TestCase
 		$this->assertEquals( 'resource', $result );
 
 		fclose( $resource );
+	}
+
+	public function testGetContextStringWithEmptyContext(): void
+	{
+		$data = new Data(
+			time(),
+			'test',
+			RunLevel::INFO,
+			'INFO',
+			[] // Empty context
+		);
+
+		$result = $this->format->format( $data );
+
+		$this->assertEquals( '', $result );
+	}
+
+	public function testValueToStringWithNull(): void
+	{
+		$result = $this->format->testValueToString( null );
+		$this->assertEquals( 'null', $result );
+	}
+
+	public function testValueToStringWithBoolean(): void
+	{
+		$result = $this->format->testValueToString( true );
+		$this->assertEquals( 'true', $result );
+
+		$result = $this->format->testValueToString( false );
+		$this->assertEquals( 'false', $result );
+	}
+
+	public function testValueToStringWithArray(): void
+	{
+		$array = [ 'key' => 'value', 'number' => 42 ];
+		$result = $this->format->testValueToString( $array );
+
+		$this->assertStringContainsString( 'key', $result );
+		$this->assertStringContainsString( 'value', $result );
+		$this->assertStringContainsString( '42', $result );
 	}
 }

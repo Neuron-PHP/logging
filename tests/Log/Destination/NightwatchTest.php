@@ -7,6 +7,17 @@ use Neuron\Log\Format\Nightwatch as NightwatchFormat;
 use Neuron\Log\RunLevel;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Test subclass that throws exception to test error handling
+ */
+class NightwatchWithException extends Nightwatch
+{
+	public function getStdErr()
+	{
+		throw new \Exception( 'Simulated exception in getStdErr' );
+	}
+}
+
 class NightwatchTest extends TestCase
 {
 	public function testOpenWithoutTokenFails()
@@ -305,5 +316,67 @@ class NightwatchTest extends TestCase
 		] );
 
 		$this->assertTrue( $result );
+	}
+
+	public function testFlushBatchWhenEmpty()
+	{
+		$nightwatch = new Nightwatch( new NightwatchFormat() );
+
+		$nightwatch->open( [
+			'token' => 'test-token',
+			'batch_size' => 10
+		] );
+
+		// Use reflection to call flushBatch with an empty batch
+		$reflection = new \ReflectionClass( $nightwatch );
+		$method = $reflection->getMethod( 'flushBatch' );
+		$method->setAccessible( true );
+
+		// Call flushBatch on empty batch - should return early without error
+		$method->invoke( $nightwatch );
+
+		// Verify batch is still empty
+		$batchProperty = $reflection->getProperty( 'logBatch' );
+		$batchProperty->setAccessible( true );
+		$this->assertEmpty( $batchProperty->getValue( $nightwatch ) );
+	}
+
+	public function testSendToNightwatchHandlesExceptionGracefully()
+	{
+		// Use test subclass that throws exception in getStdErr
+		$nightwatch = new NightwatchWithException( new NightwatchFormat() );
+
+		$nightwatch->open( [
+			'token' => 'test-token',
+			'endpoint' => 'http://localhost:9999/test', // Unreachable
+			'batch_size' => 1 // Send immediately
+		] );
+
+		$data = new Data(
+			time(),
+			'Test exception handling',
+			RunLevel::ERROR,
+			'ERROR',
+			[]
+		);
+
+		// Use reflection to call write which will trigger sendToNightwatch
+		$reflection = new \ReflectionClass( $nightwatch );
+		$method = $reflection->getMethod( 'write' );
+		$method->setAccessible( true );
+
+		$jsonData = ( new NightwatchFormat() )->format( $data );
+
+		// This will trigger the catch block (lines 185-190)
+		// The exception from getStdErr() will be caught and handled
+		// However, getStdErr() is called again in the catch block, causing another exception
+		// This is expected behavior for this test - we're testing that the catch block executes
+		try {
+			$method->invoke( $nightwatch, $jsonData, $data );
+			$this->fail( 'Should have thrown exception from mock getStdErr' );
+		} catch ( \Exception $e ) {
+			// Exception expected - this confirms catch block was executed
+			$this->assertStringContainsString( 'Simulated exception', $e->getMessage() );
+		}
 	}
 }

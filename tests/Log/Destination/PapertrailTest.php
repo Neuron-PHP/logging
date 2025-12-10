@@ -496,4 +496,62 @@ class PapertrailTest extends TestCase
 		$pid = getmypid() ?: '-';
 		$this->assertStringContainsString( (string) $pid, $result );
 	}
+
+	public function testSuccessfulConnectionPath()
+	{
+		// Use reflection to test successful connection paths by mocking internal state
+		$papertrail = new Papertrail( new PlainText() );
+		$papertrail->open( [
+			'host' => 'logs.papertrailapp.com',
+			'port' => 12345
+		] );
+
+		$reflection = new \ReflectionClass( $papertrail );
+
+		// Create a mock socket using php://memory
+		$mockSocket = fopen( 'php://memory', 'r+' );
+
+		// Set the socket property to simulate successful connection
+		$socketProperty = $reflection->getProperty( 'socket' );
+		$socketProperty->setAccessible( true );
+		$socketProperty->setValue( $papertrail, $mockSocket );
+
+		// Set connected flag
+		$connectedProperty = $reflection->getProperty( 'isConnected' );
+		$connectedProperty->setAccessible( true );
+		$connectedProperty->setValue( $papertrail, true );
+
+		// Now test the close method with a valid socket (covers lines 298-300)
+		$papertrail->close();
+
+		// Verify socket was closed
+		$this->assertNull( $socketProperty->getValue( $papertrail ) );
+		$this->assertFalse( $connectedProperty->getValue( $papertrail ) );
+	}
+
+	public function testReconnectMaxAttemptsReached()
+	{
+		$papertrail = new Papertrail( new PlainText() );
+
+		$papertrail->open( [
+			'host' => '127.0.0.1',
+			'port' => 9999, // Unreachable
+			'max_reconnect_attempts' => 2
+		] );
+
+		// Use reflection to simulate multiple reconnect attempts
+		$reflection = new \ReflectionClass( $papertrail );
+
+		$attemptsProperty = $reflection->getProperty( 'reconnectAttempts' );
+		$attemptsProperty->setAccessible( true );
+		$attemptsProperty->setValue( $papertrail, 2 ); // At max
+
+		$reconnectMethod = $reflection->getMethod( 'reconnect' );
+		$reconnectMethod->setAccessible( true );
+
+		// Should return false when max attempts reached
+		$result = $reconnectMethod->invoke( $papertrail );
+		$this->assertFalse( $result, 'Reconnect should fail when max attempts reached' );
+	}
+
 }

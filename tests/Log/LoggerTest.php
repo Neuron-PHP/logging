@@ -50,6 +50,33 @@ class LoggerTest extends TestCase
 		$this->assertTrue( $failed );
 	}
 
+	public function testSetRunLevelTextNotice()
+	{
+		$this->_Logger->setRunLevel( 'notice' );
+		$this->assertEquals( RunLevel::NOTICE, $this->_Logger->getRunLevel() );
+	}
+
+	public function testSetRunLevelTextAlert()
+	{
+		$this->_Logger->setRunLevel( 'alert' );
+		$this->assertEquals( RunLevel::ALERT, $this->_Logger->getRunLevel() );
+	}
+
+	public function testSetRunLevelTextEmergency()
+	{
+		$this->_Logger->setRunLevel( 'emergency' );
+		$this->assertEquals( RunLevel::EMERGENCY, $this->_Logger->getRunLevel() );
+	}
+
+	public function testRemoveFilter()
+	{
+		$filter = new \Neuron\Log\Filter\RunLevel();
+		$this->_Logger->addFilter( $filter );
+
+		$result = $this->_Logger->removeFilter( $filter );
+		$this->assertTrue( $result );
+	}
+
 	public function testDebug()
 	{
 		$Success = true;
