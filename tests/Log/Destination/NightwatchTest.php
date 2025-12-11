@@ -1,6 +1,9 @@
 <?php
 namespace Tests\Log\Destination;
 
+use Neuron\Core\System\HttpResponse;
+use Neuron\Core\System\IHttpClient;
+use Neuron\Core\System\MemoryHttpClient;
 use Neuron\Log\Data;
 use Neuron\Log\Destination\Nightwatch;
 use Neuron\Log\Format\Nightwatch as NightwatchFormat;
@@ -20,6 +23,14 @@ class NightwatchWithException extends Nightwatch
 
 class NightwatchTest extends TestCase
 {
+	private IHttpClient $httpClient;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->httpClient = new MemoryHttpClient();
+	}
+
 	public function testOpenWithoutTokenFails()
 	{
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
@@ -61,7 +72,8 @@ class NightwatchTest extends TestCase
 
 		$result = $nightwatch->open(
 			[
-				'token' => 'test-token-12345'
+				'token' => 'test-token-12345',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -75,7 +87,8 @@ class NightwatchTest extends TestCase
 		$result = $nightwatch->open(
 			[
 				'token'    => 'test-token',
-				'endpoint' => 'https://custom.nightwatch.com/api/logs'
+				'endpoint' => 'https://custom.nightwatch.com/api/logs',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -92,7 +105,8 @@ class NightwatchTest extends TestCase
 				'endpoint'         => 'https://nightwatch.laravel.com/api/logs',
 				'batch_size'       => 10,
 				'timeout'          => 5,
-				'application_name' => 'test-app'
+				'application_name' => 'test-app',
+				'http_client'      => $this->httpClient
 			]
 		);
 
@@ -101,12 +115,19 @@ class NightwatchTest extends TestCase
 
 	public function testWriteHandlesApiFailureGracefully()
 	{
+		// Program a failure response
+		$this->httpClient->addResponse(
+			'*',
+			new HttpResponse( 500, 'Internal Server Error', [], 0, 'Connection failed' )
+		);
+
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
 
 		$nightwatch->open(
 			[
-				'token'    => 'test-token',
-				'endpoint' => 'http://localhost:9999/nonexistent' // Unreachable endpoint
+				'token'       => 'test-token',
+				'endpoint'    => 'https://nightwatch.laravel.com/api/logs',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -118,7 +139,7 @@ class NightwatchTest extends TestCase
 			[ 'test' => 'context' ]
 		);
 
-		// This should not throw an exception even if the API is unreachable
+		// This should not throw an exception even if the API fails
 		try
 		{
 			// Use reflection to call the protected write method
@@ -139,14 +160,21 @@ class NightwatchTest extends TestCase
 
 	public function testBatchingConfiguration()
 	{
+		// Program a success response for when the batch is sent
+		$this->httpClient->addResponse(
+			'*',
+			new HttpResponse( 200, '{"success":true}', [] )
+		);
+
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
 
 		// Test batch size of 5
 		$nightwatch->open(
 			[
-				'token'      => 'test-token',
-				'batch_size' => 5,
-				'endpoint'   => 'http://localhost:9999/test' // Unreachable but doesn't matter for this test
+				'token'       => 'test-token',
+				'batch_size'  => 5,
+				'endpoint'    => 'https://nightwatch.laravel.com/api/logs',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -186,13 +214,20 @@ class NightwatchTest extends TestCase
 
 	public function testCloseFlushesRemainingBatch()
 	{
+		// Program a success response for when close flushes the batch
+		$this->httpClient->addResponse(
+			'*',
+			new HttpResponse( 200, '{"success":true}', [] )
+		);
+
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
 
 		$nightwatch->open(
 			[
-				'token'      => 'test-token',
-				'batch_size' => 10,
-				'endpoint'   => 'http://localhost:9999/test'
+				'token'       => 'test-token',
+				'batch_size'  => 10,
+				'endpoint'    => 'https://nightwatch.laravel.com/api/logs',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -229,13 +264,20 @@ class NightwatchTest extends TestCase
 
 	public function testNoBatchingWhenBatchSizeIsOne()
 	{
+		// Program a success response for immediate send
+		$this->httpClient->addResponse(
+			'*',
+			new HttpResponse( 200, '{"success":true}', [] )
+		);
+
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
 
 		$nightwatch->open(
 			[
-				'token'      => 'test-token',
-				'batch_size' => 1, // No batching
-				'endpoint'   => 'http://localhost:9999/test'
+				'token'       => 'test-token',
+				'batch_size'  => 1, // No batching
+				'endpoint'    => 'https://nightwatch.laravel.com/api/logs',
+				'http_client' => $this->httpClient
 			]
 		);
 
@@ -269,7 +311,8 @@ class NightwatchTest extends TestCase
 			[
 				'token'            => 'test-token',
 				'application_name' => 'my-custom-app',
-				'endpoint'         => 'https://nightwatch.laravel.com/api/logs'
+				'endpoint'         => 'https://nightwatch.laravel.com/api/logs',
+				'http_client'      => $this->httpClient
 			]
 		);
 
@@ -311,7 +354,8 @@ class NightwatchTest extends TestCase
 		$nightwatch = new Nightwatch( new NightwatchFormat() );
 
 		$result = $nightwatch->open( [
-			'token' => 'test-token'
+			'token' => 'test-token',
+			'http_client' => $this->httpClient
 			// No application_name, should use default
 		] );
 
@@ -324,7 +368,8 @@ class NightwatchTest extends TestCase
 
 		$nightwatch->open( [
 			'token' => 'test-token',
-			'batch_size' => 10
+			'batch_size' => 10,
+			'http_client' => $this->httpClient
 		] );
 
 		// Use reflection to call flushBatch with an empty batch
@@ -343,13 +388,21 @@ class NightwatchTest extends TestCase
 
 	public function testSendToNightwatchHandlesExceptionGracefully()
 	{
+		// Create a separate http client for this test that will cause an error
+		$httpClient = new MemoryHttpClient();
+		$httpClient->addResponse(
+			'*',
+			new HttpResponse( 500, 'Internal Server Error', [], 0, 'Connection failed' )
+		);
+
 		// Use test subclass that throws exception in getStdErr
 		$nightwatch = new NightwatchWithException( new NightwatchFormat() );
 
 		$nightwatch->open( [
 			'token' => 'test-token',
-			'endpoint' => 'http://localhost:9999/test', // Unreachable
-			'batch_size' => 1 // Send immediately
+			'endpoint' => 'https://nightwatch.laravel.com/api/logs',
+			'batch_size' => 1, // Send immediately
+			'http_client' => $httpClient
 		] );
 
 		$data = new Data(
@@ -367,7 +420,7 @@ class NightwatchTest extends TestCase
 
 		$jsonData = ( new NightwatchFormat() )->format( $data );
 
-		// This will trigger the catch block (lines 185-190)
+		// This will trigger the error handling (HTTP 500)
 		// The exception from getStdErr() will be caught and handled
 		// However, getStdErr() is called again in the catch block, causing another exception
 		// This is expected behavior for this test - we're testing that the catch block executes

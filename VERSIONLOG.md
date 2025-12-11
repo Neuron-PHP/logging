@@ -1,4 +1,11 @@
-## 0.9.1
+## 0.9.1 2025-12-11
+* **Nightwatch destination now uses system abstractions** - Refactored to use `IHttpClient` interface instead of direct curl calls
+* Added `neuron-php/core` 0.8.* dependency for system abstractions
+* Nightwatch destination now supports dependency injection with optional `IHttpClient` parameter for testability
+* Maintains full backward compatibility - existing code works without changes
+* Tests rewritten to use `MemoryHttpClient` for deterministic, fast testing without network dependencies
+* **Test performance improvement: Instant execution** - No network calls, fully deterministic
+* All 15 Nightwatch tests passing with 100% code coverage (6/6 methods, 53/53 lines)
 
 ## 0.9.0 2025-11-24
 * BREAKING CHANGE: Renamed `FATAL` log level to `CRITICAL` for PSR-3 compliance

@@ -2,10 +2,11 @@
 
 namespace Neuron\Log\Destination;
 
+use Neuron\Core\System\IHttpClient;
+use Neuron\Core\System\RealHttpClient;
 use Neuron\Log;
 use Neuron\Log\Data;
 use Neuron\Log\Format\Nightwatch as NightwatchFormat;
-use Neuron\Util\WebHook;
 use Neuron\Validation\IsUrl;
 
 /**
@@ -24,6 +25,7 @@ class Nightwatch extends DestinationBase
 	private int $timeout;
 	private array $logBatch = [];
 	private ?string $applicationName = null;
+	private IHttpClient $httpClient;
 
 	/**
 	 * Default Nightwatch API endpoint
@@ -39,6 +41,7 @@ class Nightwatch extends DestinationBase
 	 *                      - 'batch_size' (optional): Number of logs to batch before sending (default: 1)
 	 *                      - 'timeout' (optional): Request timeout in seconds (default: 10)
 	 *                      - 'application_name' (optional): Application identifier
+	 *                      - 'http_client' (optional): IHttpClient instance for testing
 	 * @return bool True if configuration is valid
 	 * @throws \Exception If token is missing or endpoint URL is invalid
 	 */
@@ -65,6 +68,10 @@ class Nightwatch extends DestinationBase
 		// Set optional parameters
 		$this->batchSize = (int)( $params['batch_size'] ?? 1 );
 		$this->timeout = (int)( $params['timeout'] ?? 10 );
+
+		// Initialize HTTP client
+		$this->httpClient = $params['http_client'] ?? new RealHttpClient();
+		$this->httpClient->setTimeout( $this->timeout );
 
 		if( isset( $params['application_name'] ) )
 		{
@@ -140,44 +147,29 @@ class Nightwatch extends DestinationBase
 	{
 		try
 		{
-			$hook = new WebHook();
-
 			// Prepare payload
 			$payload = [
 				'logs' => array_map( 'json_decode', $logs )
 			];
 
-			// Create custom WebHook instance with timeout
-			$curlHandle = curl_init();
-			curl_setopt_array(
-				$curlHandle,
-				[
-					CURLOPT_URL            => $this->endPoint,
-					CURLOPT_CUSTOMREQUEST  => 'POST',
-					CURLOPT_TIMEOUT        => $this->timeout,
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_POSTFIELDS     => json_encode( $payload ),
-					CURLOPT_HTTPHEADER     => [
-						'Content-Type: application/json',
-						'Accept: application/json',
-						'Authorization: Bearer ' . $this->token,
-						'User-Agent: Neuron-PHP/1.0'
-					]
-				]
-			);
+			// Set custom headers for the request
+			$this->httpClient->setDefaultHeaders( [
+				'Content-Type' => 'application/json',
+				'Accept' => 'application/json',
+				'Authorization' => 'Bearer ' . $this->token,
+				'User-Agent' => 'Neuron-PHP/1.0'
+			] );
 
-			$response = curl_exec( $curlHandle );
-			$httpCode = curl_getinfo( $curlHandle, CURLINFO_HTTP_CODE );
-			$error = curl_error( $curlHandle );
-			curl_close( $curlHandle );
+			// Send POST request
+			$response = $this->httpClient->postJson( $this->endPoint, json_encode( $payload ) );
 
 			// Log error to stderr if request failed (but don't throw exception)
-			if( $httpCode >= 400 || !empty( $error ) )
+			if( $response->hasError() || $response->getStatusCode() >= 400 )
 			{
 				$errorMessage = sprintf(
 					"[Nightwatch] Failed to send logs: HTTP %d %s\n",
-					$httpCode,
-					$error ?: $response
+					$response->getStatusCode(),
+					$response->hasError() ? $response->getError() : $response->getBody()
 				);
 				fwrite( $this->getStdErr(), $errorMessage );
 			}
