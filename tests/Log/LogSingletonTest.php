@@ -215,4 +215,81 @@ class LogSingletonTest extends TestCase
 		Log::addFilter( new ExampleFilter() );
 		$this->assertTrue( true );
 	}
+
+	public function testSetLevelAsRunLevelInstance()
+	{
+		Log::setRunLevel( RunLevel::INFO );
+		$this->assertEquals( RunLevel::INFO, Log::getRunLevel() );
+
+		Log::setRunLevel( RunLevel::WARNING );
+		$this->assertEquals( RunLevel::WARNING, Log::getRunLevel() );
+	}
+
+	public function testSetContextWithChannels()
+	{
+		// Add multiple channels first
+		$logger1 = new Logger( new Echoer( new PlainText() ) );
+		$logger1->setRunLevel( RunLevel::INFO );
+		Log::addChannel( 'Channel1', $logger1 );
+
+		$logger2 = new Logger( new Echoer( new PlainText() ) );
+		$logger2->setRunLevel( RunLevel::INFO );
+		Log::addChannel( 'Channel2', $logger2 );
+
+		// Now set context - this should iterate over channels
+		Log::setContext( 'TestKey', 'TestValue' );
+
+		ob_start();
+		Log::channel( 'Channel1' )->info( 'test' );
+		$output1 = ob_get_contents();
+		ob_end_clean();
+
+		ob_start();
+		Log::channel( 'Channel2' )->info( 'test' );
+		$output2 = ob_get_contents();
+		ob_end_clean();
+
+		// Both channels should have the context
+		$this->assertStringContainsString( 'TestKey=TestValue', $output1 );
+		$this->assertStringContainsString( 'TestKey=TestValue', $output2 );
+	}
+
+	public function testNotice()
+	{
+		Log::setRunLevel( RunLevel::DEBUG );
+		$test = 'notice test';
+
+		ob_start();
+		Log::notice( $test );
+		$str = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $str );
+	}
+
+	public function testAlert()
+	{
+		Log::setRunLevel( RunLevel::DEBUG );
+		$test = 'alert test';
+
+		ob_start();
+		Log::alert( $test );
+		$str = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $str );
+	}
+
+	public function testEmergency()
+	{
+		Log::setRunLevel( RunLevel::DEBUG );
+		$test = 'emergency test';
+
+		ob_start();
+		Log::emergency( $test );
+		$str = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $str );
+	}
 }

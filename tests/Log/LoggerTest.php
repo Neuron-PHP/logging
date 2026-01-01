@@ -50,6 +50,33 @@ class LoggerTest extends TestCase
 		$this->assertTrue( $failed );
 	}
 
+	public function testSetRunLevelTextNotice()
+	{
+		$this->_Logger->setRunLevel( 'notice' );
+		$this->assertEquals( RunLevel::NOTICE, $this->_Logger->getRunLevel() );
+	}
+
+	public function testSetRunLevelTextAlert()
+	{
+		$this->_Logger->setRunLevel( 'alert' );
+		$this->assertEquals( RunLevel::ALERT, $this->_Logger->getRunLevel() );
+	}
+
+	public function testSetRunLevelTextEmergency()
+	{
+		$this->_Logger->setRunLevel( 'emergency' );
+		$this->assertEquals( RunLevel::EMERGENCY, $this->_Logger->getRunLevel() );
+	}
+
+	public function testRemoveFilter()
+	{
+		$filter = new \Neuron\Log\Filter\RunLevel();
+		$this->_Logger->addFilter( $filter );
+
+		$result = $this->_Logger->removeFilter( $filter );
+		$this->assertTrue( $result );
+	}
+
 	public function testDebug()
 	{
 		$Success = true;
@@ -291,5 +318,136 @@ class LoggerTest extends TestCase
 
 		$this->assertStringContainsString( "(SessionId=2) ".$test."\r\n", $s );
 		$this->assertStringNotContainsString( "UserId".$test."\r\n", $s );
+	}
+
+	public function testRemoveContextWithNull()
+	{
+		$this->_Logger->setContext( 'UserId', 1 );
+		$this->_Logger->setContext( 'UserId', null );
+
+		$context = $this->_Logger->getContext();
+		$this->assertArrayNotHasKey( 'UserId', $context );
+	}
+
+	public function testSetChannel()
+	{
+		$this->_Logger->setChannel( 'test-channel' );
+		$this->assertEquals( 'test-channel', $this->_Logger->getChannel() );
+	}
+
+	public function testSetChannelNull()
+	{
+		$this->_Logger->setChannel( 'test-channel' );
+		$this->_Logger->setChannel( null );
+		$this->assertNull( $this->_Logger->getChannel() );
+	}
+
+	public function testEmergency()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+		$test = 'emergency message';
+
+		ob_start();
+		$this->_Logger->emergency( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testAlert()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+		$test = 'alert message';
+
+		ob_start();
+		$this->_Logger->alert( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testNotice()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+		$test = 'notice message';
+
+		ob_start();
+		$this->_Logger->notice( $test );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( $test, $s );
+	}
+
+	public function testMessageInterpolation()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+
+		ob_start();
+		$this->_Logger->info( 'User {username} logged in from {ip}', [
+			'username' => 'john_doe',
+			'ip' => '192.168.1.1'
+		] );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( 'User john_doe logged in from 192.168.1.1', $s );
+	}
+
+	public function testMessageInterpolationWithNonScalar()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+
+		ob_start();
+		$this->_Logger->info( 'Data: {data}', [
+			'data' => [ 'key' => 'value' ] // Array should not be interpolated
+		] );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		// Should contain the original placeholder since arrays aren't interpolated
+		$this->assertStringContainsString( 'Data: {data}', $s );
+	}
+
+	public function testMessageInterpolationWithStringableObject()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+
+		$stringable = new class {
+			public function __toString(): string
+			{
+				return 'StringableValue';
+			}
+		};
+
+		ob_start();
+		$this->_Logger->info( 'Object: {obj}', [ 'obj' => $stringable ] );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( 'Object: StringableValue', $s );
+	}
+
+	public function testSetRunLevelWithString()
+	{
+		$this->_Logger->setRunLevel( 'info' );
+		$this->assertEquals( RunLevel::INFO, $this->_Logger->getRunLevel() );
+
+		$this->_Logger->setRunLevel( 'warning' );
+		$this->assertEquals( RunLevel::WARNING, $this->_Logger->getRunLevel() );
+	}
+
+	public function testDebugWithContext()
+	{
+		$this->_Logger->setRunLevel( RunLevel::DEBUG );
+
+		ob_start();
+		$this->_Logger->debug( 'Debug {msg}', [ 'msg' => 'test' ] );
+		$s = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertStringContainsString( 'Debug test', $s );
 	}
 }

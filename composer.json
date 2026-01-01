@@ -14,6 +14,7 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-sockets": "*",
+        "neuron-php/core": "0.8.*",
         "neuron-php/patterns": "^0.7.2",
         "neuron-php/validation": "0.7.*",
         "neuron-php/util": "0.6.*"
