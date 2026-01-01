@@ -42,4 +42,24 @@ class FileTest extends TestCase
 
 		$this->assertFalse( $Pass );
 	}
+
+	public function testWriteWithInvalidFileHandle()
+	{
+		$File = new File( new CSV() );
+
+		// Open should fail
+		$Pass = $File->open(
+				[
+					'file_name' => "//invalid//path/%DATE%"
+				]
+			);
+
+		$this->assertFalse( $Pass );
+
+		// Write should not crash even with invalid file handle
+		$File->log( "Test message", RunLevel::ERROR );
+
+		// Test passes if no exception is thrown
+		$this->assertTrue( true );
+	}
 }

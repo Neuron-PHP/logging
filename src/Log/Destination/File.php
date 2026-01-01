@@ -83,6 +83,12 @@ class File extends DestinationBase
 
 	public function write( string $text, Log\Data $data ): void
 	{
+		// Only write if file handle is valid
+		if( !$this->_file || !is_resource( $this->_file ) )
+		{
+			return;
+		}
+
 		fwrite(	$this->_file,
 					"$text\r\n" );
 	}
