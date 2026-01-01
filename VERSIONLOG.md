@@ -27,7 +27,7 @@
 * Updated tests to 100% coverage.
 * Updated to validation 0.7
 
-## 0.7.9
+## 0.7.9 2026-01-01
 ## 0.7.8
 * Added StdOutStdError destination.
 * Updated documentation.
