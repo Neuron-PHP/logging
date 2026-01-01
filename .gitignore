@@ -8,4 +8,3 @@ node_modules
 public_html/
 .phpunit.result.cache
 coverage*
-coverage*/
