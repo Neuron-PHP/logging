@@ -1,4 +1,4 @@
-## 0.9.2
+## 0.9.2 2026-01-02
 
 ## 0.9.1 2025-12-11
 * **Nightwatch destination now uses system abstractions** - Refactored to use `IHttpClient` interface instead of direct curl calls
