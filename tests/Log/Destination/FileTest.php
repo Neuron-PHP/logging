@@ -62,4 +62,33 @@ class FileTest extends TestCase
 		// Test passes if no exception is thrown
 		$this->assertTrue( true );
 	}
+
+	public function testOpenCreatesDirectoryIfNotExists()
+	{
+		$tempDir = sys_get_temp_dir() . '/neuron_log_test_' . uniqid();
+		$logFile = $tempDir . '/logs/test.log';
+
+		$File = new File( new CSV() );
+
+		// Directory should not exist yet
+		$this->assertFalse( is_dir( dirname( $logFile ) ) );
+
+		// Open should succeed and create directory
+		$Pass = $File->open(
+				[
+					'file_name' => $logFile
+				]
+			);
+
+		$this->assertTrue( $Pass );
+		$this->assertTrue( is_dir( dirname( $logFile ) ) );
+		$this->assertTrue( file_exists( $logFile ) );
+
+		$File->close();
+
+		// Clean up
+		@unlink( $logFile );
+		@rmdir( dirname( $logFile ) );
+		@rmdir( $tempDir );
+	}
 }

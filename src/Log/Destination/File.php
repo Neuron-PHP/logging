@@ -51,6 +51,13 @@ class File extends DestinationBase
 	{
 		$this->_name = $this->buildFileName( $params[ 'file_name' ] );
 
+		// Create directory if it doesn't exist
+		$directory = dirname( $this->_name );
+		if( !is_dir( $directory ) )
+		{
+			@mkdir( $directory, 0755, true );
+		}
+
 		$this->_file = @fopen( $this->_name, 'a' );
 
 		if( !$this->_file )
