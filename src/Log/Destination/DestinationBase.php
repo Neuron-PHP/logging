@@ -45,26 +45,34 @@ abstract class DestinationBase
 	private Format\IFormat $_format;
 	private array    $_filters = [];
 	private ?ILogger $_parent  = null;
-	private mixed $_stdOut;
-	private mixed $_stdErr;
+	private mixed $_stdOut = null;
+	private mixed $_stdErr = null;
 
 	/**
 	 * @param Format\IFormat $format
 	 */
 	public function __construct( Format\IFormat $format )
 	{
-		$this->setFileHandles();
 		$this->setFormat( $format );
 	}
 
 	/**
 	 * Maps STDERR and STDOUT to file handles in non-CLI environments.
+	 * Handles are opened lazily so destinations that never write to
+	 * stdout/stderr do not leak stream resources.
 	 * @return void
 	 */
 	public function setFileHandles(): void
 	{
-		$this->_stdErr = fopen( 'php://stderr', 'w' );
-		$this->_stdOut = fopen( 'php://stdout', 'w' );
+		if( !is_resource( $this->_stdOut ) )
+		{
+			$this->_stdOut = fopen( 'php://stdout', 'w' );
+		}
+
+		if( !is_resource( $this->_stdErr ) )
+		{
+			$this->_stdErr = fopen( 'php://stderr', 'w' );
+		}
 	}
 
 	/**
@@ -72,6 +80,11 @@ abstract class DestinationBase
 	 */
 	public function getStdOut()
 	{
+		if( !is_resource( $this->_stdOut ) )
+		{
+			$this->_stdOut = fopen( 'php://stdout', 'w' );
+		}
+
 		return $this->_stdOut;
 	}
 
@@ -80,7 +93,32 @@ abstract class DestinationBase
 	 */
 	public function getStdErr()
 	{
+		if( !is_resource( $this->_stdErr ) )
+		{
+			$this->_stdErr = fopen( 'php://stderr', 'w' );
+		}
+
 		return $this->_stdErr;
+	}
+
+	/**
+	 * Closes lazily opened stdout/stderr handles.
+	 */
+	private function closeStdHandles(): void
+	{
+		if( is_resource( $this->_stdOut ) )
+		{
+			fclose( $this->_stdOut );
+		}
+
+		$this->_stdOut = null;
+
+		if( is_resource( $this->_stdErr ) )
+		{
+			fclose( $this->_stdErr );
+		}
+
+		$this->_stdErr = null;
 	}
 
 	/**
@@ -178,7 +216,14 @@ abstract class DestinationBase
 	 * @return void
 	 */
 	public function close(): void
-	{}
+	{
+		$this->closeStdHandles();
+	}
+
+	public function __destruct()
+	{
+		$this->closeStdHandles();
+	}
 
 	/**
 	 * Handles writing the log data after filtering and formatting.

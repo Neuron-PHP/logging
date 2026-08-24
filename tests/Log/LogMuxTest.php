@@ -24,8 +24,7 @@ class LogMuxTest extends TestCase
 				new Echoer(
 					new PlainText( false )
 				)
-			),
-			RunLevel::INFO
+			)
 		);
 
 		$this->_Mux->addLog(
@@ -33,8 +32,7 @@ class LogMuxTest extends TestCase
 				new Echoer(
 					new JSON()
 				)
-			),
-			RunLevel::WARNING
+			)
 		);
 
 	}
@@ -206,5 +204,26 @@ class LogMuxTest extends TestCase
 		$mux = new LogMux();
 		$context = $mux->getContext();
 		$this->assertEmpty( $context );
+	}
+
+	public function testAddLogDoesNotAttachDuplicateInstance()
+	{
+		$mux = new LogMux();
+		$logger = new Logger( new Echoer( new PlainText( false ) ) );
+
+		$mux->addLog( $logger );
+		$mux->addLog( $logger );
+
+		$this->assertCount( 1, $mux->getLogs() );
+	}
+
+	public function testAddLogAttachesDistinctInstances()
+	{
+		$mux = new LogMux();
+
+		$mux->addLog( new Logger( new Echoer( new PlainText( false ) ) ) );
+		$mux->addLog( new Logger( new Echoer( new PlainText( false ) ) ) );
+
+		$this->assertCount( 2, $mux->getLogs() );
 	}
 }

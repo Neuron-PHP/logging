@@ -209,4 +209,33 @@ class Log extends Memory
 		$log->initIfNeeded();
 		$log->logger->addFilter( $filter );
 	}
+
+	/**
+	 * Closes destinations, clears channels, and drops the persisted instance.
+	 */
+	public static function invalidate(): void
+	{
+		$log = static::instance();
+
+		if( $log instanceof self )
+		{
+			if( $log->logger instanceof LogMux )
+			{
+				$log->logger->reset();
+			}
+
+			foreach( $log->channels as $channel )
+			{
+				if( $channel instanceof LogMux )
+				{
+					$channel->reset();
+				}
+			}
+
+			$log->logger = null;
+			$log->channels = [];
+		}
+
+		parent::invalidate();
+	}
 }

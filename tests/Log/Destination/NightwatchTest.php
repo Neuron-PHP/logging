@@ -145,7 +145,6 @@ class NightwatchTest extends TestCase
 			// Use reflection to call the protected write method
 			$reflection = new \ReflectionClass( $nightwatch );
 			$method = $reflection->getMethod( 'write' );
-			$method->setAccessible( true );
 
 			$jsonData = ( new NightwatchFormat() )->format( $data );
 			$method->invoke( $nightwatch, $jsonData, $data );
@@ -189,10 +188,8 @@ class NightwatchTest extends TestCase
 		// Use reflection to test batching behavior
 		$reflection = new \ReflectionClass( $nightwatch );
 		$batchProperty = $reflection->getProperty( 'logBatch' );
-		$batchProperty->setAccessible( true );
 
 		$writeMethod = $reflection->getMethod( 'write' );
-		$writeMethod->setAccessible( true );
 
 		// Add 4 logs (should not trigger batch send)
 		for( $i = 0; $i < 4; $i++ )
@@ -242,10 +239,8 @@ class NightwatchTest extends TestCase
 		// Use reflection to add logs to batch
 		$reflection = new \ReflectionClass( $nightwatch );
 		$batchProperty = $reflection->getProperty( 'logBatch' );
-		$batchProperty->setAccessible( true );
 
 		$writeMethod = $reflection->getMethod( 'write' );
-		$writeMethod->setAccessible( true );
 
 		// Add 3 logs (less than batch size)
 		for( $i = 0; $i < 3; $i++ )
@@ -292,10 +287,8 @@ class NightwatchTest extends TestCase
 		// Use reflection to verify batch is always empty
 		$reflection = new \ReflectionClass( $nightwatch );
 		$batchProperty = $reflection->getProperty( 'logBatch' );
-		$batchProperty->setAccessible( true );
 
 		$writeMethod = $reflection->getMethod( 'write' );
-		$writeMethod->setAccessible( true );
 
 		$jsonData = ( new NightwatchFormat() )->format( $data );
 		$writeMethod->invoke( $nightwatch, $jsonData, $data );
@@ -330,7 +323,6 @@ class NightwatchTest extends TestCase
 
 		$reflection = new \ReflectionClass( $nightwatch );
 		$writeMethod = $reflection->getMethod( 'write' );
-		$writeMethod->setAccessible( true );
 
 		$jsonData = ( new NightwatchFormat( 'neuron', 'my-custom-app' ) )->format( $data );
 		$this->assertStringContainsString( 'my-custom-app', $jsonData );
@@ -375,14 +367,12 @@ class NightwatchTest extends TestCase
 		// Use reflection to call flushBatch with an empty batch
 		$reflection = new \ReflectionClass( $nightwatch );
 		$method = $reflection->getMethod( 'flushBatch' );
-		$method->setAccessible( true );
 
 		// Call flushBatch on empty batch - should return early without error
 		$method->invoke( $nightwatch );
 
 		// Verify batch is still empty
 		$batchProperty = $reflection->getProperty( 'logBatch' );
-		$batchProperty->setAccessible( true );
 		$this->assertEmpty( $batchProperty->getValue( $nightwatch ) );
 	}
 
@@ -416,7 +406,6 @@ class NightwatchTest extends TestCase
 		// Use reflection to call write which will trigger sendToNightwatch
 		$reflection = new \ReflectionClass( $nightwatch );
 		$method = $reflection->getMethod( 'write' );
-		$method->setAccessible( true );
 
 		$jsonData = ( new NightwatchFormat() )->format( $data );
 

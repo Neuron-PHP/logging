@@ -74,10 +74,12 @@ class File extends DestinationBase
 
 	public function close(): void
 	{
-		if( $this->_file )
+		if( isset( $this->_file ) && is_resource( $this->_file ) )
 		{
 			fclose( $this->_file );
 		}
+
+		$this->_file = null;
 	}
 
 	/**

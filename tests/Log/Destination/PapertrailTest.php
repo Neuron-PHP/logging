@@ -221,7 +221,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'getSeverity' );
-		$method->setAccessible( true );
 
 		// Test all log levels map to correct syslog severities
 		$this->assertEquals( 7, $method->invoke( $papertrail, RunLevel::DEBUG ) );
@@ -244,7 +243,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'buildStructuredData' );
-		$method->setAccessible( true );
 
 		$result = $method->invoke( $papertrail, [] );
 		$this->assertEquals( '-', $result );
@@ -260,7 +258,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'buildStructuredData' );
-		$method->setAccessible( true );
 
 		$context = [
 			'string_val' => 'test',
@@ -302,7 +299,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'formatSyslogMessage' );
-		$method->setAccessible( true );
 
 		$data = new Data(
 			time(),
@@ -333,7 +329,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'formatSyslogMessage' );
-		$method->setAccessible( true );
 
 		$data = new Data(
 			time(),
@@ -360,7 +355,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'formatSyslogMessage' );
-		$method->setAccessible( true );
 
 		$data = new Data(
 			time(),
@@ -454,7 +448,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'formatSyslogMessage' );
-		$method->setAccessible( true );
 
 		$data = new Data(
 			time(),
@@ -480,7 +473,6 @@ class PapertrailTest extends TestCase
 
 		$reflection = new \ReflectionClass( $papertrail );
 		$method = $reflection->getMethod( 'formatSyslogMessage' );
-		$method->setAccessible( true );
 
 		$data = new Data(
 			time(),
@@ -513,12 +505,10 @@ class PapertrailTest extends TestCase
 
 		// Set the socket property to simulate successful connection
 		$socketProperty = $reflection->getProperty( 'socket' );
-		$socketProperty->setAccessible( true );
 		$socketProperty->setValue( $papertrail, $mockSocket );
 
 		// Set connected flag
 		$connectedProperty = $reflection->getProperty( 'isConnected' );
-		$connectedProperty->setAccessible( true );
 		$connectedProperty->setValue( $papertrail, true );
 
 		// Now test the close method with a valid socket (covers lines 298-300)
@@ -543,11 +533,9 @@ class PapertrailTest extends TestCase
 		$reflection = new \ReflectionClass( $papertrail );
 
 		$attemptsProperty = $reflection->getProperty( 'reconnectAttempts' );
-		$attemptsProperty->setAccessible( true );
 		$attemptsProperty->setValue( $papertrail, 2 ); // At max
 
 		$reconnectMethod = $reflection->getMethod( 'reconnect' );
-		$reconnectMethod->setAccessible( true );
 
 		// Should return false when max attempts reached
 		$result = $reconnectMethod->invoke( $papertrail );
