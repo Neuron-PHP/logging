@@ -15,6 +15,13 @@ class LogSingletonTest extends TestCase
 	public function setUp() : void
 	{
 		parent::setUp();
+		Log::invalidate();
+	}
+
+	public function tearDown() : void
+	{
+		Log::invalidate();
+		parent::tearDown();
 	}
 
 	public function testSetLevelAsString()
@@ -291,5 +298,42 @@ class LogSingletonTest extends TestCase
 		ob_end_clean();
 
 		$this->assertStringContainsString( $test, $str );
+	}
+
+	public function testAddChannelDoesNotAttachDuplicateInstance()
+	{
+		$logger = new Logger( new Echoer( new PlainText() ) );
+		$logger->setRunLevel( RunLevel::INFO );
+
+		Log::addChannel( 'dup', $logger );
+		Log::addChannel( 'dup', $logger );
+
+		$this->assertCount( 1, Log::channel( 'dup' )->getLogs() );
+	}
+
+	public function testAddChannelAllowsDistinctLoggers()
+	{
+		$logger1 = new Logger( new Echoer( new PlainText() ) );
+		$logger1->setRunLevel( RunLevel::INFO );
+		$logger2 = new Logger( new Echoer( new PlainText() ) );
+		$logger2->setRunLevel( RunLevel::INFO );
+
+		Log::addChannel( 'mux', $logger1 );
+		Log::addChannel( 'mux', $logger2 );
+
+		$this->assertCount( 2, Log::channel( 'mux' )->getLogs() );
+	}
+
+	public function testInvalidateDropsPersistedInstanceAndChannels()
+	{
+		$logger = new Logger( new Echoer( new PlainText() ) );
+		Log::addChannel( 'temp', $logger );
+
+		$this->assertNotNull( Log::instance() );
+		$this->assertArrayHasKey( 'temp', Log::instance()->channels );
+
+		Log::invalidate();
+
+		$this->assertNull( Log::instance() );
 	}
 }

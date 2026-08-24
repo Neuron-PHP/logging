@@ -204,7 +204,6 @@ class Nightwatch extends DestinationBase
 		// Access the private $_format property through reflection
 		$reflection = new \ReflectionClass( parent::class );
 		$property = $reflection->getProperty( '_format' );
-		$property->setAccessible( true );
 		return $property->getValue( $this );
 	}
 }

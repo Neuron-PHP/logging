@@ -22,4 +22,14 @@ class EchoerTest extends TestCase
 
 		$this->assertStringContainsString( 'Test', $s );
 	}
+
+	public function testConstructDoesNotOpenStdStreams()
+	{
+		$before = count( get_resources( 'stream' ) );
+
+		$destination = new Echoer( new PlainText() );
+
+		$this->assertSame( $before, count( get_resources( 'stream' ) ) );
+		unset( $destination );
+	}
 }

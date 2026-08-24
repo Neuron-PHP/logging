@@ -22,4 +22,18 @@ class StdOutTest extends TestCase
 
 		$this->assertEquals( '', $s );
 	}
+
+	public function testHandlesOpenLazilyAndClose()
+	{
+		$before = count( get_resources( 'stream' ) );
+
+		$destination = new StdOut( new PlainText() );
+		$this->assertSame( $before, count( get_resources( 'stream' ) ) );
+
+		$destination->log( "Test", RunLevel::INFO );
+		$this->assertGreaterThan( $before, count( get_resources( 'stream' ) ) );
+
+		$destination->close();
+		$this->assertSame( $before, count( get_resources( 'stream' ) ) );
+	}
 }

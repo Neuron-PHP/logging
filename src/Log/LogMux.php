@@ -12,17 +12,21 @@ class LogMux implements ILogger
 	private ?string		$channel   = null;
 
 	/**
-	 * @param ILogger $log
-	 */
-
-	/**
+	 * Adds a logger. The same instance is not attached twice.
+	 *
 	 * @param ILogger $log
 	 * @return void
-	 *
-	 * Adds a logger.
 	 */
 	public function addLog( ILogger $log ): void
 	{
+		foreach( $this->_logs as $existing )
+		{
+			if( $existing === $log )
+			{
+				return;
+			}
+		}
+
 		// Set channel on the logger if we have one
 		if( $this->channel !== null && method_exists( $log, 'setChannel' ) )
 		{
@@ -70,11 +74,25 @@ class LogMux implements ILogger
 	}
 
 	/**
-	 * Clears all attached loggers.
+	 * Closes all attached loggers.
 	 */
+	public function close(): void
+	{
+		foreach( $this->_logs as $log )
+		{
+			if( method_exists( $log, 'close' ) )
+			{
+				$log->close();
+			}
+		}
+	}
 
+	/**
+	 * Closes and clears all attached loggers.
+	 */
 	public function reset(): void
 	{
+		$this->close();
 		$this->_logs = [];
 	}
 

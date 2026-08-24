@@ -115,8 +115,7 @@ class ArrayContextTest extends TestCase
 
 	public function testLogSingletonWithArrayContext()
 	{
-		// Reset singleton logger
-		Log::getInstance()->logger = null;
+		Log::invalidate();
 		Log::setRunLevel( RunLevel::DEBUG );
 
 		// Capture output
@@ -133,6 +132,8 @@ class ArrayContextTest extends TestCase
 		$this->assertStringContainsString( 'Database error: Connection timeout', $output );
 		$this->assertStringContainsString( 'host=db.example.com', $output );
 		$this->assertStringContainsString( 'port=3306', $output );
+
+		Log::invalidate();
 	}
 
 	public function testComplexObjectWithToString()
