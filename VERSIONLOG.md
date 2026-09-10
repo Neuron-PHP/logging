@@ -1,3 +1,5 @@
+## 0.9.5 2026-09-10
+
 ## 0.9.4 2026-08-24
 * Fixed some memory leaks related to singleton/serialize.
 
