@@ -1,4 +1,4 @@
-## 0.9.6
+## 0.9.6 2026-10-20
 
 * `Destination\Slack` keeps the result of its last post. `write()` discarded
   the webhook response, so a rate limit, a 5xx, a DNS failure or a dead
