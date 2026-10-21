@@ -1,3 +1,5 @@
+## 0.9.7
+
 ## 0.9.6 2026-10-20
 
 * `Destination\Slack` keeps the result of its last post. `write()` discarded
