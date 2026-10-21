@@ -1,5 +1,14 @@
 ## 0.9.6
 
+* `Destination\Slack` keeps the result of its last post. `write()` discarded
+  the webhook response, so a rate limit, a 5xx, a DNS failure or a dead
+  webhook URL all looked like success to anything posting through it, and
+  retries built on top of it could never fire. The destination still never
+  throws (a Slack outage must not turn every `Log::error()` into an
+  exception); `getLastResponse()` returns the `WebHookResponse` and
+  `lastWriteSucceeded()` is true only for a 2xx with no transport error.
+  `setWebHook()` injects the HTTP client for tests.
+
 ## 0.9.5 2026-09-10
 
 ## 0.9.4 2026-08-24
