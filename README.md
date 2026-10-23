@@ -16,7 +16,7 @@ A flexible and powerful logging component for PHP 8.4+ applications, part of the
 - **Filters**: Apply custom filters to control which logs are written
 - **Multiplexing**: Write to multiple destinations simultaneously with different run levels
 - **Exception Tracking**: Automatic exception formatting with stack traces
-- **Laravel Nightwatch**: Full integration with special context handling
+- **Laravel Nightwatch**: Forward logs into Laravel's existing `nightwatch` channel
 
 ## Requirements
 
@@ -71,7 +71,7 @@ The logging component supports writing to various destinations:
 - **Email**: Send logs via email
 - **File**: Write to log files
 - **Memory**: Store logs in memory for testing
-- **Nightwatch**: Send to Laravel Nightwatch monitoring service
+- **Nightwatch**: Forward logs to Laravel's Nightwatch channel
 - **Null**: Discard logs (useful for testing)
 - **Papertrail**: Send to Papertrail cloud logging service
 - **Slack**: Post to Slack channels
@@ -92,7 +92,6 @@ Each destination can use different formatting:
 - **HTML**: HTML formatted output
 - **HTMLEmail**: HTML optimized for emails
 - **JSON**: Structured JSON output
-- **Nightwatch**: Laravel Nightwatch-specific JSON formatting
 - **PlainText**: Human-readable text format
 - **Raw**: Unformatted output
 - **Slack**: Slack-specific formatting
@@ -198,78 +197,53 @@ Log::error( 'Payment processing failed', [
 
 ### Laravel Nightwatch Integration
 
+Use this when the Laravel application already runs Nightwatch. The destination forwards each Neuron record to Laravel's `nightwatch` log channel. Nightwatch's handler attaches the current request or job, and the local agent delivers it. There is no Nightwatch HTTP API to call, and no Nightwatch-specific formatter.
+
+Pass the `nightwatch` channel. Do not pass `stack` or the default channel. If that default driver writes back into Neuron, a stack write recurses.
+
 ```php
+use Neuron\Log\Log;
 use Neuron\Log\Logger;
 use Neuron\Log\Destination\Nightwatch;
-use Neuron\Log\Format\Nightwatch as NightwatchFormat;
+use Neuron\Log\Format\Raw;
+use Illuminate\Support\Facades\Log as LaravelLog;
 
-// Create Nightwatch destination with default channel
-$nightwatch = new Nightwatch( new NightwatchFormat() );
-$nightwatch->open( [
-	'token' => $_ENV['NIGHTWATCH_TOKEN'],  // Your Nightwatch API token
-	'endpoint' => 'https://nightwatch.laravel.com/api/logs', // Optional, uses default
-	'batch_size' => 10,  // Optional: batch logs for better performance
-	'timeout' => 5       // Optional: API request timeout in seconds
+$destination = new Nightwatch( new Raw() );
+$destination->open( [
+	'logger' => LaravelLog::channel( 'nightwatch' )
 ] );
 
-$nightwatchLogger = new Logger( $nightwatch );
+$nightwatchLogger = new Logger( $destination );
 $nightwatchLogger->setRunLevel( 'info' );
 
-// Log messages will be sent to Nightwatch
-$nightwatchLogger->info( 'Application started' );
-$nightwatchLogger->error( 'Database connection failed', [
-	'host' => 'db.example.com',
-	'port' => 3306,
-	'error' => 'Connection timeout'
-] );
+Log::getInstance()->logger->addLog( $nightwatchLogger );
 
-// For production use with the singleton
-use Neuron\Log\Log;
-
-// Add Nightwatch to the global logger
-Log::getInstance()->Logger->addLog( $nightwatchLogger );
-
-// Now all logs at info level and above go to Nightwatch
 Log::info( 'User logged in', [ 'user_id' => 123 ] );
-Log::warning( 'API rate limit approaching', [ 'requests' => 950, 'limit' => 1000 ] );
-Log::error( 'Payment processing failed', [ 'transaction_id' => 'txn_abc123' ] );
+Log::error( 'Payment processing failed', [
+	'transaction_id' => 'txn_abc123',
+	'exception' => $exception
+] );
 ```
 
-#### Nightwatch with Channels
+Keep the Laravel setup you already have: `LOG_STACK=single,nightwatch`, the Nightwatch agent, and `NIGHTWATCH_TOKEN`.
 
-The channel name is automatically passed to Nightwatch when using named channels:
+Context is forwarded as given. Leave `exception` as a `Throwable` so Nightwatch can serialize it. `user`, `request`, and any other keys stay in the context array.
+
+#### Channels
+
+The Neuron channel name is copied into context under `neuron_channel`. Override that key with `channel_key` when calling `open()`. Laravel's Monolog channel name remains `nightwatch`. A logger stores one channel name, so give each Neuron channel its own logger:
 
 ```php
-use Neuron\Log\Log;
-use Neuron\Log\Logger;
-use Neuron\Log\Destination\Nightwatch;
-use Neuron\Log\Format\Nightwatch as NightwatchFormat;
+$laravel = LaravelLog::channel( 'nightwatch' );
 
-// Create a single Nightwatch format instance
-$nightwatchFormat = new NightwatchFormat( 'neuron', 'my-app' );
+$audit = new Logger( new Nightwatch( new Raw() ) );
+$audit->open( [ 'logger' => $laravel ] );
+$audit->setRunLevel( 'info' );
+Log::addChannel( 'audit', $audit );
 
-// Create Nightwatch destination
-$nightwatch = new Nightwatch( $nightwatchFormat );
-$nightwatch->open( [ 'token' => $_ENV['NIGHTWATCH_TOKEN'] ] );
-
-// Create logger and add to multiple channels
-$logger = new Logger( $nightwatch );
-Log::addChannel( 'audit', $logger );
-Log::addChannel( 'security', $logger );
-Log::addChannel( 'payments', $logger );
-
-// Logs automatically include the channel name
 Log::channel( 'audit' )->info( 'User updated profile', [ 'user_id' => 123 ] );
-// Nightwatch receives: {"channel": "audit", "message": "User updated profile", ...}
-
-Log::channel( 'security' )->warning( 'Failed login attempt', [ 'ip' => '192.168.1.1' ] );
-// Nightwatch receives: {"channel": "security", "message": "Failed login attempt", ...}
-
-Log::channel( 'payments' )->error( 'Payment failed', [ 'amount' => 99.99 ] );
-// Nightwatch receives: {"channel": "payments", "message": "Payment failed", ...}
+// Context includes neuron_channel=audit
 ```
-
-The channel name appears in the Nightwatch dashboard for easy filtering and monitoring.
 
 ### Papertrail Integration
 
