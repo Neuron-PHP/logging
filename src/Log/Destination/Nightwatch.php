@@ -2,208 +2,131 @@
 
 namespace Neuron\Log\Destination;
 
-use Neuron\Core\System\IHttpClient;
-use Neuron\Core\System\RealHttpClient;
 use Neuron\Log;
-use Neuron\Log\Data;
-use Neuron\Log\Format\Nightwatch as NightwatchFormat;
-use Neuron\Validation\IsUrl;
+use Neuron\Log\RunLevel;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
- * Sends log data to Laravel Nightwatch monitoring service.
+ * Forwards log records to Laravel Nightwatch through an existing PSR-3 logger.
  *
- * This destination transmits logs to the Laravel Nightwatch API for
- * centralized monitoring and analysis. It supports authentication via
- * API tokens, configurable endpoints, and optional log batching for
- * improved performance.
+ * Nightwatch ingests logs from Laravel's `nightwatch` Monolog channel. Pass
+ * that channel as `logger`. This destination does not call the Nightwatch
+ * HTTP API. Target the `nightwatch` channel itself, never `stack` or the
+ * default channel: if Laravel's default driver writes back into Neuron, a
+ * stack write would recurse.
  */
 class Nightwatch extends DestinationBase
 {
-	private string $token;
-	private string $endPoint;
-	private int $batchSize;
-	private int $timeout;
-	private array $logBatch = [];
-	private ?string $applicationName = null;
-	private IHttpClient $httpClient;
+	private const DEFAULT_CHANNEL_KEY = 'neuron_channel';
+
+	private LoggerInterface $_logger;
+	private string $_channelKey = self::DEFAULT_CHANNEL_KEY;
 
 	/**
-	 * Default Nightwatch API endpoint
-	 */
-	private const DEFAULT_ENDPOINT = 'https://nightwatch.laravel.com/api/logs';
-
-	/**
-	 * Opens the Nightwatch destination with configuration parameters.
+	 * Opens the destination.
 	 *
 	 * @param array $params Configuration array with the following keys:
-	 *                      - 'token' (required): Nightwatch API authentication token
-	 *                      - 'endpoint' (optional): API endpoint URL (defaults to Nightwatch service)
-	 *                      - 'batch_size' (optional): Number of logs to batch before sending (default: 1)
-	 *                      - 'timeout' (optional): Request timeout in seconds (default: 10)
-	 *                      - 'application_name' (optional): Application identifier
-	 *                      - 'http_client' (optional): IHttpClient instance for testing
-	 * @return bool True if configuration is valid
-	 * @throws \Exception If token is missing or endpoint URL is invalid
+	 *                      - 'logger' (required): PSR-3 logger, typically Laravel's nightwatch channel
+	 *                      - 'channel_key' (optional): Context key for the Neuron channel name
+	 * @return bool
+	 * @throws \Exception If logger is missing or channel_key is invalid
 	 */
 	public function open( array $params ): bool
 	{
-		// Validate required token
-		if( !isset( $params['token'] ) || empty( $params['token'] ) )
+		if( !isset( $params['logger'] ) || !$params['logger'] instanceof LoggerInterface )
 		{
-			throw new \Exception( 'Nightwatch destination requires a token parameter' );
+			throw new \Exception( 'Nightwatch destination requires a PSR-3 logger parameter' );
 		}
 
-		$this->token = $params['token'];
+		$this->_logger = $params['logger'];
 
-		// Set endpoint with default fallback
-		$this->endPoint = $params['endpoint'] ?? self::DEFAULT_ENDPOINT;
-
-		// Validate endpoint URL
-		$validator = new IsUrl();
-		if( !$validator->isValid( $this->endPoint ) )
+		if( array_key_exists( 'channel_key', $params ) )
 		{
-			throw new \Exception( $this->endPoint . ' is not a valid URL' );
-		}
+			$key = $params['channel_key'];
 
-		// Set optional parameters
-		$this->batchSize = (int)( $params['batch_size'] ?? 1 );
-		$this->timeout = (int)( $params['timeout'] ?? 10 );
-
-		// Initialize HTTP client
-		$this->httpClient = $params['http_client'] ?? new RealHttpClient();
-		$this->httpClient->setTimeout( $this->timeout );
-
-		if( isset( $params['application_name'] ) )
-		{
-			$this->applicationName = $params['application_name'];
-		}
-
-		// Update format if it's a Nightwatch format and application name is provided
-		if( $this->applicationName )
-		{
-			$format = $this->getFormat();
-			if( $format instanceof NightwatchFormat )
+			if( !is_string( $key ) || $key === '' )
 			{
-				// Recreate format with application name
-				$this->setFormat( new NightwatchFormat( 'neuron', $this->applicationName ) );
+				throw new \Exception( 'Nightwatch channel_key must be a non-empty string' );
 			}
+
+			$this->_channelKey = $key;
 		}
 
 		return true;
 	}
 
 	/**
-	 * Writes log data to the Nightwatch service.
+	 * Forwards the log record to the PSR-3 logger.
 	 *
-	 * If batching is enabled, logs are accumulated until the batch size
-	 * is reached before being sent. Otherwise, logs are sent immediately.
+	 * The formatted string is ignored. Nightwatch reads the message, level,
+	 * and context from the PSR-3 call.
 	 *
-	 * @param string $text The formatted log text (typically JSON from Nightwatch format)
-	 * @param Data $data The original log data object
+	 * @param string $text
+	 * @param Log\Data $data
 	 * @return void
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 */
 	protected function write( string $text, Log\Data $data ): void
 	{
-		// If batching is disabled, send immediately
-		if( $this->batchSize <= 1 )
+		try
 		{
-			$this->sendToNightwatch( [ $text ] );
-			return;
+			$context = $data->context;
+
+			if( $data->channel !== null && $data->channel !== '' )
+			{
+				$context[ $this->_channelKey ] = $data->channel;
+			}
+
+			$this->_logger->log(
+				$this->mapLevel( $data->level ),
+				$data->text,
+				$context
+			);
 		}
-
-		// Add to batch
-		$this->logBatch[] = $text;
-
-		// Send batch if size reached
-		if( count( $this->logBatch ) >= $this->batchSize )
+		catch( \Throwable $exception )
 		{
-			$this->flushBatch();
+			$this->reportFailure( $exception );
 		}
 	}
 
 	/**
-	 * Sends accumulated logs to Nightwatch and clears the batch.
+	 * Maps a Neuron run level to a PSR-3 level name.
 	 *
-	 * @return void
+	 * @param RunLevel $level
+	 * @return string
 	 */
-	private function flushBatch(): void
+	private function mapLevel( RunLevel $level ): string
 	{
-		if( empty( $this->logBatch ) )
+		return match( $level )
 		{
-			return;
-		}
-
-		$this->sendToNightwatch( $this->logBatch );
-		$this->logBatch = [];
+			RunLevel::DEBUG     => LogLevel::DEBUG,
+			RunLevel::INFO      => LogLevel::INFO,
+			RunLevel::NOTICE    => LogLevel::NOTICE,
+			RunLevel::WARNING   => LogLevel::WARNING,
+			RunLevel::ERROR     => LogLevel::ERROR,
+			RunLevel::CRITICAL  => LogLevel::CRITICAL,
+			RunLevel::ALERT     => LogLevel::ALERT,
+			RunLevel::EMERGENCY => LogLevel::EMERGENCY
+		};
 	}
 
 	/**
-	 * Sends log data to the Nightwatch API endpoint.
+	 * Records a forward failure without letting it escape write().
 	 *
-	 * @param array $logs Array of JSON-formatted log entries
+	 * @param \Throwable $exception
 	 * @return void
 	 */
-	private function sendToNightwatch( array $logs ): void
+	private function reportFailure( \Throwable $exception ): void
 	{
 		try
 		{
-			// Prepare payload
-			$payload = [
-				'logs' => array_map( 'json_decode', $logs )
-			];
-
-			// Set custom headers for the request
-			$this->httpClient->setDefaultHeaders( [
-				'Content-Type' => 'application/json',
-				'Accept' => 'application/json',
-				'Authorization' => 'Bearer ' . $this->token,
-				'User-Agent' => 'Neuron-PHP/1.0'
-			] );
-
-			// Send POST request
-			$response = $this->httpClient->postJson( $this->endPoint, json_encode( $payload ) );
-
-			// Log error to stderr if request failed (but don't throw exception)
-			if( $response->hasError() || $response->getStatusCode() >= 400 )
-			{
-				$errorMessage = sprintf(
-					"[Nightwatch] Failed to send logs: HTTP %d %s\n",
-					$response->getStatusCode(),
-					$response->hasError() ? $response->getError() : $response->getBody()
-				);
-				fwrite( $this->getStdErr(), $errorMessage );
-			}
+			fwrite( $this->getStdErr(), '[Nightwatch] Exception: ' . $exception->getMessage() . "\n" );
 		}
-		catch( \Exception $e )
+		catch( \Throwable )
 		{
-			// Silently fail to avoid breaking the application
-			// Optionally log to stderr for debugging
-			$errorMessage = "[Nightwatch] Exception: " . $e->getMessage() . "\n";
-			fwrite( $this->getStdErr(), $errorMessage );
+			// stderr is unavailable; write() still must not throw
 		}
-	}
-
-	/**
-	 * Closes the destination and sends any remaining batched logs.
-	 *
-	 * @return void
-	 */
-	public function close(): void
-	{
-		$this->flushBatch();
-	}
-
-	/**
-	 * Gets the current format object.
-	 * This is a helper method to access the private format property.
-	 *
-	 * @return \Neuron\Log\Format\IFormat
-	 */
-	private function getFormat(): \Neuron\Log\Format\IFormat
-	{
-		// Access the private $_format property through reflection
-		$reflection = new \ReflectionClass( parent::class );
-		$property = $reflection->getProperty( '_format' );
-		return $property->getValue( $this );
 	}
 }

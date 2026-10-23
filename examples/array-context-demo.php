@@ -7,7 +7,7 @@
  * - Message interpolation
  * - Exception handling
  * - Complex object logging
- * - Special Nightwatch context keys
+ * - Context keys forwarded to Nightwatch
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -15,9 +15,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Neuron\Log\Log;
 use Neuron\Log\Logger;
 use Neuron\Log\Destination\StdOut;
-use Neuron\Log\Destination\Nightwatch;
 use Neuron\Log\Format\PlainText;
-use Neuron\Log\Format\Nightwatch as NightwatchFormat;
 
 echo "=== Array Context and PSR-3 Style Logging Demo ===\n\n";
 
@@ -102,19 +100,13 @@ Log::info( 'Application event with merged context', [
 	'user_id' => 456
 ] );
 
-echo "\n--- 7. Nightwatch Special Context Keys ---\n";
-// Create Nightwatch logger to show special handling
-$nightwatchFormat = new NightwatchFormat( 'demo', 'array-context-example' );
-$nightwatch = new Nightwatch( $nightwatchFormat );
-$nightwatch->open( [ 'token' => 'demo-token' ] ); // Won't actually send
+echo "\n--- 7. Context Forwarded to Nightwatch ---\n";
+// Nightwatch receives this context unchanged. Attach
+// Destination\Nightwatch to Laravel's nightwatch channel in the app.
+$monitor = new Logger( new StdOut( new PlainText() ) );
+$monitor->setRunLevel( 'debug' );
+Log::addChannel( 'monitoring', $monitor );
 
-$nightwatchLogger = new Logger( $nightwatch );
-$nightwatchLogger->setRunLevel( 'debug' );
-
-// Add to a channel
-Log::addChannel( 'monitoring', $nightwatchLogger );
-
-// Log with special Nightwatch context keys
 Log::channel( 'monitoring' )->error( 'Performance degradation detected', [
 	'performance' => [
 		'duration' => 1234.5,
@@ -179,7 +171,7 @@ echo "1. PSR-3 style message interpolation with {placeholders}\n";
 echo "2. Array contexts passed as second parameter\n";
 echo "3. Automatic exception formatting\n";
 echo "4. Complex nested arrays and objects\n";
-echo "5. Special Nightwatch context keys (exception, performance, tags, etc.)\n";
+echo "5. Context keys forwarded unchanged to Nightwatch (exception, performance, tags, etc.)\n";
 echo "6. Mixed type handling (strings, arrays, objects, etc.)\n";
 echo "7. Global + local context merging\n";
 echo "8. Channel-aware logging with array contexts\n\n";
